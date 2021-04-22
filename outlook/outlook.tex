@@ -1,0 +1,144 @@
+\documentclass[../talant.diss.submit.tex]{subfiles}
+\begin{document}
+\label{chap:outlook}
+%Functions performed by IDPs in a cell are complementary to those of
+%ordered proteins\cite{}.
+The conformational flexibility of IDPs give them particular
+%Because of their conformational flexibility, IDPs posess
+functional advantages over ordered proteins.
+\cite{dyson:16m,berlow:15f,zhou:12,dunker:01int,dyson:05,
+  shoeportman:00,uversky:05,gunasekaran:03,kriwacki:96,liu:14a}
+%\todo{can either not
+%  cite or cite more and more recent reviews.}
+The main goal of the research
+presented in my dissertation is to study some of these advantages using
+structure based molecular dynamics simulations.  Particular properties I
+consider in my research are enhanced association rates, less restrictive
+orientational binding constraints, low affinity and high specificity binding,
+and the influence that the speed of conformational dynamics has on binding rates
+and mechanisms.  I address these aspects of IDP binding to its target protein
+with some modifications implemented into coarse grained C-$\alpha$ model using
+well characterized pKID-KIX IDP complex as a model system. In this
+chapter, I offer a brief summary of my results in broad terms,
+and describe some open questions I
+find promising for future research.
+
+In a first project, our properly parametrized IDP model predicts three step
+binding mechanism in qualitative agreement with experimental
+observation.\cite{sugase:07} Inclusion of a desolvation barrier potential for
+native contacts resulted in a significantly enhanced coupled folding and binding
+rate over binding of a prefolded molecule.  This study is conceptually
+interesting because it illustrates the influence conformational flexibility
+has on the binding rate and mechanism  when binding is reaction limited.
+The enhanced rates are rationalized by the ability of flexible binding partner
+to navigate the desolvation barriers incrementally starting at a farther
+separation distance, while an ordered counterpart must overcome these barriers
+simultaneously due to structural constraints. In addition, I show how binding
+affinity and the specificity are uncoupled by comparing flexible and rigid pKID
+binding kinetics at the same temperature.  These results suggest that structure
+based C-$\alpha$ model is robust in accurately capturing fine detail of
+experimental observations.
+
+One interesting open problem for which I think our model is well suited is the 
+% Being moivated by this work, I aim to pursue an
+investigation of the role of phosphorylation on pKID-KIX binding. % with C-$\alpha$ model. 
+Phosphorylation is a reversible mechanism that consists of the addition of a
+phosphate group ($\mathrm{PO}_{4}$) to the polar group R of various amino acids
+allowing the protein to change conformation when interacting with other molecules.
+For an IDP pKID the phosphorylation of a specific amino acid SER133 is
+known to increase its binding affinity to KIX\cite{radhakrishnan:98,kwok:94n},
+although it is unclear what mechanism governs this process. In C-$\alpha$ model,
+the effect of phosphorylation can be implemented by altering the residual structure, binding
+strength and electrostatic energy parameters of specific region. Particularly,
+more extensive analysis must be performed on the formation of transient encounter
+complex and its response to the phosphorylation effect as it is suggested to
+have great influence.\cite{dahal:17ph}
+
+
+%textbf{summarize reconfiguration dynamics vs rate, 4rd chap.}\\
+
+In a second project, I study the role of polymeric reconfiguration timescale
+on coupled folding and binding kinetics and thermodynamics using C-$\alpha$ model.
+This is accomplished by decoupling the langevin dynamics into an independent equations
+that enable control over reconfigurational speed and the center of mass diffusion of an
+IDP separately. Using an IDP pKID, the implementation is validated by showing that
+diffusion constant remains unchanged while internal dynamics parameter $\gamma_{\mathrm{I}}$
+is gradually changed. Results show that thermodynamics of binding is not affected by changes
+in the internal dynamics, while nearly order of magnitude difference in binding
+rate is observed between the fast and slow regimes.
+Kinetic signatures of the slower conformational speed is revealed 
+% This differance in kinetics is rationalized
+by dissecting the binding trajectory into multiple intermediate steps including a loose encounter complex
+with a wide distribution of non-native contacts but with minimal native contacts,
+and an encounter complex with more extensive native intermolecular contacts. 
+My results suggest that the lifetime of the encounter complex is kinetically stabilized,
+similar in some respects (but also with important differences) to the thermodynamic
+stabilization due to non-native interactions. 
+%to mechanism shown with non-native interactions.
+%Coformational dynamics of IDPs are found to play an important role in an initial stages of protein
+%aggregation\cite{ahmad:12,ahmad:12a} and shown to have an influence on binding mechanism\cite{zhou:12a}.
+%Calibration of the internal dynamics
+%of an IDP in structure based C-$\alpha$ model, the reconfiguration dynamics can be slowed
+%down to be close to experimentally
+%reported range. As a result, encounter complex is stabilized due to ...
+
+The model I developed can be used to address another interesting question about
+coupled folding and binding proceeding via either induced fit or conformational
+selection mechanisms\cite{baker:14,espinoza-fonseca:09a,sugase:07} that is
+subject of a debate within the community.  One illustration of this issue is the
+so-called gated diffusion limited reaction.
+%Characterization of these
+%possible mechanisms is made by Zhou \textit{et al.}
+In an analytical model of stochastically gated chemical reaction, Zhou
+\textit{et al.} show how the binding rate depends on the relative timescale of
+gating and the diffusive ligand encounter time.\cite{cai:11} According to this
+model, when the rate of conformational dynamics is slow compared to the ligand
+encounter time the binding proceeds via conformational selection, whereas fast
+conformational dynamics results in a binding rate that is an average of binding
+to the closed and open states possibly showing a shift from conformational
+selection to induced fit mechanism. Although this analytical model offers a
+great control over gating transition rate between open and closed states of the
+protein, it lacks an accurate molecular level characterization of the problem.
+In contrast, the model we implemented offers a control over proteins
+conformational speed with explicit molecular description. If the conformational
+speed of an IDP is significantly slow relative to its diffusive encounter
+timescale, upon encounter the conformational sampling of an IDP is restricted by
+its speed. As a result, the transition from unbound conformation to bound state
+conformation is optimized and controlled by weak interactions in the encounter
+state leading to a target protein selecting the bound conformation of the ligand
+before binding. Thus, I expect to see a shift from induced fit to conformational
+selection binding mechanism.  The limitation we have on the maximum limit of
+$\gamma_{\mathrm{I}}$ due to integration inaccuracies can be overcome either by
+modifying Honeycut-Thurumalai approximation by including higher degree
+polynomials or by changing $\gamma_{\mathrm{D}}$ while $\gamma_{\mathrm{I}}$ has
+a value close to experimentally known reconfiguration timescale.
+
+%\textbf{Talk about how it can be applied to other systems, or
+% possibly with different modifications, and discuss
+% improovements it can show giving some experimental references!} \\
+%Effect of conformational speed with long range electrostatic interactions..... \\
+
+%\todohl{I uncommented this. I think it is fine. You can take it out again if you like.}
+%{
+Another problem suggested by this work is to probe
+%I am also interested in expanding on this work by probing
+the role of long range electrostatic
+interactions (as opposed to short range non-native contacts) on IDP binding with slow and fast
+conformational speed. Electrostatic interactions are known to speed up binding rate by
+orientating a ligand at farther distances, so called "Electrostatic Steering" effect. High
+conformational entropy of rapidly rearranging ligand likely make IDP with fast reconfiguration
+less sensitive to steering effect. Thus, I predict to see more pronounced acceleration in binding
+rate at slow ligand reconfiguration compared to fast one.
+%}
+
+IDPs are different from conventional structured proteins in structure, sequence and function.
+Conformational dynamics and flexibility allow IDPs perform vital functions in cell that are
+complementary to those ordered proteins.
+%Binding of IDPs with other targets remains very active
+%area and reqires both experimental and computational approaches to desipher.
+Molecular recognition of IDPs is a  complex mechanism for which conformational flexibility and
+dynamics, specificity, and thermodynamic and kinetic control meet. Deciphering the molecular
+level description of this rich mechanism will likely motivate new complementary experimental
+and computation methods for years to come. 
+
+\end{document}

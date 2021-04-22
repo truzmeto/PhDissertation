@@ -1,0 +1,814 @@
+\documentclass[../talant.diss.submit.tex]{subfiles}
+\begin{document}
+\label{chap:chapter1}
+% ------------------------------------------------------------------------------------------------------   
+%*************************************************************************************************
+\section{\textbf{Overview}}\label{sect:one_one}
+%*************************************************************************************************
+
+Nearly all cellular functions vital for living organisms are performed by
+protein molecules. A typical cell contains approximately $10^6$ types of
+proteins, each performing distinct essential functions. Examples of these
+functions include storing and transporting energy, electron flow in
+photosynthesis, information transport via cell signalling, defense against
+intruders as antibodies, and gene expression control by binding to specific
+sequences of nucleic acid. Proteins are also a crucial part of muscles and other
+tissues converting chemical energy into mechanical energy.
+
+Protein function critically depend on their three-dimensional structure determined by their
+amino acid sequence. This structure-function paradigm, a central idea in molecular biology,
+suggests that 
+%\cite{anfinsen:73p} This dogma
+%postulated by Anfinsen was recognized as one of the best acheivements
+%in biochemistry and was given a
+%nobel prize in 1972.
+newly synthesized proteins need to fold into unique three-dimensional shape
+prior to performing any cellular function. However, many exceptions to the rule
+have recently been found in the form of so called intrinsically disordered
+proteins (IDPs). IDPs lack fixed three-dimensional form, yet possess
+highly diverse and essential cellular functions.\cite{dunker:01int}
+
+Examples of cellular functions performed by IDPs include: molecular recognition
+of regulatory proteins, DNAs, and RNAs, enzymatic acceleration of chemical
+reactions between binding partners, facilitation of posttranslational
+modifications, alternative splicing, and insertions/deletions.  Overall,
+biological activities of IDPs play a crucial role in living cell, often
+complementing those of structured proteins. All these functions performed by
+IDPs take place when they associate with other molecules.  Thus, studying
+dynamics and binding mechanisms of intrinsically disordered proteins, the
+purpose of this dissertation, has become a very active area in biophysics.
+In particular, problems addressed in this work include origins of enhanced binding
+rates, deciphering the binding mechanism via intermediate state analysis,
+and the role of the conformational dynamics on bimolecular association of IDPs.
+
+
+
+%Next, I describe protein structure at different levels of its structural hierarchy.
+
+
+%*************************************************************************************************
+\section{\textbf{Protein Structure}}\label{sect:one_two}
+%*************************************************************************************************
+
+Proteins are polymers composed of a sequence of amino acids.  Each of
+the twenty amino acids consist of a central carbon atom, known as the $\alpha$
+carbon, which is connected via covalent bonds to the amino group, a carboxyl
+group, and a hydrogen atom.  A protein's structure can be summarized at
+different levels of a hierarchy: ``primary'', ``secondary'', ``tertiary'', and
+``quaternary'' structures, as illustrated in Fig.~\ref{fig:prot_struct}.  The
+primary structure of a protein, its sequence, is the simplest level of protein
+structure. The secondary structure of a protein refers to the local folded
+structure that forms within a polypeptide chain.  These locally folded regions typically
+form due to hydrogen bonds between residues.
+Most commonly occurring secondary structure elements in a protein
+molecule are the $\alpha$ helix and the $\beta$ sheet first described by Pauling in
+Ref.~\cite{pauling:54s}.  The tertiary structure of a protein is its
+three-dimensional structure.  The tertiary structure is stabilized through
+non-covalent bonds, including hydrogen bonding, ionic bonding, dipole-dipole
+interactions, and hydrophobic forces.
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=16.0cm]{figures/chap1_figs/prot_structure.pdf}
+    \caption{Different levels of protein structural hierarchy for human hemoglobin A,
+      pdb id 1BBB. Primary and secondary structures are
+      visualized using the C-terminal $\alpha$-helix of chain-D. Tertiary structure
+      involve long range intramolecular and intermolecular interactions between
+      chains A and B. All four chains are bound to form the quaternary structure.}
+    \label{fig:prot_struct}
+  \end{centering}
+\end{figure}
+%
+%
+The next level of complexity in hierarchy is the quaternary structure which involves 
+particular spatial arrangement and interactions between two or more proteins.
+Quaternary structure essentially describes how different proteins are assembled
+into complexes.
+
+
+%*************************************************************************************************
+\section{\textbf{Intrinsically Disordered Proteins}}\label{sect:one_three}
+%************************************************************************************************
+
+Although a specific three dimensional structure is often essential to perform
+the function, there are class of proteins that are fully or partially
+disordered, and free of the structure-function
+requirement. %Next, I aim to introduce this special group of proteins.
+IDPs are class of proteins that do not form specific structure in a large region
+of its sequence, and often the entire protein. IDPs typically fold when bind to
+other proteins. Amino acid composition of IDPs is low in overall
+hydrophobicity and highly charged compared to folded globular proteins \cite{uversky:00n}.
+Detailed comparisons of amino acid
+sequences of ordered proteins and IDPs reveal that IDPs are significantly
+depleted in bulky hydrophobic (Ile, Leu and Val) and aromatic amino acid
+residues (Trp, Tyr and Phe). These residues are responsible in forming the
+hydrophobic core of a folded globular proteins. In addition, IDPs have low
+content of Cys and Asn amino acids \cite{dunker:01int}, key residues that are
+known to have a significant contribution to the protein conformational stability
+(when present) via disulfide bonds.
+
+Despite their lack of stable structure, IDPs are a very large and functionally
+important class of proteins.  IDPs are at the heart of protein interaction
+networks \cite{dunker:05f,kim:08r}. They perform a central role in regulation of
+signaling pathways and crucial cellular processes, including regulation of
+transcription, translation and the cell cycle
+\cite{wright:99,iakoucheva:02i,galea:08r}. Tight regulation of IDP concentration
+in the cell ensures precise signaling in time and space. Mutations or changes in
+IDP cellular concentration are associated with disease
+\cite{gsponer08t,babu11i}. Overall, IDPs are different from structured proteins
+in many ways and tend to have distinct properties in terms of function,
+structure, sequence, interactions, evolution and regulation.
+%
+%\begin{figure}[htp!]
+%  \begin{centering}
+%    \includegraphics[width=14.0cm]{figures/chap1_figs/IDP_stats.pdf}
+%    \caption{Comparison of the mean net charge and the mean hydrophobicity for the set of 275 folded
+%      (blue squares) and 91 disordered proteins(red circles). Data are presented as \textbf{a}
+%      dependence of the mean net charge on the length of polypeptide chain, \textbf{b}
+%      length-dependence of the mean hydrophobicity, \textbf{c} mean net charge vs. mean hydrophobicity
+%      (data for $\alpha$-synuclein, negative factor and helix destabilizing protein are shown as green,
+%      yellow, and white circles, respectively; data for ``natively unfolded'' fragments of these proteins
+%      are presented by triangles of corresponding color, see text for explanation). In (d), the 242
+%      homologues of the natively unfolded proteins are shown as cyan circles, and the 130 predicted natively
+%      unfolded proteins are shown as green circles. Adapted from Uversky (2000)\cite{uversky:00n}.}
+%    \label{fig:IDP_stats}
+%  \end{centering}
+%\end{figure}
+%
+%
+
+
+The highly entropic nature of IDPs cover a spectrum of states from fully
+unstructured to partially structured including random coils, molten globules,
+and large multi-domain proteins connected by flexible linkers.
+%Spectroscopy method for studying IDPs that does not require crystallization is
+%nuclear magnetic resonance(NMR) \cite{baldwin:10c,jensen:13d}. Due to local magnetic environments
+%of the nuclei differing considerably the individual resonance peaks tend to be spread
+%out for structured proteins. On the other hand, in an IDPs the peaks tend to
+%be more closely spaced due to the lack of  chemical shift dispersion because
+%the local magnetic environments of the nuclei are indistinct.\cite{baldwin:10c}
+% summarize experimental studies
+In the unbound state, IDPs exist as dynamic ensembles of conformations, making
+structural qualities difficult to characterize using standard methods of protein
+structure determination. On the other hand, when IDPs are bound and folded,
+their stable well-defined secondary and tertiary structures can be characterized
+via X-ray crystallography or other standard methods.  Knowing this bound
+structure is important to understand certain structural and functional
+properties, but does not help understand kinetics of binding process. These
+bound structures can be used in conjunction with computational methods to get
+better understanding of IDP complex formation process.
+
+%Computational studies possibly offer the best way to study dynamic properties of IDPs,
+%although they are also subject to various limitations. Atomistic simulations require
+%a lot of computation resources in order to generate statistically relaible result. Thus,
+%most of the work is done via simplified or coarse grained models that we will discuss in
+%later chapters.
+
+The pKID-KIX system (shown in Fig.~\ref{fig:pKID_KIX_vmd}) is a widely studied
+IDP complex.  Phosphorylated kinase-inducible domain(pKID) is the transcription
+factor cAMP response-element binding protein (CREB) and KIX is the KID-binding
+domain of the CREB-binding protein. As characterized by experiment the IDP pKID
+folds into two helices upon binding to KIX, $\alpha_{\mathrm{A}}$ (residues
+119-129) and $\alpha_{\mathrm{B}}$ (residues 132-146), joined through flexible
+linker\cite{zor:02}. Recent NMR experiments show that $\alpha_{\mathrm{A}}$ is
+partially ordered with $~50\% $ helical population and $\alpha_{\mathrm{B}}$ is
+mostly disordered having about $10-15\%$ residual structure
+formed\cite{radhakrishnan:98}.  Large hydrophobic residues (Tyr 134, Ile 137 and
+Leu 138) which belong to helix $\alpha_{\mathrm{B}}$ were found to be essential for
+high-affinity binding \cite{radhakrishnan:97,parker:98}.
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=11.0cm]{figures/chap1_figs/pKID_KIX_vmd.pdf}
+    \caption{NMR structure of pKID-KIX IDP bound complex(PDB id: 1KDX).
+      Native state structure for above complex is portrayed using
+      visual molecular dynamics\cite{Humphrey:96}.}
+    \label{fig:pKID_KIX_vmd}
+  \end{centering}
+\end{figure}
+%
+%
+In this dissertation, I use pKID-KIX as a model system to explore binding kinetics and mechanisms
+of IDP complex formation.
+
+%
+%*************************************************************************************************
+\section{\textbf{Protein Folding}}\label{sect:one_four}
+%************************************************************************************************
+
+Proteins lack stable three-dimensional structure when translated from a sequence
+of mRNA to a chain of amino acids. The formation of unique three dimensional
+structure, so called protein folding, can occur spontaneously without the need
+of additional help from other molecules such as chaperon proteins.  Interactions
+of amino acids within the polypeptide chain and with solvent molecules are
+responsible for spontaneous self-organization of a protein molecule to adopt the
+folded conformation often referred to as native state.
+%Determination of native structure solely from linear amino acid sequence was initially proposed
+%by Anfinsen in the early 1960s\cite{anfinsen:73p,anfinsen:61k}, and was given a name
+%'sequence structure paradigm'.
+The number of three dimensional configurations available to a polypeptide, from
+random coil to the native state, grows exponentially with the size of the
+protein.  Exploration of this enormous phase space to find a particular
+conformation would take such a long time making an unbiased search incompatible
+with biological requirements.  This is called "Levinthal
+paradox".\cite{levinthal:68t}.  According to Levinthal, if it takes a picosecond
+to sample a particular conformational state, the folding of a protein through
+random search would take timescale that is comparable to the age of the
+universe.  This evidently suggests that protein molecules limit the search space
+in some way, for example, by folding through a small number of specific pathways
+to the native state.
+
+The modern theory that describes protein folding called the "Free Energy
+Landscape Theory"
+\cite{bryngelson:95,bryngelson:89,leopold:92p,brooks:01t,chan:98p,onuchic:97},
+emerged in the late 1980s as an alternative view to folding by specific
+pathways.  According to energy landscape theory, folding mechanism of proteins
+is rationalized as a statistical process through an energy landscape
+the properties of which are determined by its amino acid sequence. Nevertheless,
+there is a generic organization that can be inferred by the fact that proteins
+are heteropolymers that fold rapidly and reliably to a unique folded conformation.
+The organization of accessible conformations that compose a protein's energy
+landscape is 
+illustrated in Fig.~\ref{fig:folding_cartoon_land}. 
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=16.0cm]{figures/chap1_figs/folding_cartoon_landscape1.pdf}
+    \caption{Funnel-shaped protein folding landscape along with cartoon representation
+      for folded and unfolded states of $\lambda$-cro repressor. Folding occurs through the
+      progressive organization of ensembles of structures on a free energy landscape.}
+    \label{fig:folding_cartoon_land}
+  \end{centering}
+\end{figure}
+%
+This funnel-shaped
+landscape is described by a small number of order parameters, denoted as $Q$,
+that measure the similarity of a conformation to the native state. The width of the funnel
+represents the entropy, and the vertical axis represent value of the order parameter $Q$
+from $Q=0$ (the unfolded ensemble) to $Q=1$ (the native state ensemble). The entropy, $S(Q)$, and
+energy, $E(Q)$,  depend on the similarity to the native conformation measured by $Q$.
+At the top of the funnel, the entropy is large since there are many
+conformations lacking similarity to the native state in the unfolded ensemble.
+The energy of these unstructured states is also higher compared to the native state.
+As $Q$ increases, moving down the funnel,
+the conformational entropy reduces
+because the ensemble of structures is more restricted by the increased similarity to the native
+conformation, and energy becomes more stabilized. The correlation of the energy
+of a conformation and the native state similarity is known as the
+"principle of minimal frustration".\cite{bryngelson:87,bryngelson:89}
+%The top part of the landscape correspond to an unfolded state showing similar properties
+%to random heteropolymer, that is a large rugged surface with lots of
+%different low energy conformations separated by barriers.
+%Unlike the heteropolymers, energy landscape of proteins have funnel
+%like shape due to energetic bias driven by global minima, which significantly increases
+%its conformational search efficiency enabling a protein to fold in biologically relevant timescales. 
+%This energetic bias that reduces the amount of frustration(or ruggedness) enebling downhill
+%folding is known as the "principle of minimal frustration"\cite{bryngelson:87,bryngelson:89}. 
+According to this principle, "native-like" conformations on average have lower
+energy giving rise to a driving force towards native state encouraging rapid
+folding.
+
+Although protein folding landscape is minimally frustrated, there is certain amount
+of ruggedness
+%due to kinetic traps imposed by misfolded or partially unfolded states that tend to influence
+%the folding kinetics.
+%This traps introduce local minima along the transition pathway of
+%downhill funnel slowing down the folding rate.
+associated with traps and frustrated interactions. These traps tend to slow down
+the conformational kinetics as the protein folds. The glassy nature associated
+frustrations and 
+trapped states become more important at low temperatures for which the barriers
+between local minima are harder to overcome.  In fact, the
+effect of these traps on folding rate is found significant at low temperatures
+compared to folding temperature, while became unimportant at higher temperature
+conformations\cite{abkevich:94f}.  Trapped conformations would have to break
+favorable contacts, if necessary, that do not lead to native state and restart
+the search
+%on downhill
+for the unique three dimensional
+conformation\cite{dill:97}.
+Escape from traps and frustration, in this description, slow the conformational
+dynamics of the protein as it folds. 
+
+Under physiological conditions the native state of a protein corresponds to
+global minima of the free energy. Free energy  $F(Q)$ of the protein can be formulated
+by its energy $E(Q)$ and entropy $S(Q)$ at equilibrium temperature $T$ assuming constant
+pressure and volume:
+%
+\begin{equation}
+  \label{eq:gibbs_free}
+  F(Q) = E(Q) - T S(Q),
+\end{equation}
+%
+where, $Q$ is the order parameter that describe folding.
+Depending on the conditions, the entropy and energy do not compensate each other completely
+as the protein folds, resulting in a free energy profile with a barrier controlling the folding
+kinetics at an intermediate value of $Q$. The structural properties of the conformational ensemble within this transition state region indicate the protein's folding mechanism. 
+
+Competition between
+enthalpy and entropy expressed in Eq.~\ref{eq:gibbs_free} defines native and denatured
+states of the protein. Native state is characterized by low amount of entropy due to
+mutual intramolecular interactions stabilizing the well defined geometry, hence the order.
+Low entropy results in increased solvent entropy because hydrophobic residues are buried
+in a folded state. Protein's enthalpy is also low because attractive interactions are satisfied.
+A folded conformation can be perturbed by adding denaturant, increasing the temperature, or by
+changing the pH level that leads to unfolded state. Unfolded or denatured state has high
+conformational entropy and high enthalpy due to loss of native interactions. Additionally,
+interactions between solvent and hydrophobic residues reduce the entropy of the solvent
+relative to folded state. Therefore, increase in entropy is also considered as a driving
+force for native state\cite{wolynes:15e,sali:94d,dal:18e}
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Protein Binding}}\label{sect:one_three}
+%************************************************************************************************
+%
+
+Folding is necessary for biological function, at least for the globular
+proteins.  This function is usually carried through binding of a protein to
+other molecules such as proteins, DNAs,
+RNAs. %Next, we introduce some concepts regarding the protein binding.
+Protein binding is a process where two or more proteins come together to form a
+bound complex mediated by specific intermolecular interactions.  The role of
+protein-protein association is crucial in many biological and biophysical
+processes. Examples include interactions involved in translating extracellular
+signals into proper cellular responses (signal transduction\cite{boriack:98s}),
+interactions between transcription factors controlling the gene
+expression\cite{andel:99t}, and the regulation of cytoskeleton\cite{welch:99w}.
+
+%Due to broad range of applications and biological importance protein binding has been
+%under extensive investigation
+%\cite{north:92,frembgen-kesner:10,huangsteering:15,silva:11,de-sancho:12,hansen:10,pontius:93a}. 
+
+%Focusing of binding of two folded proteins, the stabilization of
+%bound state involve specific intermolecular interactions .
+%and possibly entropic contribution of solvent. 
+
+A simple analytical model to describe protein binding kinetics considers the rate
+for two non-interacting spheres to find each other under Brownian motion
+\cite{janin:97,szabo:82s,northrup:84b}.  This binding rate can be found by
+solving the diffusion equation giving the Smoluchowski expression,
+%
+\begin{equation}
+  \label{eq:smoluch}
+  k_{\mathrm{D}} = 4\pi D a, 
+\end{equation}
+%
+where, $D$ is the diffusion coefficient of the spheres, and $a$ is their diameter.
+Using the Stokes-Einstein expression, $D =  k_{\mathrm{B}}T/ 6\pi \eta a$,
+gives the diffusive encounter rate,
+%
+\begin{equation}
+  \label{eq:smoluch}
+  k_{\mathrm{D}} = 4\pi D a = \frac{2k_{\mathrm{B}}T}{3\eta},
+\end{equation}
+%
+independent of the size of the spheres. Here, $k_{\mathrm{B}}$ is the Boltzmann
+constant, $T$ is the temperature and $\eta$ is the solvent viscosity.  The
+independence of the encounter rate on size can be rationalized from the linear
+growth of the diffusive rate with the radius of the sphere, compensated by its
+smaller diffusion constant. At room temperature ($T=300$K), the viscosity of
+water is $\eta =8.9 \times 10^{-4}$Pa, giving the diffusive rate constant
+$k_{\mathrm{D}} \approx 6.5 \times 10^{9} \mathrm{M}^{-1}\mathrm{s}^{-1}$.  This
+is close to the upper limit of experimentally known range
+$10^{3}-10^{9} \mathrm{M}^{-1}\mathrm{s}^{-1}$ for binding rates.  Measured
+rates of $10^{9} \mathrm{M}^{-1}\mathrm{s}^{-1}$ are called diffusion
+limited. This is fastest expected bimolecular rate because it corresponds to
+binding occurring every time molecules encounter each other.  Specific examples
+of proteins with diffusion limited rates include
+thrombin-hirudin\cite{stone:89q} and barnase-barstar\cite{schreiber:96r}.
+%From energy landscape perspective, driving forces towards bottom of the funnel are specific
+%interactions at at binding site with correct relative orientation of proteins. Disoriented
+%configurations with non-specific interactions represent the rugged regions of the landscape.
+%The role of solvent is not as prominant in this example, because hydrophobic
+%residues of both proteins are most likely buried.
+
+Most proteins bind with rates $10^{4}-10^{6} \mathrm{M}^{-1}\mathrm{s}^{-1}$,
+much slower than the diffusion limited. One important aspect of protein binding
+left out of the model is the specificity of the bound complex.  Proteins bind
+with specific orientations due to the interactions between particular
+regions of the molecules. This reduces the binding interface to a fraction of
+the overall surface. A simple correction to Smoluchowski rate is to introduce a
+finite probability for binding to occur based on an estimate for the probability
+that the proteins encounter each other with the proper orientation
+\cite{janin:97}.  Here, spheres undergo random collisions before correct
+orientation with specific position is located with probability $p_r$. The
+observed rate is a product between the collision rate $k_{\mathrm{D}}$ and
+$p_r$, where $p_r=1$ indicates that orientations don't matter, and $p_r=0$
+represents orientational constraints too stringent for a reasonably short
+binding time.  Estimating $p_r$ from simulation, Janin \textit{et al.} predicted
+much slower biding rate $k \approx 10^{5}\mathrm{M}^{-1}\mathrm{s}^{-1}$
+compared to a model that only accounts for free diffusion\cite{janin:97}.
+
+Protein-protein interactions are more complex than association of two simple
+spherical particles with patches, but have some similar properties.  When
+proteins do not have diffusion limited binding rates, they typically have
+multiple encounters before native bound complex is formed.  These random collisions are
+accompanied by transient interactions within a state between the bound and
+unbound states illustrated in Fig.~\ref{fig:barnase_barstar}.  This state, often
+referred to as encounter complex, has various different definitions
+\cite{gabdoulline:99p}, but the idea is that the binding partners in the
+encounter complex are loosely associated compared to stronger interactions in
+the bound state.  Weak interactions in the encounter state allow dynamic search
+for the bound conformation before proteins escape to unbound state or successfully
+proceed to form bound complex.
+%In bimolecular reactions, two reactant molecules have to come into contact with appropriate relative
+%orientations before the reaction can proceed. There is an intermediate state with near-native
+%separation and weak partial native interactions between reactants refered to as the transient complex
+%\cite{alsallaq:08e, zhou:97e}.
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=16.0cm]{figures/chap1_figs/barnase_barstar.pdf}
+    \caption{Protein binding cartoon for Barnase and Barstar. Two folded proteins undergo
+      association through transient intermediate state to form bound complex.}
+    \label{fig:barnase_barstar}
+  \end{centering}
+\end{figure}
+%
+%
+Electrostatic interactions are also important to the binding mechanism and rate.
+Electrostatic interactions are known to accelerate protein-protein binding
+kinetics and mechanism through "electrostatic steering effect"
+which allow proteins to orient at farther
+separations.
+\cite{wade:98e,brock:07o,mohan:16e,tan:93,antosiewicz:96,huangsteering:15}.
+Then, orientational restrictions
+are satisfied as proteins approach each other, making collisions more likely to be in the proper orientation for binding, thereby enhancing the association rate.
+
+Revisiting an example of two sphere with patches, the electrostatic interactions
+are implemented as an additional factor into rate Eq.~\ref{eq:smoluch}\cite{janin:97},
+%
+\begin{equation}
+  \label{eq:rate_mode_ele}
+  k = k_{\mathrm{D}} p_r q_r q_t .
+\end{equation}
+%
+In this expression, $q_t$ depends on relative net charges of interacting
+proteins.  If proteins have net charges of opposite sign, then $q_t > 1$ as
+electrostatic attraction enhances the collision rate, and $q_t < 1$
+otherwise. Term $q_r$ is introduced as correction for electrostatic
+steering. Applying this model for experimentally available
+data\cite{schreiber:96r} of barnase-barstar binding at low ionic strength, up to
+five orders of magnitude enhancement in binding rate has been accurately
+predicted \cite{janin:97}. Although this simple model is successful in studies
+of barnase-barstar binding, it may not be applicable to binding partners with
+similar sign net charge.  Furthermore, more complex binding scenarios such as
+protein conformational fluctuations upon association need molecular level models
+for estimation to be more accurate.
+
+
+Protein-ligand association is diffusion limited if reacting molecules proceed to
+final bound complex after a single encounter. In contrast, if molecules undergo
+multiple collisions, in order to satisfy orientational restrictions prior to
+binding, then binding is referred to as reaction limited. The latter can often
+arise when the proteins must overcome an activation barrier between unbound and
+bound states.  In order to describe and distinguish above definitions, we formulate
+bimolecular reaction kinetics for a protein (P) and ligand (L) association that
+proceeds through a loosely bound intermediate (P:L) with a subsequent activated
+step that leads to the final bound complex (PL):
+%
+%
+\begin{equation}
+  \label{eq:kinetic_equation}
+  \ce{
+    \mbox{P + L} <=>[$k_{\mathrm{{D}^{+}}}$][$k_{\mathrm{{D}^{-}}}$] \mbox{P:L}
+    ->[$k_\mathrm{A}$] \mbox{PL}
+  }.
+\end{equation}
+%
+%
+Here, $k_{\mathrm{D}^+}$ is the pseudo first order diffusive encounter rate (collision rate) for protein
+and ligand to form the loosely bound encounter complex. After initial encounter, the protein and ligand can
+either leave the encounter state with a rate constant $k_{D^{-}}$ or proceed to form the final bound
+complex with rate $k_\mathrm{A}$. Eq.~\ref{eq:kinetic_equation} can be formulated through first order
+linear differential equations that can characterize time evolution for the population of each state.
+%
+%
+\begin{align}
+  \label{SystemODE}
+  \frac{dp_{\mathrm{B}}}{dt} & = p_{\mathrm{E}} k_{\mathrm{A}} \nonumber \\
+  \frac{dp_{\mathrm{E}}}{dt} & = p_{\mathrm{U}} k_{\mathrm{{{D}^{+}}}}  - p_{\mathrm{E}} (k_{\mathrm{A}} + k_{\mathrm{D}^{-}}) \\
+  \frac{dp_{\mathrm{U}}}{dt} & = p_{\mathrm{E}} k_{\mathrm{D}^{-}}  -  p_{\mathrm{U}} k_{\mathrm{D}^{+}} \nonumber,     
+\end{align}       
+%
+%
+where, $p_{\mathrm{U}}$, $p_{\mathrm{E}}$, $p_{\mathrm{B}}$ denote populations
+of unbound, encounter complex and bound states, respectively. Alternatively, these 
+also describe relative concentrations of these species in solution.
+
+These equations can be simplified by a steady state approximation.
+In a steady state approximation,
+the population of the encounter complex is assumed to quickly equilibrate and remain constant.
+Setting $\frac{dp_{\mathrm{E}}}{dt} = 0$, gives the steady-state
+population of the encounter complex,
+%
+%
+\begin{equation}
+  \label{PE_PU}
+  p_{\mathrm{E}} = p_{\mathrm{U}} \frac{k_{\mathrm{D}^{+}}}{k_{\mathrm{D}^{-}} + k_{\mathrm{A}}}.     
+\end{equation}       
+%
+%
+Since steady state approximation dictates population of encounter state to be small, the reaction
+can be treated as two state instead of three state. Then, the overall binding rate can be estimated as,
+%
+%
+\begin{equation}
+  \label{k_on}
+  k_{\mathrm{on}} = \frac{1}{p_{\mathrm{U}}} \frac{dp_{\mathrm{B}}}{dt}.   
+\end{equation}       
+%
+%
+Now, combining Eq.~\ref{PE_PU}, Eq.~\ref{k_on} and the fist equation in Eq.~\ref{SystemODE}
+we derive the final expression for overall binding rate.
+%
+%
+\begin{equation}
+  \label{k_obs}
+  k_{\mathrm{on}} = \frac{k_{\mathrm{A}} k_{\mathrm{D}^{+}}}{ k_{\mathrm{A}} + k_{\mathrm{D}^{-}}}.
+\end{equation}       
+%
+%
+Using Eq.~\ref{k_obs}, we see that $k_{\mathrm{on}}$ can be written as
+$k_{\mathrm{on}} = k_{\mathrm{A}}(p_{\mathrm{E}}/p_{\mathrm{U}})$. Therefore, the binding rate
+can be interpreted as the probability for the molecule to be in the encounter complex
+times the rate to go from the encounter complex to the final bound state.
+
+Eq.~\ref{k_obs} provides analytical solution that relates intermediate rates to
+overall binding rate based on steady state approximation. When binding is
+limited by diffusion, the ligand is most likely to bind upon initial
+encounter. Then, we expect escape rate to be negligible compared to other rates
+$k_{\mathrm{A}} \gg k_{\mathrm{D}^{-}}$. As a result, Eq.~\ref{k_obs} simplifies
+to $k_{\mathrm{on}} = k_{\mathrm{D}^{+}}$. That is, on rate equals the encounter
+rate. In contrast, when binding is reaction limited, escape from encounter
+complex is much more likely than crossing the activation barrier,
+$k_{\mathrm{A}} \ll k_{\mathrm{D}^{-}}$, which leads to
+$k_{\mathrm{on}} = \frac{k_{\mathrm{A}}
+  k_{\mathrm{D}^{+}}}{k_{\mathrm{D}^{-}}}$.
+%This last expression
+%suggests that in rate limiting reaction the overall rate is dictated by $k_{\mathrm{A}}$.
+As shown, under these approximations, the definitions for diffusion
+limited and reaction limited binding becomes more transparent.
+%Exact solution of equations Eq.~\ref{SystemODE} can be obtained by solving ODE numerically,
+%where values for rate constants are estimated from simulated binding trajectories Tab.~\ref{kinetics}.
+%Additionally, these kinetic formulations and definitions are also relevant when protein-protein binding
+%involve conformational rearrangements.
+
+%
+%*************************************************************************************************
+\section{\textbf{Coupled Folding and Binding}}\label{sect:one_four}
+%*************************************************************************************************
+
+Unlike the association of folded proteins, IDPs experience conformational changes upon binding
+when forming the bound structure. When unbound, IDPs exist in an ensemble
+of unstructured conformations resembling polymer like properties
+\cite{wright:99,dunker:01,uversky:00n,kiefhaber:12}.
+IDPs often form a stable structure only upon binding to other targets.
+During association with a target molecule, intermolecular interactions encourage
+folding of the IDP so that binding and folding are concomitant.
+This process is called coupled folding and binding
+\cite{dyson:02,wright:09,turjanski:08,wright:99,sugase:07,huang:09}.
+
+Fig.~\ref{fig:foldinglandscape} shows a free energy profile as a function of
+separation distance between proteins for coupled folding and binding.
+Here, unfolded ligand and protein are initially separated by a far distance,
+corresponding to unfolded and unbound state. 
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=12.0cm]{figures/chap1_figs/coupled_fold_bind_1D.pdf}
+    \caption{Coupled folding and binding of IDP ligand(light red) to
+      target protein(green). Center of mass separation distance between
+      a ligand and protein represent binding reaction coordinate.}
+    \label{fig:foldinglandscape}
+  \end{centering}
+\end{figure}
+%
+%
+As separation distance reduces, the IDP experience partial folding due to influence of
+target protein, while simultaneously accumulating intermolecular contacts. Interestingly, this formation
+of intermolecular contacts assist IDP ligand to transition from disordered to well
+defined ordered state located at the bottom of energy landscape. 
+
+Two limiting cases are often involved to conceptually separate protein-ligand binding
+mechanism. In terms of IDP binding, if the IDP binds before folding it is called
+"induced fit", and if binding happens after folding, it is example of
+"conformational selection"
+\cite{koshland:95k,boehr:09,Koshland-Jr:58,de-sancho:12,espinoza-fonseca:09a}.
+According to induced fit mechanism an unfolded IDP binds to a target protein and
+subsequently folds to form well-structured complex while bound. On the other hand,
+conformational selection mechanism states that in the unbound IDP exists in a fluctuating dynamic
+ensemble of states and some of those states correspond to confirmation in the bound state. Then
+binding occurs when target protein selects most favorable confirmation of IDP for
+binding. These two mechanisms are shown in Fig.~\ref{fig:CS_IF}. Other more subtle scenarios
+involving a combination of the two mechanism for binding IDPs have also been
+put forward.\cite{espinoza-fonseca:09a}
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=14.0cm]{figures/chap1_figs/CS_IF_1KDX1.pdf}
+    \caption{Possible mechanisms for coupled folding and binding process are
+      shown for IDP pKID(cyan) and KIX(red) proteins.}
+    \label{fig:CS_IF}
+  \end{centering}
+\end{figure}
+%
+%
+
+Experimental evidence for coupled folding and binding mechanism is illustrated
+by Sugase \textit{et al.} for pKID and KIX binding through relaxation and
+dispersion NMR spectroscopy. This shows that pKID's secondary structure forms as
+it binds to KIX\cite{sugase:07} suggesting that folding is assisted by binding in
+accord with induced fit description. In c-Myb binding to KIX, the initial formation
+of a weak encounter complex is observed while c-Myb is disordered following
+subsequent folding as binding progresses\cite{gianni:12}.
+%\todohl{I'm confused by this. rewrite to clarify or delete}{
+%In another study, Schuler \textit{et al.} used 
+%single molecule spectroscopy to  measure the time scale of encounter
+%complex for NCBD-ACTR coupled folding and binding. Time scale they found is
+%about $\tau=10\mu s$, that is much longer than the time expected for the folding
+%of a globular proteins of similar size, while the barrier to encounter complex
+%formation is very low.}
+%Thus, coupled folding and binding is complicated and needs to be addressed with perhaps
+%computational approaches to explore areas experiments can't reach.
+
+Studying coupled folding and binding with high resolution by
+experiment is challenging.  Computer simulations currently offer perhaps the best
+opportunity to help shed light on this process\cite{baker:14}. Similar to protein
+folding, coupled folding and binding occurs on the $1 - 10^{3} \mu$s timescale,
+but since the system size is very large, it is very hard to simulate at
+atomistic resolution. Therefore, most of the computational work has been done
+using coarse-grained models with implicit solvent that is at least hundred times
+faster.  For example, using properly calibrated C-$\alpha$ model simulations,
+Chen and coworkers \cite{zhang:12} successfully predicted experimentally
+observed\cite{sugase:07} intermediate states for association of pKID and
+KIX. Weak non-specific interactions are shown to stabilize the encounter complex
+and accelerate kinetics in coupled folding and binding
+\cite{,de-sancho:12,huang:10a,chu:17r}. I highly recommend a review article by
+Best \textit{et al.}  \cite{baker:14} as a recent summary of computational
+studies conducted to study coupled folding and binding mechanism.
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Kinetic Advantage and Binding Affinity of IDPs}}\label{sect:one_six}
+%*************************************************************************************************
+%
+
+Structural flexibility of IDPs offer numerous advantages over ordered proteins. One of these
+advantages is rapid molecular recognition fueled by coupled folding and binding. 
+One of the widely accepted and popular theories that describe kinetic advantage
+of IDPs over ordered proteins is so called fly-casting mechanism proposed by Shoemaker,
+Portman, and Wolynes \cite{shoeportman:00}.
+According to the idea, dynamic and expanded conformations in IDPs enables weak and non-specific
+interactions with the target molecule at farther distances (on the order of radius of gyration).
+This enhances the rate by increasing the binding reaction's capture radius.
+Furthermore, orientational specificity should play a minor role in binding kinetics when folding
+and binding are coupled.
+The original work demonstrated the idea for IDP DNA association using a variational model.
+A minor 20\% rate enhancement was observed in this initial study.
+%due to lack of structure in
+%the unbound, IDPs are large in size, which enables weak and non-spesific interactions with the target
+%molecule at farther distances, therefore enhancing the capture rate. Additionally, intermolecular
+%interactions encourage folding near binding site, thus resulting in fast activation
+%(barrier crossing)rate. Original work was demonstrated for IDP DNA association using variational model,
+%and minor 20\% rate enhancement was reported.
+%##############################################################################################
+Later, simulation models such as C-$\alpha$ structure based model predict a more pronounced rate
+enhancement in coupled folding and binding
+by comparing IDP binding with binding of its hypothetical counterpart\cite{turjanski:08,huang:09,huang:10a}.
+This increased the rate ending to be about a factor of two over a folded binding partner.
+%
+%
+%\begin{figure}[htp!]
+%  \begin{centering}
+%    \includegraphics[width=12.0cm]{figures/chap1_figs/fly_cast.pdf}
+%    \caption{Visual demonstration of ``fly-casting`` mechanism by means of comparison
+%      made between flexible and rigid pKID binding to KIX. In this $D_{\mathrm{CM-B}}$ is
+%      center of mass distance between pKID helix-B and KIX. Free energy sampling is
+%      performed combining multicanonical simulation results with WHAM.}
+%    \label{fig:fly_cast}
+%  \end{centering}
+%\end{figure}
+%
+%
+
+Experimental measurement \cite{rogers:13,wright:09,shammas:13} have shown binding rates of IDPs are
+indeed fast. But, some IDPs are shown to associate slower than globular proteins\cite{liu:14a}.
+Comparing association kinetics of IDP with its preorganized analog Saglam \textit{et al.} found
+marginal difference in binding rate, which lead to a conclusion that there is no kinetic advantage
+for being disordered\cite{saglam:17f}. Therefore, it appears that the kinetic advantage of IDPs
+is probably a subtle issue, influencing association kinetics of some complexes more than others.
+It may also be that conformational flexibility does not generally lead to very fast rates, just faster
+than they would otherwise be.
+
+%
+
+The picture of fly-casting, with its appeal to an expanded capture radius is most
+natural when it applies to diffusion limited binding. In this dissertation we explore
+the role of conformational flexibility and dynamics of the disordered state when there is
+an activation barrier within the encounter complex due to desolvation barrier that form
+a tight complex. In addition, we also investigate how the speed of intermolecular polymer
+dynamics affect the binding kinetics.
+
+
+Another interesting advantage of IDPs that is essential in cell signaling is
+"high specificity and low affinity binding". Binding affinity and binding
+specificity play a key role in understanding the intermolecular recognition and
+function. It is also essential in the drug discovery process to help design
+drugs that bind their specific targets.  Binding affinity is a measure of binding
+strength between two biomolecules (protein-protein, protein-DNA..). Affinity is
+measured by the equilibrium dissociation constant $\mathrm{K}_d$, which is the
+inverse of the equilibrium association constant,
+$\mathrm{K}_a = 1 / \mathrm{K}_d$. The smaller the $\mathrm{K}_d$ value, the
+more strongly the target molecule and ligand are attracted to each other upon
+binding.
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=10.0cm]{figures/chap1_figs/affinity_demo.pdf}
+    \caption{Free energy plots are depicted to provide visual illustration for
+      binding affinity and specificity estimation. Here, blue line shows low affinity
+      binding, while red line represents high affinity association. Binding affinities
+      are estimated by subtracting free energies of unbound and bound states
+      $\Delta \mathrm{F} = \mathrm{F(Q_{ub}) - F(Q_{b})}$, while binding specificity
+      can be calculated via difference in binding affinities between specific and
+      non-specific bindings $\Delta \mathrm{F} = \Delta \mathrm{F}_1 - \Delta \mathrm{F}_2$.}
+    \label{fig:affinity_demo}
+  \end{centering}
+\end{figure}
+%
+%
+From thermodynamic point of view, the binding affinity is determined by bound
+state stability. That is, the difference between free energies of native bound
+and unbound states as illustrated in Fig~\ref{fig:affinity_demo}. High
+binding specificity usually requires high affinity.
+
+IDPs can form more extended interaction surface than a folded protein allowing
+high specificity binding. On the other hand, loss of conformational entropy in
+coupled folding and binding of IDPs results in an overall unfavorable entropic
+contribution to binding.
+That is, because the IDP unfolds when it dissociates, the unbound state
+is entropically stabilized, thereby reducing the binding affinity even for
+a highly specific folded bound structure. 
+Consequently, binding affinity and specificity are uncoupled for IDPs, allowing for
+a highly specific yet low affinity association.
+\cite{tompa:02i,zhou:12,dyson:05} This property in IDPs due to intrinsic disorder
+is considered a benefit\cite{dunker:01int,dunker:02,uversky:02} because it leads to
+high dissociation rates important for regulatory and signaling proteins\cite{zhou:12}.
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Organization of Dissertation}}\label{sect:one_eleven}
+%*************************************************************************************************
+%
+%
+\noindent The dissertation is organized as follows:
+
+In Chapter 2, I introduce structure based C-$\alpha$ model simulations
+including free energy sampling methods used in my research.
+I describe how modification made into force field by including desolvation
+barrier potential improved binding cooperativity for pKID-KIX binding. 
+Finally, I summarize applicability and limitations of C-$\alpha$ model
+presenting experimental and computational evidences.
+
+
+In Chapter 3, I first give an overview of structure based model simulations
+performed to study kinetics and mechanism of coupled folding and binding.
+Using pKID-KIX IDP complex, I present how chain flexibility affect the binding
+rate in the presence of potential that accounts for expulsion of solvent.
+By comparing binding mechanism of disordered pKID with its ordered counterpart,
+I show
+how flexibility helps overcome activation barriers and
+the influence of orientational constraints on both binding kinetics and
+thermodynamics. 
+
+In Chapter 4,
+I describe the role of polymeric reconfiguration time scale on simulated binding of
+IDP pKID to its target KIX. First, I introduce the history of polymer reconfiguration
+dynamics using "Gaussian Chain" model with internal friction. Motivated by polymer studies,
+I explain how control over reconfiguration dynamics is implemented into source code. Then,
+I present results obtained using this model to study the role of reconfiguration time scale
+on coupled folding and binding of pKID-KIX.  
+
+Chapter 5 focuses on extending our work done on chapter 4 to study the role of electrostatic
+interactions on IDP binding with slow and fast reconfiguration dynamics.
+Long range electrostatic interactions are known to accelerate binding rate by orientating
+a ligand at farther distances, so called "Electrostatic Steering" effect. High conformational
+entropy of rapidly rearranging ligand likely make IDP with fast reconfiguration insensitive to
+steering effect. Thus, I predict to see more pronounced acceleration in binding rate at slow
+ligand reconfiguration compared to fast one.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,200 @@
+%\documentclass[letter]{report}
+\documentclass[12pt,leqno]{ksudiss}
+% \usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel}
+\usepackage[applemac]{inputenc}
+\usepackage[english]{babel}
+\usepackage{subfig}
+\usepackage{makeidx}
+\usepackage{float}
+\usepackage{threeparttable}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage[toc,page]{appendix}
+\usepackage{subfiles}
+\usepackage[version=4]{mhchem}
+\usepackage{bm}
+%\usepackage{xcolor}
+%=============
+%---jjp: class file didn't get even margins. I commented it out of class and include here.
+\usepackage[letterpaper,
+            % bindingoffset=0.2in,%
+            left=1in,right=1in,top=1in,bottom=1in,%
+            footskip=.25in]{geometry}
+%---jjp: double spacing better this way too
+\usepackage{setspace}
+\doublespacing
+%\usepackage[document]{ragged2e}
+%=============
+%
+%------------------if using bibtex
+\usepackage[backend=bibtex,style=phys]{biblatex}
+%\bibliographystyle{newnsf}
+\bibliography{jportman_talant}
+%--------------------------------
+%------------------if using biber
+%\usepackage[backend=biber,style=numeric-comp,sorting=none,natbib=true]{biblatex}
+%\usepackage[backend=biber,style=authoryear-icomp,sortlocale=de_DE,
+%natbib=true,url=false,doi=true,eprint=false]{biblatex}
+% \addbibresource{jportman_talant.bib}
+%--------------------------------
+\makeatletter
+\def\blx@maxline{77}
+\makeatother
+% - Center pagenumber
+\usepackage{fancyhdr}
+%
+\usepackage{csquotes}
+%
+\usepackage{chngcntr}
+
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\graphicspath{{figures/chap1_figs/}{figures/chap2_figs/}{figures/chap3_figs/}{figures/chap4_figs}{figures/chap5_figs}}
+
+% =========
+\usepackage[compact,sf,bf]{titlesec}
+\titleformat{\chapter}[display]%
+      {\center\Large\bfseries\sffamily}% formatting commands to apply to the whole heading
+      {\chaptertitlename  \thechapter}% the label and number
+      {10pt}% space between label/number and subsection title
+      {}% formatting commands applied just to subsection title
+      []% punctuation or other commands following subsection title
+
+\titleformat{\section}%
+      {\large\bfseries\sffamily}% formatting commands to apply to the whole heading
+      {\thesection}% the label and number
+      {10pt}% space between label/number and subsection title
+      {}% formatting commands applied just to subsection title
+      []% punctuation or other commands following subsection title
+      % \titleformat{\subsection}{\normalsize\bfseries\sffamily}{$\square$~\thesubsection}{0em}{}[]
+      \titleformat{\subsection}{\normalsize\bfseries\sffamily}{\thesubsection}{1em}{}
+      \titleformat{\subsubsection}[runin]{\bfseries\sffamily}{\thesubsubsection}{1em}{}[.~]
+%
+\titlespacing{\subsubsection}{0ex}{1 .ex plus .1ex minus .2ex}{1pc}
+\titlespacing{\subsection}{0ex}{2.ex plus .1ex minus .2ex}{-.5pc}
+\titlespacing{\section}{0ex}{2.ex plus .1ex minus .2ex}{1ex}
+\titlelabel{\thetitle.\quad}
+% ========
+
+
+\title{\large\bf The role of chain flexibility and conformational  \protect\\
+  \large\bf  dynamics on Intrinsically Disordered Protein \protect\\
+  \large\bf association}
+
+\author{Talant Ruzmetov}
+\namedegreedate{Ruzmetov, Talant  Ph.D., }
+\pages{161}
+\advisor{Dr. John J. Portman}
+\degrees{B.Sc., National University of Uzbekistan, 2007 \\ 
+         M.Sc., Mississippi State University, 2012 \\
+         Ph.D., Kent State University, 2019}
+
+\newcommand{\cdate}{August, 2019}
+
+\makeindex
+
+%----------------------------------------------------------------------
+%todos
+\usepackage[colorinlistoftodos,color=green!20,textsize=tiny]{todonotes}
+\usepackage[normalem]{ulem} % use normalem to protect \emph for highlighting and short note
+\newcommand\hl{\bgroup\markoverwith{\textcolor{yellow!20}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
+\newcommand\ghl{\bgroup\markoverwith{\textcolor{green!10}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
+\newcommand\bhl{\bgroup\markoverwith{\textcolor{blue!10}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
+\newcommand\rhl{\bgroup\markoverwith{\textcolor{red!10}{\rule[-.5ex]{2pt}{2.5ex}}}\ULon}
+\newcommand{\todohl}[2]{\todo[color=yellow!20]{#1}\hl{#2}~}
+\newcommand{\newtxt}[1]{\todo[color=blue!10]{new}\bhl{#1}~}
+\newcommand{\rewrite}[1]{\todo[color=red!10]{rewrite}\rhl{#1}~}
+\newcommand{\needref}[1]{\todo[color=orange!20]{ref: #1}~}
+\newcommand{\todoin}[1]{\todo[inline]{\small #1}}
+\newcommand{\todoitem}[1]{\todo[inline,caption={}]{\small #1}}
+% ----------------------------------------------------------------------
+
+
+\begin{document}
+\frontmatter
+\prefacesection{Acknowledgments}
+\noindent
+
+I am immensely grateful to have my family members for being supportive of my education
+and motivating me throughout my undergraduate and graduate career. I feel blessed and
+thankful to my mother Miyassar Atamuratova and father Adilbek Ruzmetov for the love,
+care, nurture and continuous motivation they have been providing me with. IÕm very thankful
+to have such an amazing life partner, my beloved wife Feruza Ruzmetova for being supportive
+of my carreer and providing endless care and love for me and my kids. I am also grateful to
+my other family members and friends, who have supported me along the way.
+
+I would like to express infinite gratitude to my research advisor, Dr. John J. Portman for
+providing his heartfelt support and guidance at all times and has given me inspiration and
+suggestions in my quest for research in biophysics. Due to his endless efforts, I was able to
+transition from amateur physicist to an expert computational and theoretical biophysicist.
+In addition to introducing me to this amazing research field, Dr. Portman has given me
+a step by step guidance on critical thinking process, scientific writing, programming, and
+other tools crucial for my research that goes beyond the problem setup. While working under
+his supervision, I also enjoyed the freedom to pursue the research and studies of my choice.
+Without his able guidance and help, this thesis would not have been possible and I shall
+eternally be grateful to him for his supervision.
+
+My special gratitude goes to Constance Reho, Kelly Conley and other office staff in
+the physics department. I would like to mention Academic Laboratory Manager, Mr. Greg
+Putman and Dr. Mina Katramatou for providing a great many years of teaching experience.
+I am also thankful to Dr. L\"ussem Bj\"orn for his demonstration
+of efficient teaching methods, leadership, and management during my teaching assistantship in
+an active learning course. I would like to express appreciation to my colleagues, Daniel Gavazzi
+and alumnus Prithviraj Nandigrami for fun times we shared together (racquetball and card games),
+technical support and insightful suggestions.
+
+I would like to acknowledge financial support from the National Science Foundation for
+part of the research presented in this dissertation.
+
+I'm thankful to Ohio Supercomputer Center for computational resources made available.
+
+Finally, despite all the assistance provided by Dr. Portman
+and others, I take responsibility for the content of the material in this dissertation.
+
+
+\startthesis
+% - Center pagenumber
+\pagestyle{fancy}
+\renewcommand\headrulewidth{0pt}
+\lhead{}\chead{}\rhead{}
+\cfoot{\vspace*{1.5\baselineskip}\thepage}
+%\tableofcontents
+%
+\chapter{\textbf{Introduction}}
+\subfile{chapter1/chapter1.tex}
+%
+\chapter{\textbf{Coarse Grained Structure Based Model Simulations}}
+\subfile{chapter2/chapter2.tex}
+%
+%
+\chapter{\textbf{Role of flexibility in binding kinetics and affinity of pKID-KIX}}
+\subfile{chapter3/chapter3.tex}
+%
+\chapter{\textbf{The Influence of Reconfiguration Dynamics on IDP Binding Kinetics}}
+\subfile{chapter4/chapter4.tex}
+%
+
+\chapter{\textbf{Outlook}}
+
+% \subfile{conclusion/conclusion.tex}
+
+\subfile{outlook/outlook.tex}
+%
+
+%Appendices
+%\begin{appendices}
+%  \appendix
+%  \chapter{\bf{Supplement for Chapter 4}} %\label{}
+%  \subfile{appendix/chapter4.tex}
+%  \chapter{\bf{Supplement for Chapter 5}} %\label{}
+%  \subfile{appendix/chapter5.tex}
+%\end{appendices}
+\printbibliography
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

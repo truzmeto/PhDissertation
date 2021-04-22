@@ -1,0 +1,2351 @@
+\documentclass[../talant.diss.submit.tex]{subfiles}
+\begin{document}
+\label{chap:chapter4}
+%
+%
+%*************************************************************************************************
+\section{\textbf{Introduction}}\label{sect:four_one}
+%*************************************************************************************************
+%
+Intrinsically disordered proteins (IDP) are disordered as isolated proteins and can often
+acquire unique three dimensional structure upon binding to other molecules.
+\cite{dyson:02,wright:09,turjanski:08,wright:99,sugase:07} 
+Existing in an ensemble of conformations, IDPs rapidly sample numerous distinct
+configurations some of which may resemble bound conformation. The role of conformational dynamics
+on bimolecular association of IDPs gained a wide attention, lately, due to its importance
+in cell signaling\cite{csermely:10a,zhou:12a} and protein aggregation \cite{ahmad:12}.
+
+Binding of IDPs with other proteins involves two timescales:
+the characteristic time for describing conformational dynamics of the protein, and the
+timescale for free diffusion. Folding within the encounter complex, that is
+the loosely interacting complex 
+between bound and unbound conformations, must be sufficiently fast
+for binding to be diffusion limited. Moreover, the relevant conformational timescale for
+initial encounter, where molecular recognition begins, is likely determined by
+the diffusive timescale but can also depend on the timescale of the polymer dynamics of the
+disordered protein as well.
+
+The influence of these two timescales can be illustrated by
+considering diffusion limited reaction between two unstructured polymers, each
+with a single reactive monomer. Doi and de Gennes demonstrated the reaction rate
+between the monomers 
+is determined not by the small lengthscale of the
+individual monomers, $a$, but by the size of the 
+the polymers specified by its radius of gyration ($R_g$).
+The reason for this is that the time a monomer attached to a polymer explores
+a volume of order $R_g^3$ is short enough compared to the diffusive timescale
+of the center of mass motion that the monomers react whenever the polymers are brought
+within a separation distance $R_\mathrm{g}$ by diffusion.\cite{doi:75,degennes:82,oshaughnessy:94}
+
+The polymer dynamics timescale of a disordered or unfolded protein can be characterized by
+its reconfiguration time. Measured reconfiguration times of different proteins are
+qualitatively understood in terms of the degree of the internal friction
+due to self interactions as well as local sources such as  dihedral angle transitions.
+\cite{lapidus:13,buscaglia:03k}
+%\todohl{dont' know the references but we could probably delete this without much change}{
+%and often characterized by effective intramolecular diffusion coefficients.}
+%\cite{chen:09c,chen:10g}.
+Unstructured peptides and IDPs have the fastest reconfiguration times (10-100ns)
+with little internal friction due to expanded unstructured shape
+while some collapsed globules of unfolded proteins have longer reconfiguration times
+(up to 1-10 $\mu$s).\cite{chen:10g,schuler:02p}
+
+According to Lapidus \textit{et al.}, the internal dynamics of IDPs play a key role in
+aggregation propensity.\cite{ahmad:12} Lapidis found that there is an optimal reconfiguration
+time for the aggregation rate for IDPs under high concentration.
+The physical picture is that when the reconfiguration timescale, $\tau$, is too slow or too fast
+compared to diffusive timescale, hydrophobic contacts are more likely to break before a new
+contact forms. On the other hand, for a protein with large $\tau$, the conformational
+exploration of the encounter complex is too inefficient to form enough simultaneous hydrophobic
+contacts. Since IDPs tend to have fast recognition times, this observation may help explain how
+IDPs avoid aggregation as well as present possible therapy strategies.
+
+In this chapter, I use a coarse grained structure based C-$\alpha$ model
+to investigate how the timescale of the polymer dynamics influences the thermodynamic and kinetic properties of IDP complex
+formation. Using pKID-KIX as model system,
+I design a way to  decouple center of mass motion from internal motion of the protein for a
+langevin equation in order to control the
+reconfiguration timescale relative to diffusion. In addition,
+I demonstrate the effects that reconfigurational dynamics have on kinetics of encounter complex,
+and compare our finding with models of coupled folding and binding that include non-native
+interactions. 
+
+
+%*************************************************************************************************
+\section{\textbf{Diffusive Timescales and Polymeric Reconfiguration Time in a Coarse Grained Model}}\label{sect:gaussian_chain}
+% *************************************************************************************************
+The diffusive timescale of a polymer is characterized by the translational motion of entire chain, while
+reconfiguration time of a polymer describes the internal polymeric reconfiguration dynamics.
+As discussed  in this section, coarse grained C-$\alpha$ models with a Langevin thermostat do not 
+accurately estimate the diffusion constant for a given molecule and its
+reconfiguration time scale simultaneously.
+Known time scales that describe molecular rearrangement cover a wide
+range depending on size, type of the molecule, and solvent conditions such as denaturant
+concentration\cite{soranno:12}.
+%For instance, time scales for an unfolded proteins cover $0.01-1\mu s$ range,
+%while compact globular proteins are estimated to span $1-10\mu s$ timescale range.
+%estimate for reconfiguration time scale is too fast compared to
+%tipical range known for compact globular proteins (1 - 10$\mu s$).
+Measured polymeric reconfiguration times of unstructured proteins span $0.01\mu$s- $10\mu$s.
+The fastest times are observed in IDPs, and unfolded proteins with largely expanded
+overall conformations $10-200$ns. Longer times of $0.1-10\mu$s have been observed for unfolded
+proteins with compact size distribution.
+%Since reconfiguration times tend to increase
+%inversely with the size of the unstructured protein, it is thought that interresidue
+%interactions play a role setting this timescales.
+The range of reconfiguration times is often
+attributed to different degrees of internal friction (independent of solvent viscosity),
+which can be estimated by extrapolating measured rate to zero viscosity.
+\cite{soranno:12,cellmer:08m,ansari:92r,liu:09t}
+Sources of internal friction, while not well established, include barriers controlling
+local motions as well as interresidue interactions. Presumably, IDPs and unfolded proteins
+with shorter reconfiguration times have internal friction from local motion, while
+the longer reconfiguration times of compact
+unfolded proteins are likely due to intramolecular contacts. Thus, inclusion of internal friction into coarse grained C-$\alpha$
+model perhaps offers a way to have reconfiguration time scale close to experimentally known range.
+
+To assess the conformational motion in the coarse-grained model, I first need to estimate the simulation
+step size in real time units. This can be achieved by comparing diffusion constant calculated
+from Stokes-Einstein relation to diffusion constant obtained by analyzing simulation trajectory.
+Stokes-Einstein relation is known to provide an accurate estimate for the diffusion constant
+of a molecule under Brownian motion given the environment temperature $T$ and the size of the
+molecule $a$,
+\begin{equation}
+  \label{eq:stocks_einstein}
+  D = \frac{k_{B} T}{6 \pi \eta a},  
+\end{equation}
+where, $\eta$ is a water viscosity at room temperature $\eta =8.9 \times 10^{-4}$Pa.
+A protein's size can be estimated by measuring the average radius of gyration $a = \langle R_{g}(t) \rangle$
+over a long time equilibrium run. Using Eq.~\ref{eq:stocks_einstein}, the estimated diffusion constant at
+T=332K is $D_{\mathrm{Stocks}} = 2.27 \times 10^{-6} \mathrm{cm^{2} / s}$.
+%
+On the other hand, the diffusion constant can also be calculated from simulated trajectories
+by performing linear regression on mean square displacement of center of mass motion
+\begin{equation}
+  \label{eq:msd_equ}
+  \langle (\vec r(t) - \vec r(0))^{2} \rangle = \frac{6 k_{B} T}{\gamma} = 6Dt.  
+\end{equation}
+As shown in Fig.~\ref{fig:diff_reconpKID}a,  the slope of the linear fit performed on $\langle \delta r ^{2} \rangle$ vs $t$ data gives a diffusion constant of
+$D_{\mathrm{sim}} = 1.14 \cdot 10^{-3} \AA^2 /step$.
+%
+% We adopted this latter method in order to estimate center of mass diffusion.
+By combining these results, gives an
+estimate for the simulation step size of 50 fs, which is of the same order as the
+step size of 200 fs reported in Ref.~\cite{takada:12}.%\textit{Cafemol} 
+%This estimate of simulation
+%time step is important to compare kinetic measurements with experimental observations.
+
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=15cm]{figures/chap4_figs/diff_reconpKID.pdf}
+    \caption{Mean squared displacement(a) and end-to-end distance autocorrelation(b) vs time steps
+      plots are depicted for pKID, where red dashes show actual simulated
+      data at T=332K, while blue line represents fit to the data.  Distance units are
+      in $\AA$ and time units are in 100 md steps.} 
+    \label{fig:diff_reconpKID}
+  \end{centering}
+\end{figure}
+%
+%
+
+
+Reconfiguration dynamics of a protein is characterized through auto-correlation
+relaxation time of the end-to-end distance vector $\bm{R}(t) = \bm{r}_N(t) - \bm{r}_1(t)$,
+%
+%
+\begin{equation}
+  \label{eq:autocorr_end}
+  \phi_{\mathrm{I}}(\tau) = \frac{\langle \bm{R}(t) \cdot \bm{R}(0) \rangle}{\langle \bm{R}^2 \rangle}.  
+\end{equation}
+%
+%
+The end-to-end distance is calculated ensuring that simulation length is long enough for
+autocorrelations converge to zero. As shown in Fig.~\ref{fig:diff_reconpKID}b,
+the relaxation time $\tau_{\mathrm{end}}$ can be estimated by fitting an exponential function
+to the simulated correlations. As a result, for the C-$\alpha$ model implicit
+solvent simulation of IDP pKID at 332K, we approximate the end-to-end relaxation time
+to be $\tau_{\mathrm{end}}$=0.27 ns. This estimate for the reconfiguration
+time is shorter than the typical range reported for unfolded proteins by at least
+two orders of magnitude. 
+How coarse-grained C-$\alpha$ models overestimate the polymeric
+relaxation rates when the timestep is set by the diffusion timescale is a clear problem
+to address when both timescales are relevant. 
+%As a solution, we offer a simple method, motivated
+%by polymer dynamics studies, that can slow down the reconfiguration speed allowing it to be
+%within or at least close to typical range. 
+
+
+
+%*************************************************************************************************
+\section{\textbf{Gaussian Chain with Internal Friction}}\label{sect:gaussian_chain}
+% *************************************************************************************************
+One possibility of slowing the internal dynamics relative to the
+center of mass diffusive timescale is through a kind of internal friction.
+The diffusive timescale is determined
+solely by solvent friction, whereas internal polymer dynamics have an additional
+friction, independent of solvent friction. Bazua and Williams,\cite{bazua:73} introduced a 
+simple analytic model that includes internal friction arising from short lengthscale
+motion such as bond angle transitions. Portman
+\textit{et al.} later used this model to describe barrier crossing dynamics of folding
+proteins.\cite{portman:01a} Interest in this model has renewed recently
+\cite{khatri:07,cheng:13,Samanta:2014,Yu:2015,Samanta:2016,Zheng:2018b}
+as a way to analyze single molecule experiments
+aimed at quantifying the degree of internal friction in folded proteins and
+IDPs.\cite{soranno:12,Schuler:2016,Soranno:2017} While the molecular source of internal friction is not
+well understood, it is thought to have several origins including  intermolecular
+contacts in addition to friction
+associated with local dihedral motions.\cite{echeverria:14,Zheng:2018b} Although it will not be used directly
+in the coarse grained simulation, this simple model provides some
+context for the way I decouple the internal polymeric dynamics from center of
+mass motion in the coarse grained simulations described in the next section.
+
+\subsection{\textbf{Rouse Model}}
+I first describe the Rouse model of polymer dynamics without internal
+friction.\cite{doi1988th} One of the simplest models of a polymer is
+for a Gaussian chain which describes the polymer as
+$N$ monomers sequentially connected by harmonic constraints with mean
+bondlength, $a$. The Hamiltonian enforcing chain connectivity can be written
+as $N-1$ bond constraints;
+\begin{equation}
+  \label{eq:gchain1}
+  H_\mathrm{chain} = \frac{3 k_\mathrm{B}T}{2a^2} \sum_{i=1}^{N-1} (\mathbf{r}_{i+1} - \mathbf{r}_{i})^2,
+\end{equation}
+where $\mathbf{r}_i$ denotes the position of the i$^{th}$ monomer, and
+$k_\mathrm{B}T$ is the thermal energy at temperature $T$.  The spring constant
+is chosen so that the mean square bondlength is given by
+\begin{equation}
+  \label{eq:bond}
+  \langle (\mathbf{r}_i - \mathbf{r}_{i-1})^2\rangle = a^2.
+\end{equation}
+It is convenient to express
+$H_\mathrm{chain}$ in terms of a spring constant matrix
+\begin{equation}
+  \label{eq:gchain2}
+  H_\mathrm{chain} = \frac{3 k_\mathrm{B}T}{2a^2}\sum_{ij} \mathbf{r}_i\cdot K_{ij}\cdot \mathbf{r}_{j},
+\end{equation}
+where $\bm{\mathsf{K}}$, called the Rouse matrix, describes the nearest neighbor
+connectivity of the polymer
+\begin{equation}
+  \label{eq:rouse_mat}
+  \bm{\mathsf{K}} = 
+  \left(\begin{array}{cccccccccc}
+    1 & -1 & 0 & \ldots\\
+    -1 & 2 & -1 & 0 & \ldots  \\
+    0 & -1 &  2 & -1 & 0 & \ldots\\
+    0 & 0 & \ddots &  \ddots & \ddots & 0 &0  \\
+    & \ldots &  0 & -1 &  2 & -1 & 0 \\
+    & & \ldots & 0 & 0 &  1 & -1 \\
+  \end{array}\right)
+\end{equation}
+The mean distance between monomers $i$ and $j$ in this model depends on the
+sequence separation
+\begin{equation}
+  \label{eq:correlation}
+    \langle (\mathbf{r}_i - \mathbf{r}_{j})^2\rangle^{1/2} = |i-j|^{1/2}a. 
+  \end{equation}
+  In particular, the overall size of the polymer can be characterized by
+  end-to-end distance
+\begin{equation}
+  \label{eq:end-to-end-distance}
+    \langle (\mathbf{r}_N - \mathbf{r}_{1})^2\rangle^{1/2} = \sqrt{N-1} a. 
+  \end{equation}
+consistent with statistics for a random walk of $N-1$ steps.
+
+A simple description for the dynamics of the Gaussian chain is given by the
+overdamped Langevin equation where the solvent friction on each bead  $\gamma_\mathrm{s}$
+is independent of the motion of the other monomers. In this free draining chain,
+the Langevin equation can be written as
+\begin{equation}
+  \label{eq:gle_1}
+    % \gamma_\mathrm{s} \frac{\partial}{\partial t} \bm{r}_i = - \frac{3 k_\mathrm{B}T}{a^2} K_{ij}\bm{r}_j + \bm{\xi}_i
+  \gamma_\mathrm{s} \dot{\bm{r}}_i = - \frac{3 k_\mathrm{B}T}{a^2} K_{ij}\bm{r}_j + \bm{\xi}_i,
+\end{equation}
+where a summation over the repeated index $j$ in the second term is assumed.
+The correlations of the random force on the $i^{th}$ bead,
+$\bm{\xi}_i(t) = \xi_i^x(t) \bm{\hat{x}} + \xi_i^y(t) \bm{\hat{y}} +\xi_i^z(t) \bm{\hat{z}}$,
+are given by the fluctuation-dissipation theorem,
+\begin{equation}
+  \label{eq:random_force} 
+  \langle \bm{\xi}_i(t)\rangle = 0, \quad \mbox{and}
+  \quad \langle \xi_i^\alpha(t) \xi_j^\beta(t') \rangle = 2 k_\mathrm{B} T \gamma_\mathrm{s} \delta_{ij}\delta_{\alpha,\beta} \delta(t-t').
+\end{equation}
+The solvent friction, $\gamma_\mathrm{s}$, corresponds to a monomer diffusion constant $D_0 = k_\mathrm{B}T/\gamma_\mathrm{s}$.
+  
+%
+%Eq.\ref{eq:gle_1} can be solved by by diagonalizing the connectivity matrix and
+%writing dynamics of the chain as a superposition of independent eigenmodes
+%(so-called Rouse modes) $\bm{x}_p(t)$,
+%\begin{equation}
+%  \label{eq:6} 
+%  \langle \bm{\xi}_i(t)\rangle = 0, \quad \mbox{and}
+%  \quad \langle \xi_i^\alpha(t) \xi_j^\beta(t') \rangle = 2 k_\mathrm{B} T \gamma_0 \delta_{ij}\delta_{\alpha,\beta} \delta(t-t').
+%\end{equation}
+%%
+%The solvent friction, $\gamma_0$, corresponds to a monomer diffusion constant $D_0 = k_\mathrm{B}T/\gamma_0$.
+
+Eq.\ref{eq:gle_1} can be solved by diagonalizing the connectivity matrix and writing the chain dynamics 
+as a superposition of independent eigenmodes (so-called Rouse modes) $\bm{x}_p(t)$,
+%
+\begin{equation}
+  \label{eq:lin_trans}
+  \bm{r}_i(t) = \sum_{p=0}^{N-1} \bm{x}_p(t) u_{pi}.
+\end{equation}
+%
+Here, the eigenvectors of $\bm{\mathsf{K}}$ are given by
+%
+\begin{equation}
+  \label{eq:modes_p}
+  u_{pi} = \left(\frac{2-\delta_{p0}}{N} \right)^{1/2}
+  \cos \left( \frac{p\pi }{N}\left(i-\frac{1}{2}\right)  \right),
+\end{equation}
+where $i = 1, . . . , N$ denotes the monomer index and $p = 0, 1,. . . , N-1$
+enumerates the orthogonal modes. The value of $p$ reflects the lengthscale in
+sequence (number of monomers) associated with the collective motion of the mode.
+
+The Langevin equation for the Rouse modes becomes
+\begin{equation}
+  \label{eq:rouse_le}
+  \gamma_\mathrm{s} \dot{\bm{x}}_p = -\frac{3 k_\mathrm{B}T}{a^2} \lambda_p\bm{x}_p + \bm{\xi}_p.
+\end{equation}
+where
+\begin{equation}
+  \label{eq:lambda_p}
+    \lambda_p = 4 \sin^{2} \left( \frac{p\pi}{2N} \right). 
+  \end{equation}
+is the eigenvalue of $\bm{\mathsf{K}}$ for mode $p$.
+Since the rouse modes are decoupled, it is straight-forward to find their correlation functions.
+For $p=0$, 
+the harmonic potential $\lambda_0$ vanishes leading to
+\begin{equation}
+  \label{eq:gaussian_x0}
+  \langle \left(\bm{x}_0(t) - \bm{x}_0(0)\right)^2 \rangle =
+  6 \left(\frac{k_\mathrm{B}T}{\gamma_0}\right) t.
+\end{equation}
+Since $\bm{x}_0 = \frac{1}{\sqrt{N}}\sum_i\bm{r}_i$, Eq.~\ref{eq:gaussian_x0}
+can be written in terms of the mean square displacement of the center of mass, $\bm{r}_\mathrm{cm} = \frac{1}{N}\sum_i\bm{r}_i$,
+\begin{equation}
+  \label{eq:gaussian_cm}
+  \langle \left(\bm{r}_\mathrm{cm}(t) - \bm{r}_\mathrm{cm}(0)\right)^2 \rangle =
+  6 D_\mathrm{cm} t.
+  \end{equation}
+where the center of mass diffusion coefficient is given by
+$D_\mathrm{cm} = k_\mathrm{B}T/(N\gamma_\mathrm{s}) = D_0/N$. That is,
+%the friction on each monomer adds up, resulting in
+the center of mass diffusion coefficient $D_\mathrm{cm}$ is smaller than the
+monomer diffusion coefficient, $D_0$, by a factor $N$.
+
+The other modes are independent, with correlations that relax according to
+%
+\begin{equation}
+  \label{eq:modecorrelation}
+  \langle \bm{x}_p(t)\cdot\bm{x}_p(0)\rangle = \frac{a^2}{\lambda_p}\exp(-t/\tau_p),
+\quad \mbox{with relaxation times}  \quad \tau_p =  \frac{\tau_\mathrm{s}}{\lambda_p},
+\end{equation}
+where $\tau_\mathrm{s} = \gamma_\mathrm{s} a^2/(3k_\mathrm{B}T)$ is a microscopic timescale
+set by the solvent friction.
+The relaxation times of the modes can be written (in the limit of large $N$) as
+%
+\begin{equation}
+  \label{eq:tau_rouse}
+  \tau_p \approx \frac{\tau_\mathrm{rouse}}{p^2}
+\end{equation}
+where
+$\tau_\mathrm{rouse} = (N/\pi)^2\tau_\mathrm{s} = \gamma_\mathrm{s} a^2
+N^2/3k_\mathrm{B}T \pi^2$ is the relaxation time corresponding to the
+mode with the longest lengthscale motion ($p=1$). Since
+$\tau_\mathrm{rouse} \sim N^2$, the range of relaxation times as $p$ ranges from
+1 to $N-1$ is very broad for large $N$.
+
+The overall polymeric reconfiguration time can be characterized by the
+relaxation time of the end-to-end vector,
+$\bm{R}(t) = \bm{r}_N(t) - \bm{r}_1(t)$,
+\begin{equation}
+  \label{eq:reconfig}
+  \tau_{\mathrm{reconfig}} = \int_0^\infty \phi(t) \mathrm{d}t,
+\end{equation}
+%
+with the end-to-end correlation function
+$\phi(t) = \langle \bm{R}(t)\cdot\bm{R}(0)\rangle/\langle \bm{R}^2\rangle$. This
+correlation function can be expressed as a sum over the Rouse modes
+%The end-to-end correlation function can be expressed as a sum over the Rouse modes
+%
+\begin{equation}
+  \label{eq:autocorr}
+ \phi(t) = 
+  \frac{1}{N-1}\sum_{p=1}^{N-1} \frac{(u_{pN} - u_{p1})^{2}}{\lambda_{p}}
+  \exp{ - t/\tau_p}.
+\end{equation}
+%The long time behavior of $\phi(t)$
+%is dominated by the longest wavelength mode, $\tau_\mathrm{Rouse}$.
+Integrating over times give the reconfiguration time as a sum
+\begin{equation}
+  \label{eq:reconfig2}
+  \tau_\mathrm{reconfig} = \frac{\tau_\mathrm{s}}{N-1}\sum_{p=1} \frac{(u_{pN} - u_{p1})^{2}}{\lambda_{p}^2}
+\end{equation}
+for this model. Approximating the sum with an integral shows that \cite{cheng:13}
+\begin{equation}
+  \label{eq:reconfig3}
+  \tau_\mathrm{reconfig} \approx 0.8\tau_\mathrm{rouse}
+\end{equation}
+consistent with the fact that the long time behavior of $\phi(t)$ is dominated by the
+longest wavelength mode, $\tau_\mathrm{Rouse}$.
+
+
+
+\subsection{\textbf{Local Internal Friction}}
+One way to include local internal friction is to add a dissipative force that
+opposes the relative motion in stretching a bond,
+$-\gamma_I (\dot{\bm{r}}_{i+1} - \dot{\bm{r}}_{i})$.\cite{bazua:73}
+This models friction due to
+local motion such as hopping between dihedral angle basins. Incorporating this
+into the Langevin equation for the monomers gives
+\begin{equation}
+  \label{eq:gle_if}
+  \gamma_\mathrm{s} \dot{\bm{r}}_i 
+%   \gamma_\mathrm{s} (\delta_{ij} - \gamma_I/\gamma_\mathrm{s} K_{ij}) \dot{\bm{r}}_j
+   = - \frac{3 k_\mathrm{B}T}{a^2} K_{ij}\bm{r}_j +  \gamma_I K_{ij} \dot{\bm{r}}_j+ \bm{\xi}_i,
+\end{equation}
+where $\gamma_I$ controls the strength of the internal friction. Eq.~\ref{eq:gle_if}
+can be diagonalized with the same modes as before giving
+\begin{equation}
+  \label{eq:gle_if}
+    \gamma_\mathrm{p} \dot{\bm{x}}_p 
+%   \gamma_\mathrm{s} (\delta_{ij} - \gamma_I/\gamma_\mathrm{s} K_{ij}) \dot{\bm{r}}_j
+   = - \frac{3 k_\mathrm{B}T}{a^2} \lambda_p\bm{r}_j + \bm{\xi}_p,
+\end{equation}
+where the friction on mode $p$ is given by $\gamma_p = \gamma_\mathrm{s} + \gamma_{I}\lambda_p$.
+
+The result is that the center of
+mass diffusion constant stays the same (independent of internal friction),
+$D = D_0/N$, and the relaxation times of the modes become
+\begin{equation}
+  \label{eq:tau_if}
+  \tau_p = \frac{\tau_\mathrm{s}}{\lambda_p} + \tau_I
+\end{equation}
+where $\tau_I = \gamma_I a^2/(3k_\mathrm{B}T)$.
+Using Eq.~\ref{eq:tau_rouse}, we can rewrite Eq.~\ref{eq:tau_if} as
+%
+\begin{equation}
+  \label{eq:tau_if2}
+     \tau_p = \frac{\tau_\mathrm{rouse}}{p^2} + \tau_I.
+\end{equation}   
+As shown in Fig.~\ref{fig:poly_time_modes},
+the effect of the internal
+friction is to provide a lower bound for the relaxation times of the mode:
+that is, modes for which $\tau_\mathrm{s}/\lambda_p \ll \tau_I$ relax on the
+timescale $\tau_I$, but modes with $\tau_\mathrm{s}/\lambda_p \gg \tau_I$
+relax with the original timescale, $\tau_\mathrm{s}/\lambda_p$ independent of
+internal friction.
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=10.0cm]{figures/chap4_figs/poly_time_modes_semilog.pdf}
+    \caption{Polymeric end-to-end relaxation rate($\tau_s / \tau_p$) versus mode index $p$
+    shown for different $\gamma_{\mathrm{I}}$ values.}
+    \label{fig:poly_time_modes}
+  \end{centering}                                                                                          
+\end{figure}                                                                                             
+%\begin{figure}[htp!]
+%\begin{centering}
+%\includegraphics[width=12.0cm]{figures/chap4_figs/poly_end_corr.pdf}                                    
+%  \caption{End-to-end distance vector autocorrelations for Gaussian Chain with
+%  internal friction is illustrated for set of internal friction constant
+%  values.  In this simple polymer model, 15 beads are attached with flexible
+%  springs with spring constant $k = 40~\mathrm{kcal/mol}\AA^{-2}$, and
+%  $T=300$K, $k_{\mathrm{B}}=0.002$kcal/mol.}
+%  %\label{fig:poly_end_corr}
+%\end{centering}                                                                                         
+%\end{figure}                                                                                            
+
+The reconfiguration time calculated from Eq.\ref{eq:autocorr} becomes
+\begin{equation}
+  \label{eq:reconf_if}
+  \tau_\mathrm{reconfig} \approx 0.8\tau_\mathrm{rouse} + \tau_\mathrm{I}
+\end{equation}
+Since $\tau_\mathrm{rouse} \sim N^2$, the long time relaxation such as
+$\tau_\mathrm{reconfig}$ will be independent of $\gamma_I$ for long enough chains
+($N \gg \sqrt{\gamma_I/\gamma_\mathrm{s})}$.
+De Gennes called this ``Kuhn
+Theorem''.\cite{Gennes:1979}
+
+In order for local internal friction to greatly increase
+the relaxation time (for a fixed $N$) requires $\tau_I \gg \tau_\mathrm{rouse}$.
+Processes involving short time
+dynamics are sensitive to local sources of internal friction (such as loop
+closure times\cite{portman:03,weikl:08}), but large scale relaxation depends
+primarily on friction due to solvent.  Much recent experimental work has been
+done to uncover the amount of internal friction in IDPs and proteins by making
+measurements under varying solvent conditions and extrapolating the zero
+viscosity.\cite{soranno:12,Schuler:2016} Models such as this provide a good fit to
+the data.\cite{cheng:13,Samanta:2014,Samanta:2016,Zheng:2018b} Recent studies %have modeled of internal friction
+have increased dihedral angle barriers systematically to explore this molecular origin
+of internal friction.\cite{echeverria:14,Zheng:2018b}
+
+%This would essentially make all relaxation times equal to $\tau_{\mathrm{I}}$.
+While one can imagine that $\tau_{\mathrm{I}}$ could dominate the dynamics when
+the viscosity is very low, it is not necessarily reasonable at normal values of
+$\gamma_0$ because the internal friction is weak for long chains.  It is also
+been observed that compact proteins (such as unfolded globular proteins) have
+higher internal friction likely due to intermolecular
+contacts.\cite{soranno:12,Schuler:2016,Zheng:2018b} In fact, internal friction
+dominates the reconfiguration time when the unfolded protein is collapsed (under
+low denaturant conditions), but is greatly reduced when the unfolded protein is
+expanded (high denaturant conditions).\cite{Schuler:2016} This suggests that
+internal friction due to intermolecular contacts can have a stronger influence
+than internal friction from local sources.\cite{sorano:2017a} It has been
+proposed that such contacts change the mode relaxation as
+\begin{equation}
+  \label{eq:mode_if2}
+  \tau_p = \frac{\tau_\mathrm{rouse}}{p} + \tau_{con}\left(\frac{N}{p}\right) + \tau_\mathrm{I}
+\end{equation}
+which has a stronger $N$ dependence than local internal friction.\cite{Soranno:2018}
+
+
+To bring us back to molecular recognition of IDPs (rather than the polymer
+dynamics of the IDPs themselves): our goal is to investigate how the timescale of
+the internal dynamics influences coupled folding and binding. Inspired by the
+models outlined in this section, I originally attempted to slow down the
+internal dynamics through increasing dihedral angles barriers as well as adding
+non-native interactions. This molecular approach was not very promising
+because reconfiguration times were difficult to control.
+Dynamics were found to be so sensitive to dihedral angle potentials that they
+either produce models with weak changes to the reconfiguration or for slightly higher
+barrier the protein essentially froze the conformational dynamics. There was not sufficient control in between the two. Adding non-native contacts to
+slow the internal dynamics drastically changed the conformations explored in the
+unbound state and %were also
+was not easy to control the dynamics timescale in this way either. 
+
+While very interesting, the problem before us is not the molecular origin of internal friction of IDPs.
+Rather, I wish to explore what happens to the coupled folding and binding kinetics when the timescale
+for internal
+dynamics is slowed down to be in balance with the diffusion timescale.
+%This is a correction to the current coarse-grained model as outlined in the previous section.
+Therefore, to have more control
+over the timescale, I choose an ad hoc method of controlling these separate timescales separately.
+I take from the model of internal friction the idea that the translational diffusion of the center
+of mass is unaffected by the internal friction that slows the polymer dynamics.
+Since internal friction does adjust the relative polymeric and diffusive timescales of IDPs, our
+study is hoped to have broader applicability even though our model controls the internal dynamics
+with a somewhat artificial prescription. 
+
+%
+%
+%*************************************************************************************************
+\section{\textbf{Decoupling Center of Mass from Reconfigurational Motion}}\label{sect:four_three}
+%*************************************************************************************************
+%
+%
+\subsection{\textbf{Langevin Equation}}\label{subsect:le}
+We have devised a simple approach to gain control over the reconfiguration dynamics of protein within
+the coarse grained model. 
+In this approach, we the decouple center of mass motion from the internal motion by performing coordinate
+transformation on Langevin equation. First, let's write down Langevin equation that controls
+dynamics of many body system,
+%
+%
+\begin{equation}
+  \label{eq:langevin}
+  m\ddot{\bm{r}_i} = -\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat}) -
+  \gamma \dot{\bm{r}_i} + \bm{\xi}_i.
+\end{equation}
+Here, the configuration of the protein is specified by N position vectors
+${\bm{r}_i(t)}$, $U(\bm{r|r}_{nat})$ is
+a native centric potential that biases configurations towards the conformation
+to be at ${\bm{r}_{nat}}$, and $\gamma$ is a friction
+constant. The last term in Eq.~\ref{eq:langevin} is a random force, $\bm{\xi}_i$,
+that mimics thermal fluctuations.
+%due to the solvent consistent with fluctuation dissipation theorem.
+This force has a zero mean
+$\langle \bm{\xi}(t)\rangle = 0$, while its strength and correlations are given by
+%
+%
+\begin{equation}
+  \label{eq:rand_force_def}
+    \langle \bm{\xi}_i(t) \bm{\xi}_j(t')\rangle = 2k_B T\gamma \delta_{ij} \delta(t-t').
+\end{equation}
+%
+The variance of the force ensures that  equilibrium
+simulations result in the Boltzmann distribution at temperature $T$,
+consistent with the fluctuation-dissipation theorem.
+
+%$\bm{\xi}(t)$ is delta correlated random force
+%$\langle \bm{\xi}_i(t) \bm{\xi}_j(t')\rangle = 2k_B T\gamma \delta_{ij} \delta(t-t')$
+%with zero mean $\langle \bm{\xi}(t)\rangle = 0$.
+%This random force $\bm{\xi}(t)$ mimics thermal fluctuations due to the solvent and its strength
+%is consistent with  fluctuation-dissipation theorem, which ensures equilibrium at a given temperature.
+As illustrated in Fig.~\ref{fig:coord_trans} positions of mass points $\bm{r}_i$
+can be expressed in terms of center of mass (COM) coordinates, $\bm{r}_{CM}$,
+and positions relative to COM, $\delta \bm{r}_i$,
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=10.0cm]{figures/chap4_figs/coord_trans.pdf}
+    \caption{Visual illustration of coordinate transformation for $\lambda$-cro repressor chain-A.}
+    \label{fig:coord_trans}
+  \end{centering}
+\end{figure}
+%
+%
+%
+%
+\begin{equation}
+  \label{eq:trans_coord}
+  \bm{r}_i = \bm{r}_{CM} + \delta \bm{r}_i.
+\end{equation}
+%
+%
+%Here, $\bm{r}_{CM} = \frac{\sum_{\substack{i=1}}^{N} m_i \bm{r}_i}{\sum_{\substack{i=1}}^{N} m_i} =
+%\frac{1}{N}\sum_{\substack{i=1}}^{N}\bm{r}_i$
+Assuming all masses are same,
+$\bm{r}_{CM} = \frac{\sum_{\substack{i=1}}^{N} m_i \bm{r}_i}{\sum_{\substack{i=1}}^{N} m_i}
+= \frac{1}{N}\sum_{\substack{i=1}}^{N}\bm{r}_i$.
+Taking the summation over i from 1 to $N$ of Eq~\ref{eq:langevin} gives the Langevin
+equation for the COM motion,
+%
+%
+\begin{equation}
+  \label{eq:lang_COM}
+  M\ddot{\bm{r}}_{CM} =
+  %-\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat})
+  -N\gamma\dot{\bm{r}}_{CM}
+  + \sum_{\substack{i=1}}^{N}\bm{\xi}_i
+\end{equation}
+%
+%
+where, $M = mN$ is total mass of the chain. In this equation, random force acting on COM is
+total random force due to all beads with
+%
+%
+\begin{equation}
+  \label{eq:corr_ij_COM}
+  \sum_{\substack{i,j}} \langle \bm{\xi}_i(t) \bm{\xi}_j(t')\rangle = 2Nk_B T\gamma \delta(t-t').
+\end{equation}
+%
+%
+In this 'free draining' limit, where hydrodynamic drag is neglected,  the friction
+on the COM equals the sum over all friction constants, $\gamma_\mathrm{tot} = N\gamma$. Dividing
+Eq.~\ref{eq:lang_COM} by N gives following simple form,
+%
+%
+\begin{equation}
+  \label{eq:r_COM}
+  m\ddot{\bm{r}}_{CM} = -\gamma\dot{\bm{r}}_{CM} + \bm{\xi}^{CM},
+\end{equation}
+%
+%
+with $\bm{\xi}^{CM} = \frac{1}{N} \sum_{\substack{i=1}}^{N} \bm{\xi}_i$, and correlations 
+$\langle \bm{\xi}_i^{CM}(t) \bm{\xi}_j^{CM}(t')\rangle = \frac{2k_B T\gamma}{N} \delta_{ij} \delta(t-t')$.
+Then, subtracting Eq~\ref{eq:lang_COM} from Eq~\ref{eq:langevin} leads to Langevin equation for internal
+dynamics
+%
+%
+\begin{equation}
+  \label{eq:lang_intra}
+  m\delta \ddot{\bm{r}}_i =
+  -\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat})  
+  -\gamma \delta \dot{\bm{r}_i}
+  +\delta \bm{\xi}_i
+\end{equation}
+%
+%
+where, $\bm{\delta{\xi}}_i = \bm{\xi}_i - \bm{\xi}^{CM}$,
+$\langle \bm{\delta \xi}_i(t) \bm{\delta \xi}_j(t')\rangle =
+2k_{B}T \gamma(1-\frac{1}{N}) \delta_{ij} \delta(t-t')$.
+
+%Taking time derivative of Eq.~\ref{eq:trans_coord} we can decouple friction force that is proportional
+%to bead velocity. 
+%
+%
+%\begin{equation}
+%  \label{eq:trans_fric}
+%  \gamma \dot{\bm{r}_i} = \gamma \dot{\bm{r}}_{CM} + \gamma \delta \dot{\bm{r}}_i
+%\end{equation}
+%
+%
+%Here, $\dot{\bm{r}_{CM}}$ is center of mass speed and $\delta \dot{\bm{r}_i}$ is velocity for each bead
+%relative to COM. Decoupling of random force is analogous to Eq.~\ref{eq:trans_coord}
+%,where we add and subtract random force averaged over chain size
+%$\bm{\xi}^{CM} = \frac{1}{N} \sum_{\substack{i=1}}^{N} \bm{\xi}_i$.
+%Then, it can be expressed in terms of force that acts on COM of whole chain
+%$\sum_{\substack{i=1}}^{N}\bm{\xi}^{CM}_i$ (controls diffusion of protein) and the force that governs
+%internal motion $\delta \bm{\xi}_i$.
+%
+%
+%\begin{equation}
+%  \label{eq:kick}
+%  \bm{\xi}_i = \bm{\xi}^{CM} + (\bm{\xi}_i - \bm{\xi}^{CM}) 
+%   =  \bm{\xi}^{CM} + \delta \bm{\xi}_i 
+%\end{equation}
+%
+%
+%Decoupling of COM and internal motion is accomplished.
+
+Next, we introduce prefactors into
+fluctuation ($\bm{\xi}_i$) and dissipation ($\gamma \dot{\bm{r}}_i$) terms so that we can
+control internal motion independently from COM motion, giving
+%
+%
+\begin{equation}
+  \label{eq:lang_COM_final}
+  m\ddot{\bm{r}}_{CM} = -\alpha_{D} \gamma\dot{\bm{r}}_{CM} + \alpha_{D}^{1/2} \bm{\xi}_{CM} ,
+\end{equation}
+and 
+\begin{equation}
+  \label{eq:lang_intra_final}
+  m\delta \ddot{\bm{r}}_i  =  -\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat})  
+  -\alpha_{I} \gamma \delta \dot{\bm{r}_i} + \alpha_{I}^{1/2} \delta \bm{\xi}_i.
+\end{equation}
+%
+%\begin{align}
+%  %\label{eq:lang_COM_intra}
+%  m\ddot{\bm{r}}_{CM}      & = -\alpha_{D} \gamma\dot{\bm{r}}_{CM} + \alpha_{D}^{1/2} \bm{\xi}_{CM} \nonumber\\ 
+%  m\delta \ddot{\bm{r}}_i & =  -\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat})  
+%  -\alpha_{I} \gamma \delta \dot{\bm{r}_i} + \alpha_{I}^{1/2} \delta \bm{\xi}_i \label{lang_COM_intra}.
+%\end{align}
+%%
+%
+Combining Eq.~\ref{eq:lang_COM_final} and Eq.~\ref{eq:lang_intra_final} gives the final decoupled equations with
+independent tuning parameters for internal($\alpha_I$) and COM($\alpha_D$) motions,
+\begin{equation}
+  \label{eq:langevin2}
+  m\ddot{\bm{r}}_i = -\frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat}) 
+  - \alpha_{I} \gamma \delta \dot{\bm{r}_i} - \alpha_{D}\gamma \dot{\bm{r}}_{CM}
+  + \alpha_{D}^{1/2} \bm{\xi}^{CM} + \alpha_{I}^{1/2} \delta \bm{\xi}_i.
+\end{equation}
+%
+%
+Eq.~\ref{eq:langevin2} allow independent control over internal dynamics and COM diffusion.
+In the remainder of this section, I demonstrate how this type of decoupling is implemented into the simulation code.
+%
+%
+%
+%
+%\begin{equation}
+%  \label{eq:pot_decop}
+%  \frac{ \partial}{\partial{\bm{r}_i}} U(\bm{r|r}_{nat}) =
+%  \frac{ \partial}{\partial{\bm{r}_i}} U_{inter}(\bm{r|r}_{nat}) +
+%  \frac{ \partial}{\partial{\bm{r}_i}} U_{intra}(\bm{r|r}_{nat})  
+%\end{equation}
+%
+%
+%Intramolecular interactions include all bonded and non-bonded interactions withing the chain(single protein).
+%Summation over these interactions does indeed result in zero net force.
+%
+%
+%\begin{equation}
+%  \label{eq:pot_intra_sum}
+%  \sum_{\substack{i=1}}^{N} \frac{ \partial}{\partial{\bm{r}_i}} U_{intra}(\bm{r|r}_{nat}) = 0  
+%\end{equation}
+%
+%
+%In contrast, intermolecular interactions are non-bonded interactions between different units(proteins)
+%that do not give zero net force per chain because they are not physically attached.
+%
+%
+%\begin{equation}
+%  \label{eq:pot_inter_sum}
+%  \sum_{\substack{i=1}}^{N} \frac{ \partial}{\partial{\bm{r}_i}} U_{inter}(\bm{r|r}_{nat}) \neq 0  
+%\end{equation}
+%
+%
+%\begin{equation}
+%  \label{eq:langevin2}
+%  m\ddot{\bm{r}}_{CM} + m\delta \ddot{\bm{r}}_i =
+%  -\frac{ \partial}{\partial{\bm{r}_i}}\big(U_{inter}(\bm{r|r}_{nat}) + U_{intra}(\bm{r|r}_{nat}) \big)  
+%  -\gamma \delta \dot{\bm{r}_i}
+%  -\gamma \dot{\bm{r}}_{CM}
+%  +\bm{\xi}^{CM}_i
+%  +\delta \bm{\xi}_i
+%\end{equation}
+%
+%
+%Now, we have derived Langevin equation for COM motion Equ.~\ref{eq:lang_COM} and internal motion
+%Equ.~\ref{eq:lang_intra}.
+%Note, that we have different labeling on potential energy because internal
+%dynamics is only affected by self(intramolecular) interactions, and COM dynamics is only influenced
+%by interactions with other(intermolecular) molecules.
+%This finalizes decoupling and next we present inplementation step.
+%
+%
+
+\subsection{\textbf{Integration via Honeycutt-Thirumalai Approximation}}
+Honeycutt and Thirumalai\cite{Honeycutt:92} extended the verlet integration to numerically integrate the Langevin
+equation (Eq.~\ref{eq:langevin}), with a velocity dependent drag term.
+%Since the force (an acceleration) $\bm{a}_i(t+h)$ dependsdepends on  
+%on $\bm{v}_i(t)$, equations are solved self-consistently.
+We begin by writing the Langevin equation,
+%
+%
+\begin{equation}
+  \label{eq:langevin_mod}
+  m \bm{a}_{i} = \bm{f}_i - \gamma \bm{v}_i +  \bm{\xi}_i. 
+\end{equation}
+%
+%
+where, $\bm{f}_i$ is the net conservative force and $\bm{\xi}_i$ is random force on the
+$i^{\mathrm{th}}$ particle, respectively.
+We wish to use Eq.~\ref{eq:verl1} to update the positions, velocities, and accelerations
+for a step from time $t$ to $t+h$.
+By substituting acceleration equation Eq.~\ref{eq:langevin_mod} into position update formula
+Eq.~\ref{eq:verl1}, we derive the following update for the positions,
+%
+\begin{equation}
+  \label{eq:coord_update}
+  \bm{r}_{i}(t+h) = \bm{r}_{i}(t) + \bm{v}_{i}(t)h \Big(1 - \frac{\gamma h}{2m} \Big) +
+  \frac{1}{2}h^2 \Big(\frac{\bm{f}_{i}(t)}{m} + \frac{\bm{\xi}_{i}(t)}{m} \Big)
+\end{equation}
+%
+%Here, we write random forces as  $\bm{\xi}_{i} = \sqrt{\frac{2k_{B}T\gamma}{m}}~ \bm{\eta}_{i}$,
+%with $\bm{\eta}_i$
+%correlations obey $\langle \bm{\eta}_i(t) \bm{\eta}_j(t')\rangle = \delta_{ij} \delta(t-t')$.
+The friction force has been separated from other forces because it is updated along with the velocity.
+To make the equations more compact, the remaining forces are collected into an acceleration term 
+%Here, $\xi_{i} = \sqrt{\frac{2k_{B}T\gamma}{m}}~ \vec \eta_{i} $ is a random force. Since
+%friction force depends on velocity it is updated through velocity, so separate it out from
+%other forces.
+%Then we collect remaining forces into one variable(the acceleration)
+$\bm{a}_{i}(t) = \frac{1}{m}(\bm{f}_{i}(t) + \bm{\xi}_{i}(t))$ giving the coordinate update
+%
+\begin{equation}
+  \label{eq:coord_update_simple}
+  \bm{r}_{i}(t+h) = \bm{r}_{i}(t) + \bm{v}_{i}(t)h \Big(1 - \frac{\gamma h}{2m} \Big) + \frac{h^2}{2} \bm{a}_{i}(t). 
+\end{equation}
+%
+%Next step is force(or acceleration) update, where we feed function that calculates force due to
+%potential with new coordinates and get new force $f_{i}(t+h)$. Whereas, random forces are simply
+%updated by generating new set of random numbers.
+The accelerations of non-frictional forces are updated according to
+%
+\begin{equation}
+  \label{eq:force_update}
+  \bm{a}_{i}(t+h) = \frac{\bm{f}_{i}(t+h)}{m} + \frac{\bm{\xi}_{i}(t+h)}{m}.
+\end{equation}
+%
+The velocity update formula in Eq.~\ref{eq:verl3} includes both the accelerations as well as
+drag forces giving
+%
+%
+\begin{equation}
+  \label{eq:vel_update_ver}
+  \bm{v}_{i}(t+h) = \bm{v}_{i}(t) + h \frac{\bm{a}_{i}(t) + \bm{a}_{i}(t+h)}{2} -
+  h \gamma \frac{\bm{v}_i(t) + \bm{v}_i(t+h)}{2m}.   
+\end{equation}
+%
+This equation further simplifies to,
+%
+\begin{equation}
+  \label{eq:vel_update1}
+  \bm{v}_{i}(t+h)\Big(1 + \frac{\gamma h}{2m}\Big) = \bm{v}_{i}(t)\Big(1 - \frac{\gamma h}{2m}\Big) + \\
+  \frac{h}{2} \Big (\bm{a}_{i}(t) + \bm{a}_{i}(t+h)\Big ). 
+\end{equation}
+%
+%
+%In order to get $v_i(t+h)$ we need to multiply both sides of the Eq.\ref{eq:vel_update1} by
+%$(1+\gamma h/2)^{-1}$. Besides, we expand this term into Taylor series assuming $\gamma h \ll 1$.
+Solving for $\bm{v}_i(t+h)$ and using the expansion
+$(1 + \gamma h/2m)^{-1} = 1 - (\gamma h/2m) + (\gamma h/2m)^2 + ....$,
+we derive velocity update rule,
+%
+\begin{equation}
+  \label{eq:vel_update}
+  \bm{v}_{i}(t+h) = \bm{v}_{i}(t)\Big(1 - \frac{\gamma h}{2m}\Big) \\
+  \Big[1 - \frac{\gamma h}{2m} + \Big( \frac{\gamma h}{2m} \Big)^2 \Big] + \\
+  \frac{h}{2} \Big(1 - \frac{\gamma h}{2m} \Big) \Big (\bm{a}_{i}(t) + \bm{a}_{i}(t+h)\Big).   
+\end{equation}
+%
+This equation is valid up to terms of order $(\gamma h/2m)^3$. The term  $(\gamma h/2m)$ must be sufficiently small
+in order to maintain the equilibrium at temperature T. This sets a limit on the size of timestep for
+a given $\gamma$.
+%In practice $\gamma h < 0.2$, ............... can't read!!! 
+%Note that third or higher order polynomials are omitted from second term on right hand side of the equation
+%assuming $\gamma h$ is very small. One has to take precaution when using large value for $\gamma$, and make
+%sure that $\gamma h$ is small enough($\gamma h < 0.2$). Additionally, effect of increasing $\gamma$ can be
+%compensated by reducing time step $h$, while using large values for $\gamma$. We have observed occurrence of
+%thermodynamic imbalance if one ignores this issue. As a result, equipartition theorem does not hold due to
+%shift in the energy distribution. We will give more detailed explanation in upcoming sections.
+%
+Collecting these equations
+\begin{align}
+  \label{eq:finale_update}
+  \bm{r}_{i}(t+h) & = \bm{r}_{i}(t) + \bm{v}_{i}(t)h
+  \Big(1 - \frac{\gamma h}{2m} \Big) + \frac{h^2}{2} \bm{a}_{i}(t),         \nonumber \\
+  \bm{a}_{i}(t+h) & = \frac{\bm{f}_{i}(t+h)}{m} + \frac{\bm{\xi}_{i}(t+h)}{m},  \\
+  \bm{v}_{i}(t+h) & = \bm{v}_{i}(t)\Big(1 - \frac{\gamma h}{2m}\Big) 
+  \Big[1 - \frac{\gamma h}{2m} + \Big( \frac{\gamma h}{2m} \Big)^2 \Big] + \nonumber  
+                  \frac{h}{2} \Big(1 - \frac{\gamma h}{2m} \Big) \Big (\bm{a}_{i}(t) + \bm{a}_{i}(t+h)\Big)\nonumber   
+\end{align}
+%
+provides the update rules for Langevin equation.
+
+\subsection{\textbf{Decoupling Implementation}}
+In section \ref{subsect:le}, I described a way to decouple the Langevin equation for a coarse grained
+protein into separate internal and COM motions. Here, I apply the corresponding decoupling
+technique to the Verlet update equations.   
+%coupling center of mass motion from reconfigurational motion is to be able to manipulate them
+%independently, which we have demonstrated via Langevin equation in section \ref{sect:four_one}. Here, we
+%apply those rules on equations shown a previous section. First, we decouple friction force with tuning
+%prefactors included
+The frictional force in coordinate update equation (Eq.~\ref{eq:coord_update_simple}) is first decoupled
+by separating the center of mass velocity , $\bm{\bar v}$, from internal velocity
+$\delta{\bm{v}} = \bm{v}_i - \bm{\bar v}$, 
+%
+%
+\begin{equation}
+  \label{eq:vel_de}
+  \gamma \bm{v}_{i} = \alpha_{D}\gamma \bm{\bar v} + \alpha_{I} \gamma (\bm{v}_{i} - \bm{\bar v}).
+\end{equation}
+%
+%
+Here, we use two parameters $\alpha_I$ and $\alpha_D$, introduced earlier, to control friction of internal and
+COM motion, respectively. Inserting Eq.~\ref{eq:vel_de} to Eq.\ref{eq:coord_update_simple} with minor rearrangements
+gives a decoupled coordinate update rule,
+%
+%
+\begin{equation}
+  \label{eq:coord_update_de}
+  \bm{r}_{i}(t+h) = \bm{r}_{i}(t) + v_{i}(t)h \Big(1 - \frac{\gamma \alpha_{I} h}{2m} \Big) +
+  \frac{\bm{a}_{i}(t) h^2}{2} + \frac{\bm{\bar v}(t) \gamma h^2}{2m} \big( \alpha_{I} - \alpha_{D} \big).
+\end{equation}
+%
+%
+Next, we consider the force update equation. The random force is also decoupled according to,
+\begin{equation}
+  \label{eq:rand_de}
+  \xi_{i} = %\xi_{i} - \bar \xi + \bar \xi =
+  %\sqrt{\frac{2k_{B}T \alpha_{I} \gamma}{m}}(\eta_{i} - \bar \eta) +
+  %\sqrt{\frac{2k_{B}T \alpha_{D} \gamma}{m}} \bar \eta =
+  \alpha_{I}^{1/2} \xi_{i} + \bar \xi (\alpha_{D}^{1/2} - \alpha_{I}^{1/2}),
+\end{equation}
+%
+where, $\bar{\xi} = \frac{1}{N} \sum_{\substack{i=1}}^{N} \xi_i$ represents average random force.
+By substituting $\xi_i$ in Eq.~\ref{eq:rand_de} into Eq.~\ref{eq:force_update}, we derive the decoupled
+force update equation
+%
+%
+\begin{equation}
+  \label{eq:force_update_de}
+  a_{i}(t+h) = \frac{f_{i}(t+h)}{m} + \alpha_{I}^{1/2} \xi_{i}(t+h) +
+  (\alpha_{D}^{1/2} - \alpha_{I}^{1/2}) \bar \xi(t+h). 
+\end{equation}
+%
+%
+In order to perform decoupling on velocity update rule, we write the last term
+on the right hand side of the Eq.~\ref{eq:vel_update_ver},
+%
+%
+\begin{align}
+  \label{eq:tmp_vel_de}
+  \frac{h\gamma}{2m} \big[ \bm{v}_i(t) + \bm{v}_i(t+h) \big]  = 
+  \frac{h\gamma}{2m} \big[ \alpha_I \big( \bm{v}_i(t) - \bm{\bar v}(t) \big) + \alpha_D \bm{\bar v}(t)
+    + \alpha_I \big( \bm{v}_i(t+h)  - \bm{\bar v}(t+h) \big) + \alpha_D \bm{\bar v}(t+h)\big].    
+\end{align}
+%
+%
+By substituting this expression into Eq.~\ref{eq:vel_update_ver} and solving for $\bm{v}_i(t+h)$ we get
+the decoupled velocity update formula
+%
+%
+\begin{equation}
+  \begin{aligned}
+    \label{eq:vel_update_de}
+    \bm{v}_{i}(t+h) & = \bm{v}_{i}(t)\Big[ 1 - \frac{\alpha_{I}\gamma h}{2m}\Big] 
+    \Big[1 - \frac{\alpha_{I} \gamma h}{2m} + \Big( \frac{\alpha_{I}\gamma h}{2m} \Big)^2 \Big]  \\
+    & + \frac{h}{2} \big[1 - \frac{\alpha_{I}\gamma h}{2m} \big]
+    \big( \bm{a}_{i}(t) + \bm{a}_{i}(t+h) \big)  \\ 
+    & +\frac{\gamma h}{2m} \big( \alpha_{I} - \alpha_{D})(\bm{\bar v}(t) + \bm{\bar v}(t+h) \big).  
+  \end{aligned}
+\end{equation}
+%
+In this equation, the value of the velocity at step $t+h$ depends on center of mass velocity at $t+h$. In order to
+calculate $\bm{\bar v}(t+h)$, we construct an additional update rule for the center of mass velocity, which can be
+derived by taking summation over $i$ in Eq.\ref{eq:vel_update}, 
+%
+%
+\begin{equation}
+  \begin{aligned}
+    \label{eq:vel_update_COM}
+    %\frac{1}{N}\sum_{i}^{N}{\bm{v}_i}(t+h) = \\
+    \bm{\bar v}(t+h) & = \bm{\bar v}(t) \Big(1 - \frac{\alpha_{D} \gamma h}{2m} \Big) 
+    \Big[1 - \frac{\alpha_{D} \gamma h}{2m} + \Big( \frac{\alpha_{D}\gamma h}{2m} \Big)^2 \Big] \\
+    & + \frac{h}{2} \Big[1 - \frac{\alpha_{D} \gamma h}{2m}  \Big]
+    \big ( \bm{\bar a}(t) + \bm{\bar a}(t+h) \big ), 
+  \end{aligned}
+\end{equation}
+%
+where, $\bm{\bar a}$ is the acceleration of the center of mass. This equation must be updated prior to
+$\bm{v}_i(t+h)$ calculation. Note that all update formulas agree with original update equations when tuning
+prefactors are set to 1 ($\alpha_{I}=1$ and $\alpha_{D}=1$). This method allow control over reconfigurational
+and collective motions of a molecule separately by tuning parameters $\alpha_{I}$ and $\alpha_{D}$.
+In the simulations we set $\alpha_{I} = \gamma_{I}/\gamma$ and $\alpha_{D}=\gamma_{D}/\gamma=1.0$.
+
+Table.~\ref{tab:diff_tab} (with data plotted in Fig.~\ref{fig:Tend_diff}) shows how the COM diffusion
+and end-to-end relaxation time
+of IDP pKID changes as a function of $\gamma_{\mathrm{I}}$.
+Since $\gamma$ is fixed, the diffusion constant remains approximately constant as expected.
+The small
+reduction of $D_\mathrm{CM}$ at high friction is a result of integration inaccuracy at high values
+of $(\gamma_{\mathrm{I}})$ from
+Honeycutt and Thirumalai approximation which is based on the Tailor expansion
+about $\gamma \delta t$.
+%,also denoted as $\gamma_{\mathrm{I}}/\gamma$.
+%
+%
+%
+\begin{table}[htp!]
+  \centering
+  \begin{tabular}{@{}llllllllllll@{}}
+    & $\gamma_{\mathrm{I}} / \gamma$
+    & $D_{\mathrm{CM}}$ 
+    & $\tau_{\mathrm{end}}$\\
+    \hline 
+    & 0.2    & 2.28  &  0.07  \\
+    & 1.0    & 2.28  &  0.27  \\
+    & 2.0    & 2.28  &  0.48  \\
+    & 4.0    & 2.26  &  1.12  \\
+    & 6.0    & 2.24  &  1.95  \\
+    & 8.0    & 2.27  &  2.40  \\
+    & 10.0   & 2.26  &  3.15  \\
+    & 12.0   & 2.24  &  4.0   \\
+    & 15.0   & 2.20  &  6.0   \\
+  \end{tabular}
+  \caption{Center of mass diffusion and end-to-end relaxation time measurements
+    are reported for a set of values of internal friction. Diffusion constant units are reported
+    in $\mathrm{cm^2}$/s, while units for $\tau_{\mathrm{end}}$ is in ns.}
+  \label{tab:diff_tab}
+\end{table}
+%This data is shown in Fig.~\ref{fig:Tend_diff}.
+%
+%
+
+
+\begin{figure}[htp!]                                                                                          
+  \begin{centering}                                                                                         
+    \includegraphics[width=5in]{figures/chap4_figs/Tend_diff.pdf}
+    \caption{Visual illustration for how internal dynamics and center of mass diffusion
+      change upon tuning the parameter $\gamma_{\mathrm{I}}/\gamma$. Time units are reported
+      in ns assuming each molecular dynamics step size is 50 fs as demonstrated previously.}                    
+    \label{fig:Tend_diff}                                                                                 
+  \end{centering}                                                                                           
+\end{figure}                                                                                             
+
+For larger $\gamma_I$, relaxation time increases almost linearly with $\gamma_{\mathrm{I}}$,
+as shown in Fig.~\ref{fig:Tend_diff}.
+The relaxation time for slowest reconfiguration of pKID at $\gamma_\mathrm{I}/\gamma=15.0$ is 
+$\tau_{\mathrm{end}}=6.0$ ns, which is close to (though somewhat smaller than the)
+typical range measured for IDps 10-200 ns .
+In our implementation, it is possible to slow the reconfiguration speed down further. Unfortunately,
+it becomes inconvenient as the time to simulate coupled folding and binding increases
+as well. We will discuss the trends in binding thermodynamics and kinetics as $\gamma_I$ increases
+over the range shown in Table~\ref{tab:diff_tab}. The slowest reconfiguration time is about
+20 times longer than the original model (corresponding to $\gamma_\mathrm{I}/\gamma = 1$).
+
+%
+%
+%*************************************************************************************************
+\section{\textbf{Thermodynamics of Slow and Fast Internal Dynamics}}\label{sect:slow_fast_thermo}
+%   
+%*************************************************************************************************
+
+In Langevin dynamics, the value of the friction coefficient effectively defines
+the scale of the timestep. Since the random force strength is constrained
+by the fluctuation-dissipation theorem to give the proper thermodynamics sampling at temperature
+$T$ for any value of $\gamma$, it is expected that thermodynamics should be the same as we
+vary the strength of the friction. We first verify this independence of thermodynamic
+sampling holds when there are two separate values of the friction, one controlling the timescale
+of the center of mass diffusion and the other controlling the timescale of the internal dynamics. 
+This also serves as a check on the  algorithm's implementation.
+
+In this study, I use the same coarse grained potential with desolvation barriers as in the previous chapter, but the
+relative timescales of center of mass diffusion and internal coordinates varied through different
+values of $\gamma_\mathrm{I}/\gamma$. The original model corresponds to $\gamma_{I}/\gamma = 1$ which we have argued that
+the relative internal dynamics is too fast. Slower internal dynamics corresponds to greater values of
+$\gamma_\mathrm{I}/\gamma$. 
+
+I performed thermodynamics analysis on pKID-KIX association by running 24 independent
+different temperature simulations. Using WHAM, free energy surfaces 
+ are constructed at the binding transition temperature $T_{\mathrm{m}}=318$
+K for both fast $(\gamma_\mathrm{I}/\gamma = 1)$ and slow internal
+$(\gamma_\mathrm{I}/\gamma = 8.0)$ dynamics of IDP pKID.
+Folding and binding of
+pKID is represented through the fraction of intermolecular contacts, $Q_{\mathrm{inter}}$, and
+intramolecular contacts,
+$Q_{\mathrm{intra}}$, respectively.  
+As shown in Fig.~\ref{fig:2d_free_recon}, free energy surfaces showing the coupled folding and binding
+for models with slow and fast reconfigurational dynamics are similar.  
+%Unfolded and unbound states to folded and bound state.
+In the unbound ensemble, the fraction of native intramolecular contacts is broadly distributed,
+ranging from 10\% to as high as 80\%, and the folded and bound ensemble has roughly 60\% to 80\% of the
+intramolecular contacts.
+One minor difference is that the 
+width of the barrier defining the transition region is somewhat wider for the
+slow reconfiguration model compared to the fast model.
+This may indicate that there are more varied contacts in the transition region for the
+model with slow reconfiguration dynamics, but it has proved difficult to analyze this
+difference quantitatively. 
+
+\begin{figure}[htp!]                                                                                     
+\begin{centering}                                                                                        
+    \includegraphics[width=16cm]{figures/chap4_figs/2d_free_recon.pdf}
+    \caption{Free energy profiles representing folding and binding of IDP pKID
+      for fast(a) $\gamma_{\mathrm{I}}/\gamma_0 = 1.0$ and slow(b)
+      $\gamma_{\mathrm{I}}/\gamma_0 = 8.0$ reconfigurations.}                    
+\label{fig:2d_free_recon}                                                                                
+\end{centering}                                                                                          
+\end{figure}                                                                                             
+
+
+The temperature for which the equilibrium bound and unbound populations are equal is referred to as
+the binding transition temperature or melting temperature, $T_m$.
+%At this critical value of temperature long
+%equilibrium simulation provide accurate and equally sampled bound and unbound states.
+The melting temperature is estimated by peak value of heat capacity vs temperature
+curve shown in Fig.~\ref{fig:cv_recon}. Here, the heat capacity is calculated via mean squared fluctuations
+in systems entalpy. As shown in Fig.~\ref{fig:cv_recon}, the specific heat curve, and hence $T_m$, 
+is not affected by different timescales of the internal dynamics. %Talk about why?
+
+\begin{figure}[htp!]
+  \begin{centering}                                                                                         
+    \includegraphics[width=10cm]{figures/chap4_figs/cv_recon.pdf}
+    \caption{Heat capacity curves constructed from 24 independent different temperature
+      simulations shown for fast and slow internal dynamics of the pKID. The melting
+      temperature in both cases is equal to 331K.}                    
+    \label{fig:cv_recon}                                                                                   
+  \end{centering}                                                                                           
+\end{figure}                                                                                                
+%                   
+%
+
+
+Another interesting thermodynamic property to consider is how binding progress as protein and ligand
+approach each other. Fig.~\ref{fig:dist_cos_Qb_recon} shows the alignment of helix-B to its
+native bound orientation and fraction of native intermolecular
+contacts for helix-B as pKID approaches KIX. The results show that helix-B
+orientation starts to form gradually at 25\AA~ and aligns completely at
+12\AA~ for both models with fast and slow dynamics. As discussed in the previous chapter,
+intermolecular contacts and orientional alignment accumulate incrementally due to both slow
+and fast helix-B's because of the flexibility of pKID when unbound.
+
+\begin{figure}[htp!]
+  \begin{centering}                                                                                         
+    \includegraphics[width=15cm]{figures/chap4_figs/dist_cos_Qb_recon.pdf}
+    \caption{Helix-B fraction of native intermolecular contacts $Q_B$ (a),
+      and alignment of the helix-B end-to-end vector with the orientation
+      in the bound complex $\cos(\theta_\mathrm{B})$ (b) plotted as a function
+      of center of mass separation between helix-B and KIX, where red and blue
+      colors represent fast and slow internal dynamics respectively.}                    
+    \label{fig:dist_cos_Qb_recon}                                                                                 
+  \end{centering}                                                                                           
+\end{figure}                                                                                                
+
+Other thermodynamic measures also suggest that the method we have applied to control the internal
+dynamics does not influence the thermodynamics of the coupled folding and binding mechanism.
+Thus, in upcoming sections we will be mainly focusing on kinetics of coupled folding and binding.
+
+      
+%
+%****************************************************************************************
+\section{\textbf{Binding Characterized by Multi-Step Kinetics}\label{sect:multi_step_binding_kinetics}}
+%*****************************************************************************************
+
+
+To analyze the binding kinetics for this model, we choose a slightly different scheme
+from the one used in chapter 3, where the transition from the unbound state to the encounter
+complex required a single native contact to form.
+Because I am interested in the influence of the relative
+time scales of center of mass diffusion and conformation dynamics, I divided the state
+previously called the encounter complex into two parts: (i) a loose encounter state defined by
+how close the proteins are to each other based on their center of mass separation as well as the 
+proximity between their residues; (ii) an encounter complex that has more significant intermolecular
+native contacts. The reason for this change is an attempt to isolate the diffusive encounter
+step (which we initially thought would be determined largely by the translational diffusion constant)
+and the evolution of native contacts when the proteins are close to each other (which should be
+more sensitive to the timescale of the conformational dynamics). 
+%Kinetics of coupled folding and binding process is interesting at the same time
+%chellenging. Generally, transition from unbound to bound state is accompanied by one
+%intermediate state, so called transient encounter. Recent NMR relaxation dispersion studies
+%\cite{sugase:07} for pKID-KIX binding emphasized the possibility of two intermediate states
+%based on different levels of residual structure measured for helix-B in the encounter complex.
+%Accordingly, we model protein-ligand association with two intermediate states in addition to
+%already existing bound and unbound states:
+%
+%
+
+Accordingly,
+I consider the following kinetic scheme to describe the coupled folding and binding
+\begin{equation}
+  \label{eq:kinetic_equation}
+  \ce{
+    \mbox{\textbf{U}} <=>[$\bm{k_{\mathrm{D}^{+}}}$][$\bm{k_{\mathrm{D}^{-}}}$] \mbox{\textbf{LE}}
+    <=>[$\bm{k_{\mathrm{E}^{+}}}$][$\bm{k_{\mathrm{E}^{-}}}$] \mbox{\textbf{E}}
+    ->[$\bm{k_{\mathrm{A}}}$] \mbox{\textbf{B}}.
+  }
+\end{equation}
+%
+%
+Definitions for entering and leaving a state depend on the separation distance
+between the pKID and KIX as well as structural parameters such as the extent of
+intermolecular contacts. Although the specific definitions of the states are
+somewhat arbitrary, I verified that different reasonable values for the
+boundaries between the states did not make a significant difference in the
+overall findings presented here. Starting from the unbound state (U), pKID enters
+the loose encounter state (LE)
+when the separation of pKID and KIX is within 50~\AA, with a specific or
+non-specific contact between the two. The transition from U to LE occurs at rate
+$k_{\mathrm{D}^+}$.  Next, ligand can either escape to unbound state with rate
+$k_{\mathrm{D}^-}$ by loosing all contacts and moving farther than 50~\AA, or
+enter the encounter complex (EC) by making at least 10 native intermolecular
+intermolecular contacts. The rate to go from $\mathrm{LE\rightarrow U}$ is denoted by
+$k_{\mathrm{D}^-}$, and the rate to go from $\mathrm{LE \rightarrow E}$ is denoted
+by $k_{\mathrm{E}^+}$. The ligand can make a transition from $\mathrm{E \rightarrow LE}$
+with rate $k_\mathrm{E^-}$ by losing all native intermolecular contacts. Binding
+completes  with rate $k_\mathrm{A}$ when at least 90\% of the intermolecular native
+contacts are formed.
+
+
+An example of a binding trajectory as it passes through these stages is shown in
+Fig~.\ref{fig:traj15_fast_nnat0}. Here, the kinetic state of the system is indicated
+by the color on a trajectory represented by the number of intermolecular contacts
+$N_{\mathrm{inter}}$ as a function of time.
+This trajectory starts in the unbound state U, followed by multiple attempts made
+into LE and E states, ultimately reaching the bound state 'B' when about
+67 native intermolecular contacts are formed. 
+
+Notice that the time spent in the LE and E varies considerably for each visit to these
+states. Also, note there is considerable dynamic fluctuation of native
+contacts in the encounter complex. In the encounter complex,
+stabilizing native interactions % with stabilize the encounter complex
+have a broad distribution,
+often reaching a maximum of 20 to 40 before losing these contacts. Then other intermolecular
+contacts are formed to stay in E or else proceeds back to LE.
+In this example, binding occurs after a single diffusive encounter.
+In other binding trajectories, it is common to reenter the unbound state and
+make several diffusive attempts before binding.
+The inset of this figure shows the probability for a conformation in the encounter complex
+to have specific number of native and non-native intermolecular contacts. While the number of native contacts is widely distributed, the weight of the distribution
+is primarily towards states with smaller number (less than 20) native contacts, with 10 being
+the most probable. Still, the molecules interact extensively within the encounter complex
+as shown by broad distribution of non-native contacts for these conformations. 
+
+ 
+\begin{figure}[htp!]
+  \begin{centering}                                                                                        
+    \includegraphics[width=15cm]{figures/chap4_figs/traj15_fast_nnat0.pdf}
+    \caption{Binding trajectory is illustrated for a typical kinetics scenario with multiple
+      attempts made before complex formation. 200 binding simulations are performed at
+      melting temperature $T$=321K starting from random unbound configurations and stopped
+      when condition for bound minima is reached $N_{\mathrm{inter}}$=70. Each time step shown
+      in x-axis corresponds to 100 molecular dynamics steps. Inset figure shows distribution
+      for number of native and non-native intermolecular contacts collected while complex reside
+      at state E. Internal dynamics parameter for this trajectory is $\gamma_{I}/\gamma_0 = 0.2$.  }
+\label{fig:traj15_fast_nnat0}                                                                                 
+  \end{centering}  
+\end{figure}
+
+The rates in Eq.\ref{eq:kinetic_equation} are calculated using the mean lifetime of a state and the number
+of transitions into and out of the state. 
+The average transition rate to go from state $i$ to state $j$ can be written as 
+%
+\begin{equation}
+  \label{eq:main_kin_equ}
+  \mathrm{k_{i \rightarrow j}} = %\frac{N_{i \rightarrow j}}{T_{i} \sum N_{i \rightarrow j}} = \
+  \frac{N_{i \rightarrow j}}{T_i}.
+\end{equation}
+where $N_{i \rightarrow j}$ is the number of transitions made from state $i$ to state $j$,
+and $\mathrm{T}_{i}$ is the total time spent in the $i^\mathrm{th}$ state. 
+Following this description, we can write down the formula for the calculation of all rates:
+%
+\begin{align}
+  \label{eq:Dplus}
+  k_{\mathrm{D^{+}}} &= \frac{N_{\mathrm{D}^{+}}}{\sum_l T_{\mathrm{D}^+}^{(l)}}
+  & (\mathrm{U \rightarrow LE}) \\%    k_{\mathrm{U \rightarrow LE}}                    
+  \label{eq:Dminus}
+  k_{\mathrm{{D^{-}}}} &= \frac{N_{\mathrm{D}^{-}}}{\sum_l T_{\mathrm{D}^+}^{(l)} +
+    \sum_l T_{\mathrm{D}^-}^{(l)}}
+  & (\mathrm{LE \rightarrow U})\\    %k_{\mathrm{LE \rightarrow U}}
+  \label{eq:Eplus}
+  k_{\mathrm{E^{+}}} &= \frac{N_{\mathrm{E}^{+}}}{\sum_l T_{\mathrm{D}^+}^{(l)} +
+    \sum_l T_{\mathrm{D}^-}^{(l)}}
+  &  (\mathrm{LE \rightarrow E}) \\ %  k_{\mathrm{{LE \rightarrow E}}} &=
+  \label{eq:Eminus}
+  k_{\mathrm{{E^{-}}}}  &= \frac{N_{\mathrm{E}^{-}}}{\sum_l T_{\mathrm{E}^{-}}^{(l)} +
+    \sum_l T_{\mathrm{A}}^{(l)}}
+  & (\mathrm{E \rightarrow LE})\\  %k_{\mathrm{E \rightarrow LE}}
+  \label{eq:A}
+  k_{\mathrm{{A}}} &=  \frac{N_{\mathrm{A}}}{\sum_l T_{\mathrm{E}^{-}}^{(l)} +
+    \sum_l T_{\mathrm{A}}^{(l)}}
+  & (\mathrm{E \rightarrow B}) % k_{\mathrm{E \rightarrow B}} &
+\end{align}
+%
+Here, $N_{\mathrm{D}^+}$ is the total number of transitions occurred from state U to state LE collected
+from all simulations. Note, that each simulation can have multiple transitions between the states.
+$T_{\mathrm{D}^+}^{(l)}$ is the time it takes to make one transition (the $l^{th}$) from state U
+to state LE,
+and we sum over all transitions ($l = {1,N_{\mathrm{D}^+}}$) to get total time spent in state U.
+On the other hand, since LE state supports both entrance and exit, the overall occupancy time of this
+state equals to sum of $\sum_l T_{\mathrm{D}^+}^{(l)}$ and $\sum_l T_{\mathrm{D}^-}^{(l)}$. The rest of rates
+are calculated similarly based on Eq.~\ref{eq:main_kin_equ}.
+
+%######################################################################################################################
+%An alternative way to express these rates is through the 
+%mean first passage
+%times, $\tau_{i \rightarrow j}$. The mean first passage time for transition from $i\rightarrow j$
+%can be written as the inverse of the rate in Eq.\ref{eq:main_kin_equ}
+%is the total time it took to make all transitions divided by number of transitions
+%
+%\begin{equation}
+%  \label{eq:mfpt_def}
+%  \tau_{i \rightarrow j} = \frac{T_i}{N_{i \rightarrow j}}
+%\end{equation}
+%%
+%This the mean time spent in state $i$ before making a transition to state $j$. In terms
+%of the mean first passage times, Eqn.\ref{eq:Dplus} - Eq.\ref{eq:A} can be written as
+%\begin{align}
+%  \label{eq:tDplus1}
+%  k_{\mathrm{D^{+}}}^{-1} &= \tau_{\mathrm{D}^+}  \\
+%  \label{eq:tDminus1}
+%  k_{\mathrm{{D^{-}}}}^{-1} &= \frac{N_{\mathrm{D}^{+}}}{N_{\mathrm{D}^{-}}} \tau_{\mathrm{D}^+} + \tau_{\mathrm{D}^-}  \\
+%  % k_{\mathrm{{D^{-}}}} = \frac{1}{\tau_{\mathrm{D}^-} + \tau_{\mathrm{D}^+} N_{\mathrm{D}^{+}} / N_{\mathrm{D}^{-}}} 
+%  \label{eq:tEplus1}
+%  k_{\mathrm{E^{+}}}^{-1} &=  {\frac{N_{\mathrm{D}^{+}}}{N_{\mathrm{E}^{+}}} \tau_{\mathrm{D}^+} + \tau_{\mathrm{D}^-}} \\
+%  \label{eq:tEminus1}
+%  k_{\mathrm{{E^{-}}}}^{-1} &= \tau_{\mathrm{E}^{-}} + \frac{N_{\mathrm{A}}}{N_{\mathrm{E}^{-}} \tau_{\mathrm{A}}}   \\
+%  \label{eq:tA1}
+%  k_{\mathrm{{A}}}^{-1} &=  \frac{N_{\mathrm{E}^{-}}}{N_{\mathrm{A}}}  \tau_{\mathrm{E}^{-}} + \tau_{\mathrm{A}}   
+%\end{align}
+%
+%
+% \todoin{probably should check this is right}
+%############################################################################################################################
+% \begin{equation}
+%  \label{Dplus1}
+%  k_{\mathrm{D^{+}}} = \frac{1}{ \tau_{\mathrm{D}^+}}  
+%\end{equation}                                                                                                 
+%%
+%%
+%\begin{equation}
+%  \label{Dminus1}
+%  k_{\mathrm{{D^{-}}}} = \frac{1}{ \frac{N_{\mathrm{D}^{+}}}{N_{\mathrm{D}^{-}}} \tau_{\mathrm{D}^+} + \tau_{\mathrm{D}^-}} 
+%  %k_{\mathrm{{D^{-}}}} = \frac{1}{\tau_{\mathrm{D}^-} + \tau_{\mathrm{D}^+} N_{\mathrm{D}^{+}} / N_{\mathrm{D}^{-}}} 
+%\end{equation}                                                                                                 
+%%
+%%
+%%
+%%
+%\begin{equation}
+%  \label{Eplus1}
+%  k_{\mathrm{E^{+}}} = \frac{N_{\mathrm{E}^{+}} / N_{\mathrm{D}^{-}}}
+%  {\frac{N_{\mathrm{D}^{+}}}{N_{\mathrm{D}^{-}}} \tau_{\mathrm{D}^+} + \tau_{\mathrm{D}^-}} 
+%\end{equation}                                                                                                 
+%%
+%%
+%%
+%\begin{equation}
+%  \label{Eminus1}
+%  k_{\mathrm{{E^{-}}}} = \frac{1}{\tau_{\mathrm{E}^{-}} + \frac{N_{\mathrm{A}}}{N_{\mathrm{E}^{-}}} \tau_{\mathrm{A}}}   
+%\end{equation}                                                                                                 
+%%
+%%
+%%
+%%
+%\begin{equation}
+%  \label{A1}
+%  k_{\mathrm{{A}}} = \frac{1}{ \frac{N_{\mathrm{E}^{-}}}{N_{\mathrm{A}}}  \tau_{\mathrm{E}^{-}} + \tau_{\mathrm{A}}}   
+%\end{equation}                                                                                                 
+%
+%The number of transitions and mean first passage times can be calculated from simulations from multiple
+%simulations of individual binding events as reported in the next section.
+% Next, we describe how this multi-step chemical reaction
+%kinetics is modelled and solved.
+
+
+%%*************************************************************************************************
+%\section{\textbf{Multi-Step Reaction Kinetics Formulation}}\label{sect:five_two}
+%%*************************************************************************************************
+%
+%Time evolution of chemical reaction with two intermediate states shown in Equ.~\ref{eq:kinetic_equation}
+%can be formulated via linear system of Ordinary Differential Equations(ODE). Here we demonstrate both
+%analytical and numerical solution in order to provide quantitative description on how population of
+%each state change with time.
+%Formulation involve assumption to consider the reaction as real experimental situation, where
+%certain amount of proteins and ligands are released into a solution, instead of just two molecules.
+%In this one way forward chemical reaction, initially unbound state dominates, then slowly intermediate
+%and bound states populate as time progress. The system of ODEs that describe population growth/decline
+%according to Eq.~\ref{eq:kinetic_equation} takes the following form:
+%%
+%%
+%\begin{equation}
+%  \begin{split}
+%    \label{SystemODE}
+%    \frac{dP_{\mathrm{U}}}{dt}  =  P_{\mathrm{LE}}  k_{\mathrm{D}^{-}} - P_{\mathrm{U}}  k_{\mathrm{D}^{+}}\\    
+%    \frac{dP_{\mathrm{LE}}}{dt} =- P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) +
+%    P_{\mathrm{E}}  k_{\mathrm{E}^{-}} + P_{\mathrm{U}} k_{\mathrm{D}^{+}} \\
+%    \frac{dP_{\mathrm{E}}}{dt}  =  P_{\mathrm{LE}}  k_{\mathrm{E}^{+}} -
+%    P_{\mathrm{E}} (k_{\mathrm{A}} + k_{\mathrm{E}^{-}}) \\
+%    \frac{dP_{\mathrm{B}}}{dt}  = P_{\mathrm{E}} k_{\mathrm{A}}. 
+%  \end{split}
+%\end{equation}                                                                            
+%%
+%%
+%In this, $P$ is normalized time dependant population of the state denoted by its subscript.    
+%Population of unbound state $P_{\mathrm{U}}$ can grow at rate $k_{\mathrm{D}^{-}}$ by gaining from
+%state 'LE', while it can decrease at rate $k_{\mathrm{D}^{+}}$ by transfering reactants to state
+%'LE'. The rest of the equations can be interpreted similarly. The state 'LE' is the most interactive
+%one according to its ability to comunicate both forward and backward with neighbouring states
+%'U' and 'E'.
+%
+%System of differential equations shown in Eq.~\ref{SystemODE} can be solved numerically
+%using linear algebra, hence the eigenvalue approach. We first rewrite equations to have the following form:
+%%
+%%
+%\begin{equation}
+%  \label{vec_ODE}
+%  K \vec{P}  = \frac{d}{dt} \vec{P}.
+%\end{equation}                                                                                                 
+%%
+%%
+%In this equation, $K$ is a rate matrix;
+%%                                                                                                            
+%%                                                                                                            
+%\begin{equation}                                                                                             
+%  \label{eq:rate_mat}                                                                                       
+%  K =                                                                                                 
+%  \left(\begin{array}{cccc}                                                                            
+%    -k_{\mathrm{D}^{+}}  & k_{\mathrm{D}^{-}}  &  0 & 0  \\                                                                
+%    k_{\mathrm{D}^{+}} &  -(k_{\mathrm{D}^{-}} + k_{\mathrm{E}^{+}})  & k_{\mathrm{E}^{-}}  & 0   \\             
+%    0 & k_{\mathrm{E}^{+}}  &  -(k_{\mathrm{A}} + k_{\mathrm{E}^{-}})  & 0  \\
+%    0  &  0  &  k_{\mathrm{A}}  &  0       
+%  \end{array}\right)                                                                                         
+%\end{equation}
+%%
+%%                                                                                                            
+%, and $\bm{P}$ represents population vector with four states:
+%%                                        
+%%
+%\begin{equation}                                                                                             
+%  \label{eq:pop_vec}                                                                                       
+%  \vec{P} =                                                                                                 
+%  \left(\begin{array}{c}                                                                            
+%    P_{\mathrm{U}}\\                                                                
+%    P_{\mathrm{LE}} \\             
+%    P_{\mathrm{E}}  \\
+%    P_{\mathrm{B}}      
+%  \end{array}\right)                                                                                         
+%\end{equation}                                                                                               
+%%                                                                                                            
+%%                      
+%We solve this equations using 'odeint' function under 'scipy' library with Python programming
+%language. We set state 'U' fully populated $P_{\mathrm{U}}$=1 and the rest of the states unpopulated,
+%as initial condition to make it consistent with the simulation.
+%The result of numerical calculations is shown Fig.~\ref{fig:popu_time1} via population vs time graphs.
+%%
+%%                                                                                                           
+%\begin{figure}[htp!]                                                                                          
+%  \begin{centering}                                                                                         
+%    \includegraphics[width=10cm]{figures/chap4_figs/popu_time1.pdf}
+%    \caption{Population dynamics of al four states is shown for a pKID-KIX binding
+%      simulation performed at 300K for $\gamma_{\mathrm{I}} / \gamma_0$=1.0 case.}                    
+%    \label{fig:popu_time1}                                                                                 
+%  \end{centering}                                                                                           
+%\end{figure}                                                                                                
+%%                   
+%%
+%As depicted, initially unbound state population undergoes sudden decrease, while all other
+%states are populating. Then after $10^6$ md steps, intermediate states also start to decrease
+%by sequentially transfering to bound state. Interestingly, 'LE' state grows and declines faster
+%than the 'E' encounter state. This is in part due to 'LE' state being the neirest nighbour
+%of state 'U'. Besides, 'LE' state is not influenced by strong native interactions, that
+%makes it short lived. 
+%
+%%*************************************************************************************************
+%%\section{\textbf{Steady State Approximation}}\label{sect:five_two}
+%%*************************************************************************************************
+%Another, approximate, but the most common method to solve this equations is achieved through
+%steady state approximation(SSA). SSA dictates that popolations of intermediate states are small
+%and time independant. Under these assumptions system of ODEs can be simplified. For instance,
+%setting time derivatives of states 'E' and 'LE' we get following equations:
+%%
+%%
+%\begin{equation}
+%  \begin{split}
+%    \label{SSA1}
+%    \frac{P_{\mathrm{E}}}{P_{\mathrm{LE}}} = \frac{k_{\mathrm{E}^{+}}}{ k_{\mathrm{A}} + k_{\mathrm{E}^{-}}} \\
+%    P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) = P_{\mathrm{E}} k_{\mathrm{E}^{-}} +
+%    P_{\mathrm{U}} k_{\mathrm{D}^{+}} \\
+%  \end{split}
+%\end{equation}                                                                            
+%%
+%%
+%These equations can be combined to relate populations of states 'E' and 'U' by
+%eliminating $P_{\mathrm{LE}}$:
+%%
+%%
+%\begin{equation}
+%  \label{SSA2}
+%  \frac{P_{\mathrm{E}}}{P_{\mathrm{U}}} = \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{A}} + k_{\mathrm{E}^{-}}}
+%\end{equation}                                                                                                 
+%%
+%%
+%Second condition of SSA requires populations of both intermediate states to be very small
+%compared to other populations. Accordingly, whole reaction can be approximated as bimolecular
+%reaction with only two states 'U' and 'B'. Then the observed rate constant for overall binding
+%kinetics can be expressed as:
+%%
+%%
+%\begin{equation}
+%  \label{SSA3}
+%  k_{\mathrm{on}} =  k_{\mathrm{obs}} = \frac{1}{P_{\mathrm{U}}}\frac{dP_{\mathrm{B}}}{dt} =
+%  \frac{P_{\mathrm{E}}}{P_{\mathrm{U}}}k_{\mathrm{A}}.
+%\end{equation}                                                                                                 
+%%
+%%
+%Finally, combining Equ.~\ref{SSA2} and Equ.~\ref{SSA3} we derive expression for binding
+%rate in terms of all intermediate rates relying on staeady state approximation.
+%%
+%\begin{equation}
+%  \label{SSA4}
+%  \frac{1}{k_{\mathrm{on}}} = \frac{1}{k_{\mathrm{D}^{+}}} +
+%  \frac{1}{k_{\mathrm{E}^{+}}} \Big( \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{D}^{+}}} \Big) +
+%  \frac{1}{k_{\mathrm{A}}} \Big( \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{D}^{+}}} \Big)
+%  \Big( \frac{k_{\mathrm{E}^{-}}}{k_{\mathrm{E}^{+}}} \Big)
+%\end{equation}                                                                                                 
+%%
+%%
+%Furthermore, in this steady state assumptions using Eq.~\ref{SystemODE}, it can be shown that
+%population of bound state grow linearly, while population of unbound decay exponentially.
+%
+%%Comparison with simulated $k_{on}$ at different temps
+%
+
+
+%*************************************************************************************************
+\section{\textbf{Simulated Binding Rates as a Function of Reconfiguration Time}}\label{sect:rates_reconfig}
+%*************************************************************************************************
+
+Binding kinetics of an unstructured protein to a target protein is affected by
+various different factors such as dynamic flexibility, temperature, non-specific
+(i.e., non-native) interactions, and stability.  Among these factors, the
+protein's dynamics has received little attention.  Although changes
+in pKID's reconfiguration timescale does not affect the thermodynamics of
+pKID-KIX binding, we expect it to influence the kinetics within the encounter
+complex.  By separating the binding trajectories into transitions between
+%in to and out of
+four states, we aim to describe how binding kinetics change as a function of the
+timescale of the internal dynamics.
+%
+\begin{figure}[htp!]
+  \begin{centering}                                                                                        
+    \includegraphics[width=16cm]{figures/chap4_figs/traj_fast74_slow100.pdf}
+    \caption{Kinetic trajectories of pKID-KIX association for fast(a) and slow(b)
+      reconfiguration regimes. 200 binding simulations are performed at melting
+      temperature $T$=321K starting from random unbound configuration and stopped
+      when condition for bound minima is reached at $N_{\mathrm{inter}}$=70.
+      Time units are in 100 molecular dynamics steps.}
+    \label{fig:traj_fast74_slow100}
+  \end{centering}                                                                                          
+\end{figure}                                                                                               
+%
+
+Fig.~\ref{fig:traj_fast74_slow100} shows an example of binding trajectories
+%characterized by the number of native intermolecular contacts versus time for
+%slow ($\gamma_{\mathrm{I}}/ \gamma_0$=10.0) and fast
+%($\gamma_{\mathrm{I}} / \gamma_0$=0.2) pKID binding to KIX.
+as described above with four states labeled with distinct colors.
+%These trajectories are
+%selected from the pool of 200 independant binding simulations with distinct
+%initial conditions.
+Here, the overall binding time for the model with slow reconfiguration dynamics is longer
+compared to the model with fast reconfiguration dynamics. In order to understand which
+intermediate steps are responsible for this difference, 
+%in binding time
+we can compare individual states between slow and fast regimes. While the
+time spent in the loose encounter state and the transition attempts in to and
+out of this state appear similar, the model with the slower
+dynamics seems to dwell in the encounter complex for longer periods of time. This allows for more
+varied and extensive intermolecular interactions within the encounter
+complex. This difference is highlighted in the kinetic analysis that follows.
+
+%While 'LE' state
+%doesn't present any conclusive difference, at encounter state 'E' ligand seem to engage for longer time
+%in intermolecular interactions compared to fast giving rise to more stable encounter complex. 
+%Basing this finding on one trajectory may not be convincing, thus we aim to show more detailed evedence
+%based on average statistics of 200 binding events in following sections.
+%
+%
+\begin{table}[htp!]
+  \centering
+  \begin{tabular}{@{}lllllllllllll@{}}
+    & $\gamma_{\mathrm{I}}/\gamma_0$
+    & $k_\mathrm{on}$ 
+    & $k_\mathrm{SSA}$
+    & $k_{\mathrm{D}^{+}}$
+    & $k_{\mathrm{D}^{-}}$
+    & $k_{\mathrm{E}^{+}}$
+    & $k_{\mathrm{E}^{-}}$
+    & $k_{\mathrm{A}}$
+    & $k_{\mathrm{end}}$\\
+    %& $\langle N_{\mathrm{D}^{+}}\rangle$
+    %& $\langle N_{\mathrm{D}^{-}}\rangle$
+    %& $\langle N_{\mathrm{E}^{+}}\rangle$
+    %& $\langle N_{\mathrm{E}^{-}}\rangle$
+    \hline 
+    & 0.2  & 0.54  &   1.06 &  21.2   &   12.4  &   2.62  &   23.2  &   7.73 &   752 \\% &   19.97  &   18.97  &   4.0   &   3.00     
+    & 1.0  & 0.42  &   0.80 &  16.23  &   9.9   &   2.04  &   14.0  &   4.73 &   184 \\% &   20.29  &   19.29  &   3.97  &   2.97     
+    & 2.0  & 0.31  &   0.58 &  12.41  &   7.72  &   1.72  &   10.6  &   3.03 &   103 \\% &   21.25  &   20.25  &   4.50  &   3.50     
+    & 4.0  & 0.26  &   0.49 &  10.93  &   6.85  &   1.51  &   7.0   &   1.93 &   48  \\% &   22.21  &   21.21  &   4.66  &   3.66     
+    & 6.0  & 0.21  &   0.40 &  9.62   &   6.23  &   1.35  &   6.0   &   1.48 &   26  \\% &   24.29  &   23.29  &   5.04  &   4.04     
+    & 8.0  & 0.19  &   0.38 &  8.56   &   5.45  &   1.27  &   4.1   &   1.03 &   21  \\% &   22.41  &   21.41  &   4.97  &   3.98     
+    & 10.0 & 0.17  &   0.34 &  8.13   &   5.26  &   1.05  &   3.3   &   0.94 &   16  \\% &   23.86  &   22.86  &   4.58  &   3.58     
+    & 12.0 & 0.14  &   0.29 &  7.92   &   5.04  &   0.91  &   3.0   &   0.80 &   12  \\% &   27.32  &   26.32  &   4.78  &   3.77     
+  \end{tabular}
+  \caption{Calculated rates are tabulated for various values of $\gamma_{\mathrm{I}}/\gamma_0$ at $T$=300K.
+    All rate units are $10^{-6}$ steps. $k_{\mathrm{SSA}}$ represents overall rate calculated using steady
+    state approximation. $k_{\mathrm{end}} = 1/ \tau_{\mathrm{end}}$ describe the speed of protein reconfiguration. }
+  \label{tab:kin_tab1}
+\end{table}
+%
+%
+
+Kinetics results calculated by taking an average from multiple binding events
+give more reliable statistics about the binding kinetics than comparing individual
+trajectories.
+Table.~\ref{tab:kin_tab1} shows the calculated rates based on 200 binding events
+for each model. The reconfiguration speed decreases as the relative internal friction
+coefficient is varied from $\gamma_I/\gamma_0 = 0.2$ (fast) to
+$\gamma_\mathrm{I}/\gamma_0 = 12.0$ (slow). The overall binding rate monotonically decreases
+from $k_\mathrm{on} = 0.54 \times 10^{-6} \mathrm{steps}^{-1}$ for the model with the
+fastest reconfiguration time to $k_\mathrm{on} = 0.14 \times 10^{-6}\mathrm{steps}^{-1}$
+for the model with the slowest reconfiguration time.
+The reduction in binding rate by a factor of 4 is much weaker
+than the corresponding 63 fold decrease in the reconfiguration rate.
+%Thus, xxx.  
+
+Fig.~\ref{fig:fast_slowT300} shows the rates normalized by the corresponding rate of the model
+with the fastest reconfigurational dynamics ($\gamma_\mathrm{I}/\gamma_0 = 0.2$).
+Although the reconfiguration time varies by a factor of 63, the rates have a more modest dependence
+on $\gamma_\mathrm{I}/\gamma_0$.
+The rates into and out of the loose encounter complex from the unbound state ($k_\mathrm{D}^+$ and $k_\mathrm{D}^-$)
+and the rate into the encounter complex ($k_\mathrm{E}^+$) decrease by a factor of 2 - 3 over this range.
+The overall binding rate has a slightly bigger reduction in the rate, decreasing by a factor of about 4.
+The dependence
+%of $k_{\mathrm{on}}$
+on $\gamma_\mathrm{I}/\gamma_0$ is similar to the dependence of
+$k_\mathrm{end}$ but the reduction is much less. 
+%
+\begin{figure} \begin{centering}
+    \includegraphics[width=11cm]{figures/chap4_figs/fast_slowT300.pdf}
+    \caption{(a) All intermediate rates including overall binding rate is
+      plotted against internal dynamics parameter($\gamma_{\mathrm{I}} / \gamma_0$)
+      at $T_{\mathrm{m}}$=300K for pKID-KIX IDP complex formation. (b) Reconfiguration rate
+      of an isolated pKID is shown as function of $\gamma_{\mathrm{I}} / \gamma_0$.
+      Rates are normalized by its value at the $\gamma_{\mathrm{I}} / \gamma_0$=0.2,
+      the fastest reconfiguration regime.} \label{fig:fast_slowT300}
+  \end{centering}
+\end{figure}                                                                                             
+%
+
+The rate coefficients most affected 
+by reduction in reconfiguration speed
+of pKID are for those entering or leaving the encounter state with
+$k_\mathrm{A}$ and $k_\mathrm{E-}$ both reduced by a factor of 10.
+This nearly order of magnitude reduction in both rates
+can be explained appealing to interaction dynamics in the encounter state E.
+The encounter state encompasses a wide range of both 
+native and non-native interactions as illustrated by the example trajectory  shown in
+Fig.~\ref{fig:traj15_fast_nnat0}.
+When the conformational dynamics are slowed down, 
+these contacts also form and break more slowly, which promotes contacts to last longer.
+This slow reconfiguration leads to a longer lived encounter complex as reflected
+in the rates into and out of the encounter complex.
+
+As shown Fig.~\ref{fig:fast_slowT300}, the diffusive encounter rate $k_{\mathrm{D}^{+}}$
+decrease nearly 3 times as we increase internal friction. 
+According to the design of this study, a diffusion constant of pKID is fixed among
+the models, so I anticipated that the diffusive encounter rate would be independent
+of the internal dynamics.
+% Therefore, diffusive encounter rate is expected to be same between slow and fast regimes.
+After consideration, it seems that this unexpected behavior is a consequence of
+performing the simulation at relatively high ligand concentration. A small box size of length
+$b$ = 110\AA~ was chosen in the interest of making the simulation times shorter to avoid
+non-interacting molecules taking a significant fraction of the binding trajectories.
+Nevertheless, with this concentration, the timescale for diffusion to bring the
+center of mass separation within the radius of gyration of pKID is short enough to  resolve the influence of
+the speed of conformational dynamics on the initial encounter.
+Thus, although  center of mass diffusion occurs with the same timescale for all models, faster
+reconfiguration dynamics result in a shorter time to make non-specific intermolecular contacts
+(and initiate the loose encounter state). If the concentration was lower, I suspect that the influence
+of conformational dynamics would be much less apparent. 
+
+%Although fast ligand diffuse at the same rate as the slow, its
+%rapid rearragments in size allows it to engage with the target more frequently compared to slow. This
+%behaviour is reminescent of ``fly-casting`` mechanism, but the effect is due to dynamics rather that the
+%flexibility. The effect is expected to diminish at large box size, or smaller concentration.
+
+To see this, I consider the initial encounter occurring in two distinct steps:
+first, diffusion brings the center of mass separation into proximity, and then, the protein
+interacts with the substrate through its flexible conformational dynamics. The encounter rate
+can be written as
+%
+\begin{equation}
+  \label{indep_diff}
+  \frac{1}{k_{\mathrm{D}^+}} = \frac{1}{k_{\mathrm{D}^+}'} + \frac{1}{k_{\mathrm{I}}},
+\end{equation}                                                                                           
+where, $k_{\mathrm{D}^+}' = 4\pi D_{\mathrm{CM}} R_\mathrm{g} [C]$ is
+the psuedo first order bimolecular rate to bring the protein within the
+lengthscale of the radius of gyration, $R_\mathrm{g}$, $[C]$ is the ligand
+concentration, and $k_\mathrm{I}$ is the rate for making an intermolecular
+contact when the center of mass separation is within $R_\mathrm{g}$. Here,
+$k_{\mathrm{D}^+}'$ is independent of the conformational dynamics of the
+unfolded protein, and $k_\mathrm{I}$ is independent of the ligand concentration.
+The relative values of  $k_{\mathrm{D}^+}'$ and $k_{\mathrm{I}}$ in Eqn.~\ref{indep_diff} depend on
+the concentration $[C]$.
+At sufficiently low concentrations,  $k'_{\mathrm{D}^+} \ll k_\mathrm{I}$, so that
+the diffusive encounter rate becomes insensitive to the internal dynamics. 
+At higher concentrations the encounter rate depends on the conformational dynamics of the unfolded protein.
+
+%\todoin{We can leave this out for sure: following could be done if we want.  We could use
+%  $4\pi D_\mathrm{CM}R_\mathrm{g} [C]$ instead
+% of the fastest encounter rate.}
+%\newtxt{
+%  If we correct for this effect by setting the diffusive encounter rate to the value of the
+%  simulated encounter for of the fastest rate for each model, 
+%  the range of the overall binding rate changes from a reduction of a factor of 4 to a factor of
+%  xxx. Interpret.
+%}
+
+
+% =========
+
+
+%\begin{figure}[htp!]                                                                                          
+%  \begin{centering}                                                                                         
+%    \includegraphics[width=11cm]{figures/chap4_figs/fast_slowTm321.pdf}
+%    \caption{Average rates are plotted against internal dynamics tuning parameter
+%      ($\gamma_{\mathrm{I}} / \gamma_0$) at melting temperature $T_{\mathrm{m}}$=321K of
+%      pKID-KIX IDP complex formation. The rates are normalized by its value at
+%      $\gamma_{\mathrm{I}} / \gamma_0$=0.2, the fastest reconfiguration regime.}
+%    \label{fig:fast_slowTm321}                                                                                   
+%  \end{centering}                                                                                           
+%\end{figure}                                                                                                
+%                   
+%
+%
+%Average rates calculated at melting temperature of pKID-KIX  binding $T_{\mathrm{m}}$=321K
+%show distinct pattern for intermediate rate $k_{\mathrm{E}^{+}}$ Fig.~\ref{fig:fast_slowTm321}.
+%At 300K, this rate is the least affected by changes in internal dynamics of ligand, while at 321K
+%its order is shifted from first to third. This suggests that $k_{\mathrm{E}^{+}}$ is more sensative to
+%internal dynamics at higher temperatures. ?????????????????
+%This attribute is the consequence of change in free energy
+%landscape due to altered simulation temperature. At low temperatures, bound and encounter states
+%re more stable and favored leading to $k_{\mathrm{E}^{+}}$
+
+%
+%*************************************************************************************************
+%\section{\textbf{Time Evolution of Intermediate State Population}}\label{sect:four_seven}
+%*************************************************************************************************
+%
+%
+
+%*************************************************************************************************
+\section{\textbf{Time Evolution of Binding Kinetics}}
+%*************************************************************************************************
+
+The simulated rates suggest that the encounter complex may be stabilized in some way  when
+the reconfiguration dynamics is slow. This can not be a thermodynamic stabilization (as we have seen
+that the models produce the same equilibrium properties), but must somehow show up in the
+kinetics. To pursue this idea further, we consider the time evolution of the rate equations
+in shown in Eq.~\ref{eq:kinetic_equation}.
+
+
+In this section, I show numerical solutions and 
+analytic approximations  to the differential equations corresponding
+to the chemical reactions in Eq.~\ref{eq:kinetic_equation}. The goal is to
+provide a quantitative description on how population of each state change with time.
+The formulation of the problem assumes that 
+proteins and ligands are initially released into a solution (instead of just two molecules
+used in the simulation). Then, in the forward chemical reaction, the population of the unbound state, which initially dominates,
+declines in population in favor of the loose encounter and encounter state. Ultimately
+ the bound state grows until is encompasses the entire system (because the back reaction is not included).
+
+The kinetics scheme shown in Eq.~\ref{eq:kinetic_equation} can be represented 
+by a system of linear ordinary differential equations (ODEs)
+that describe the populations as a function of time
+%
+%
+\begin{align}
+    \label{eq:SystemODE_1}
+  \frac{dP_{\mathrm{U}}}{dt}  &=  P_{\mathrm{LE}}  k_{\mathrm{D}^{-}} - P_{\mathrm{U}}  k_{\mathrm{D}^{+}}\\
+      \label{eq:SystemODE_2}
+    \frac{dP_{\mathrm{LE}}}{dt} &=- P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) +
+                                  P_{\mathrm{E}}  k_{\mathrm{E}^{-}} + P_{\mathrm{U}} k_{\mathrm{D}^{+}} \\
+  \label{eq:SystemODE_3}
+    \frac{dP_{\mathrm{E}}}{dt}  &=  P_{\mathrm{LE}}  k_{\mathrm{E}^{+}} -
+                                  P_{\mathrm{E}} (k_{\mathrm{A}} + k_{\mathrm{E}^{-}}) \\
+    \label{eq:SystemODE_4}
+    \frac{dP_{\mathrm{B}}}{dt}  &= P_{\mathrm{E}} k_{\mathrm{A}}. 
+  \end{align}
+%\begin{equation}
+%  \begin{split}
+%    \label{SystemODE}
+%    \frac{dP_{\mathrm{U}}}{dt}  =  P_{\mathrm{LE}}  k_{\mathrm{D}^{-}} - P_{\mathrm{U}}  k_{\mathrm{D}^{+}}\\    
+%    \frac{dP_{\mathrm{LE}}}{dt} =- P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) +
+%    P_{\mathrm{E}}  k_{\mathrm{E}^{-}} + P_{\mathrm{U}} k_{\mathrm{D}^{+}} \\
+%    \frac{dP_{\mathrm{E}}}{dt}  =  P_{\mathrm{LE}}  k_{\mathrm{E}^{+}} -
+%    P_{\mathrm{E}} (k_{\mathrm{A}} + k_{\mathrm{E}^{-}}) \\
+%    \frac{dP_{\mathrm{B}}}{dt}  = P_{\mathrm{E}} k_{\mathrm{A}}. 
+%  \end{split}
+%\end{equation}                                                                            
+%
+%
+Here, $P_\alpha(t)$ is a normalized population of the state denoted by its subscript.    
+The population of the unbound state, $P_{\mathrm{U}}$, can grow at rate $k_{\mathrm{D}^{-}}$ by
+gaining from state LE, while transition to the LE state decreases $P_\mathrm{U}$ with
+a rate $k_{\mathrm{D}^{+}}$.
+The rest of the equations can be interpreted similarly. The derivative of the LE state
+involves the most species because transitions between U and E occur in both forward
+and backward directions.
+
+Eq.~\ref{eq:SystemODE_1} - Eq.~\ref{eq:SystemODE_4} can be solved numerically by uncoupling the
+linear equations. We first rewrite equations as 
+%
+%
+\begin{equation}
+  \label{eq:vec_ODE}
+  K \vec{P}  = \frac{d}{dt} \vec{P}.
+\end{equation}                                                                                           
+with a rate matrix,
+\begin{equation}
+  \label{eq:rate_mat}
+  K =                                                                                                 
+  \left(\begin{array}{cccc}                                                                            
+    -k_{\mathrm{D}^{+}}  & k_{\mathrm{D}^{-}}  &  0 & 0  \\                                                                
+    k_{\mathrm{D}^{+}} &  -(k_{\mathrm{D}^{-}} + k_{\mathrm{E}^{+}})  & k_{\mathrm{E}^{-}}  & 0   \\             
+    0 & k_{\mathrm{E}^{+}}  &  -(k_{\mathrm{A}} + k_{\mathrm{E}^{-}})  & 0  \\
+    0  &  0  &  k_{\mathrm{A}}  &  0
+  \end{array}\right),
+\end{equation}
+and populations of the species represented by the vector, 
+\begin{equation}
+  \label{eq:pop_vec}                                                                                       
+  \vec{P} =                                                                                                 
+  \left(\begin{array}{c}                                                                            
+    P_{\mathrm{U}}\\                                                                
+    P_{\mathrm{LE}} \\             
+    P_{\mathrm{E}}  \\
+    P_{\mathrm{B}}      
+  \end{array}\right)                                                                                        
+\end{equation}                                                                                               
+Eq.\ref{eq:vec_ODE} can be solved by diagonalizing the rate matrix. I do this numerically
+using 'odeint' function under 'scipy' library with Python programming language.
+
+Initially, the system is set to be entirely unbound, with $P_{\mathrm{U}}(0)=1$ and  $P_{\alpha \ne \mathrm{U}}(0) = 0$.
+A typical example of the evolution of the species is shown in Fig.~\ref{fig:popu_time1}
+calculated with the simulated rates corresponding to $\gamma_\mathrm{I}/\gamma_0 = 1$.
+As shown in this figure, the initially unbound state population undergoes sudden decrease,
+while all other states rapidly begin to populate. After rapidly reaching a maximum, the LE and E states
+decline by sequentially transferring population to the bound state.
+
+%\todohl{not sure this is easy to see in this example. edit this part}{
+%Interestingly, the LE state grows and declines to a greater extent than 
+%the E encounter state.
+%This is in part due to LE state being the nearest neighbour
+%of state U. Besides, LE state is not influenced by strong native interactions, that
+%makes it short lived. }
+
+\begin{figure}[htp!]
+  \begin{centering}                                                                                        
+    \includegraphics[width=10cm]{figures/chap4_figs/popu_time1.pdf}
+    \caption{Population dynamics of al four states is shown for a pKID-KIX
+      binding simulation performed at 300K for
+      $\gamma_{\mathrm{I}} / \gamma_0=1.0$. Time is in units of 
+      $10^6$ simulation steps.}
+    \label{fig:popu_time1}                                                                                 
+  \end{centering}                                                                                          
+\end{figure}                                                                                             
+
+The steady state approximation (SSA) is a common approximation to simplify
+linear rate equations.
+%An  approximate, but common, method to solve these equations is achieved through
+%steady state approximation (SSA).
+The SSA assumes that populations of intermediate species
+quickly equilibrate to time independent values.
+%Under these assumptions, system of ODEs can be simplified.
+Setting the time derivatives of states $P_\mathrm{E}(t)$ and $P_\mathrm{LE}(t)$ to zero leads to
+the following conditions,
+\begin{equation}
+  \label{SSA1}
+  \frac{P_{\mathrm{E}}}{P_{\mathrm{LE}}} = \frac{k_{\mathrm{E}^{+}}}{ k_{\mathrm{A}} + k_{\mathrm{E}^{-}}},
+\end{equation}
+and
+\begin{equation}
+  \label{SSA2}
+  P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) = P_{\mathrm{E}} k_{\mathrm{E}^{-}} +
+  P_{\mathrm{U}} k_{\mathrm{D}^{+}}.
+\end{equation}
+%\begin{equation}
+%  \begin{split}
+%    \label{SSA1}
+%    \frac{P_{\mathrm{E}}}{P_{\mathrm{LE}}} = \frac{k_{\mathrm{E}^{+}}}{ k_{\mathrm{A}} + k_{\mathrm{E}^{-}}} \\
+%    P_{\mathrm{LE}} (k_{\mathrm{E}^{+}} + k_{\mathrm{D}^{-}}) = P_{\mathrm{E}} k_{\mathrm{E}^{-}} +
+%    P_{\mathrm{U}} k_{\mathrm{D}^{+}} \\
+%  \end{split}
+%\end{equation}                                                                            
+%
+%
+Combining Eq.~\ref{SSA1} and Eq.~\ref{SSA2} and eliminating, $P_{\mathrm{LE}}$, gives
+\begin{equation}
+  \label{SSA2}
+  \frac{P_{\mathrm{E}}}{P_{\mathrm{U}}} = \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{A}} + k_{\mathrm{E}^{-}}}.
+\end{equation}                                                                                                 
+A second condition of SSA requires populations of both intermediate states to remain small
+compared to other populations. Accordingly, the whole reaction can be approximated as bimolecular
+reaction with only two states U and B. Then, the observed rate constant for overall binding
+kinetics can be expressed as an effective two state rate:
+\begin{equation}
+  \label{SSA3}
+  k_{\mathrm{on}} =  k_{\mathrm{obs}} = \frac{1}{P_{\mathrm{U}}}\frac{dP_{\mathrm{B}}}{dt} =
+  \frac{P_{\mathrm{E}}}{P_{\mathrm{U}}}k_{\mathrm{A}}.
+\end{equation}                                                                                           
+Finally, combining Equ.~\ref{SSA2} and Equ.~\ref{SSA3}, we derive expression for binding
+rate in terms of all intermediate rates relying on steady state approximation.
+%
+\begin{equation}
+  \label{SSA4}
+  \frac{1}{k_{\mathrm{on}}} = \frac{1}{k_{\mathrm{D}^{+}}} +
+  \frac{1}{k_{\mathrm{E}^{+}}} \Big( \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{D}^{+}}} \Big) +
+  \frac{1}{k_{\mathrm{A}}} \Big( \frac{k_{\mathrm{D}^{-}}}{k_{\mathrm{D}^{+}}} \Big)
+  \Big( \frac{k_{\mathrm{E}^{-}}}{k_{\mathrm{E}^{+}}} \Big)
+\end{equation}                                                                                                 
+
+%\todohl{not sure if this is relevant}{
+%Furthermore, in this steady state assumptions using Eq.~\ref{SystemODE}, it can be shown that
+%population of bound state grow linearly, while population of unbound decay exponentially.}
+%Comparison with simulated $k_{on}$ at different temps
+
+
+%====
+The average binding rates calculated using steady state approximation Eq.~\ref{SSA4}, as shown in
+Table.~\ref{tab:kin_tab1}, are off by nearly 50\% from actual binding rates. This
+suggests that approximation is not accurate, perhaps due to conditions imposed by steady state
+are not met. Most likely this is due to the large growth and decay of the LE state as shown in
+Fig.~\ref{fig:popu_time_sf}. The evolution of $P_\mathrm{E}(t)$ likely meets the requirements
+for an accurate steady state simplification.
+
+%==============================================================================================
+
+\begin{figure}[htp!]
+  \begin{centering}                                                                                        
+    \includegraphics[width=10cm]{figures/chap4_figs/popu_time_SlowFast.pdf}
+    \caption{Time evolution of all populations is presented for fast (a)
+      $\gamma_{\mathrm{I}} / \gamma_0$=0.2 and slow (b) $\gamma_{\mathrm{I}} / \gamma_0$=12
+      reconfiguration regimes. Time units are in $10^{6}$ md steps.}                    
+\label{fig:popu_time_sf}                                                                                 
+  \end{centering}
+\end{figure}                                                                                             
+
+
+The evolution of $P_\mathrm{LE}(t)$ and $P_\mathrm{E}(t)$ show interesting behavior as a function
+of the reconfiguration timescale as illustrated in  Fig.~\ref{fig:popu_time_sf}.
+When the reconfiguration time is fast, the maximum population obtained by the encounter complex state
+(E) remains small, and when the reconfiguration is slow, maximum reaches a larger value.
+%The population of bound state grow nearly 3 times faster for fast reconfiguration compared to slow. 
+This is a kinetic signature of the increased population of the encounter complex
+inferred by the slow rates into and out of the encounter complex. In terms of the
+interaction between the molecules, the greater maximum population of LE can be
+rationalized by transient and dynamic nature of the intermolecular contacts in
+the encounter complex. Once formed, these contacts are more likely to break when
+the reconfiguration dynamics is fast before contacts from neighboring residues
+can stabilize the interactions. Consequently, when the dynamics is
+very fast, transient encounter complex population remains small.
+In contrast, slower reconfiguration dynamics allows
+sufficient time for adjacent contacts to form promoting the greater growth of
+the encounter state population.
+
+
+%\todohl{edit, delete, or incorporate above}{
+%Fig.~\ref{fig:popu_time_sf} shows $P_\mathrm{LE}(t)$ and $P_\mathrm{E}(t)$ for the set
+%of models with varying reconfiguration times. 
+%As shown, the population of bound state grow nearly 3 times faster for fast reconfiguration compared
+%to slow. Additionally, the population of state 'E' for slow ligand initially grow to a larger extent
+%and decay slower suggesting that 'E' state is more stable compared to fast ligand.
+%}
+
+%                                                                                                           
+%
+The evolution of $P_\mathrm{LE}(t)$ and $P_\mathrm{E}(t)$ for the set
+of models with varying reconfiguration times is shown 
+Fig.~\ref{fig:all_E_popuT300} and Fig.~\ref{fig:all_LE_popuT300}, respectively. 
+Interestingly, the loose encounter population reaches the same maximum
+of approximately 0.5 for all reconfiguration timescales. Nevertheless, $P_\mathrm{LE}(t)$
+decay rate reflects the speed of the dynamics. 
+%\hl{
+%The 'LE' state population growth accounting for transitions coming from unbound state, mainly
+%controlled by diffusion that is kept constant. This explains why growth of this state is not
+%influenced by changes in the reconfiguration speed of ligand.
+%In contrast, the reduction of LE state population is in part due to transitions to E state.
+%These transitions get slower as reflected in $k_{\mathrm{E}^+}$ at slow reconfigurations speeds
+%giving rise to loger relaxation time for $P_{\mathrm{LE}}$ decay.}
+%\todoin{I don't think the hl part above is convincing because for us kD+ does change. I would like an
+%  explanation though. Could ssa help?
+%  One explanation === not sure I like this either. Especially the decay part. Anwyway,
+%  maybe we can replace the highlighted part with this below}
+%\hl{
+The initial growth approximately depends on the rates into LE from U ($k_\mathrm{D}^+$) and out of LE
+to U and E ($k_\mathrm{D}^- + k_\mathrm{E}^+$). Since these remain in the same proportion
+as the reconfiguration speed changes, the maximum population of $P_\mathrm{LE}(t)$ is unaffected
+from changes in $\tau_\mathrm{reconfig}$.
+In contrast, the decay of LE to E does depend on $\tau_\mathrm{reconfig}$ as reflected by the reduction
+of  $k_\mathrm{E}^{+}$ as the reconfiguration time increases.
+Fig.~\ref{fig:all_E_popuT300} shows that the maximum population of $P_\mathrm{E}(t)$
+progressively grows as the reconfiguration time becomes longer. This maximum reaches about
+3 times higher peak value for slow reconfiguration ($\gamma_{\mathrm{I}} / \gamma_0$=10.0)
+compared to the fastest reconfiguration speed($\gamma_{\mathrm{I}} / \gamma_0$=0.2).
+In addition, $P_{\mathrm{E}}$ relaxations occur at
+slower rates gradually decreasing as the reconfiguration dynamics slow, similar to the decay of
+$P_\mathrm{LE}(t)$.
+
+\begin{figure}[htp!]
+  \begin{centering}                                                                                        
+    \includegraphics[width=12cm]{figures/chap4_figs/all_LE_popuT300.pdf}
+    \caption{Growth and decay of loose encounter state is illustrated for
+      range of parameters that control reconfiguration speed of pKID.
+      Time units are in $10^{6}$ md steps.}                    
+   \label{fig:all_LE_popuT300}                                                                                 
+  \end{centering}
+\end{figure}
+
+\begin{figure}[htp!]                                                                                     
+\begin{centering}                                                                                        
+    \includegraphics[width=12cm]{figures/chap4_figs/all_E_popuT300.pdf}
+    \caption{Time evolution of encounter state is depicted for the
+      set of $\gamma_{\mathrm{I}}$ values. Time units are in $10^{6}$ md steps.}                    
+\label{fig:all_E_popuT300}                                                                               
+  \end{centering}
+\end{figure}                                                                                                
+
+
+%
+
+Longer lived encounter state due to ligand's slow reconfiguration dynamics is reminiscent
+of the way non-specific attractive interactions stabilize the encounter complex.\cite{huang:10a}
+However, stabilization of the encounter complex by non-native contacts is reflected in the
+free energy and other thermodynamic quantities like the thermodynamic binding mechanism.
+In contrast, the transient enhanced population of the encounter complex due to slowing down
+the reconfigurational dynamics is a kind of kinetic stabilization: it lengthens the
+lifetime of the encounter complex during binding events, but does not have a thermodynamic
+signature.
+
+%
+%*************************************************************************************************
+\section{\textbf{Non-native Contacts Stabilize Intermediate State}}\label{sect:non_native}
+%*************************************************************************************************
+
+In this section, I  consider the influence of non-specific
+hydrophobic interaction between pKID and KIX on binding
+thermodynamics and kinetics of IDP association in order give some context to the results
+described in this chapter. These
+coupled folding and binding simulations include non-native
+hydrophobic attraction between pKID and KIX added to the coarse-grained Hamiltonian I have used
+so far. 
+The role of non-native interactions has been reported for coupled folding and binding
+of pKID-KIX in earlier work by other researchers, albeit without the inclusion of desolvation
+barriers.\cite{huang:10a,turjanski:08}.
+For pKID-KIX IDP association, inclusion of weak non-specific hydrophobic interactions of the type
+considered here
+% via gaussian type attractive potential Eq.~\ref{eq:U_nnat}
+has been previously shown to increase
+binding rate, while not affecting the binding mechanism. \cite{huang:10a,turjanski:08}. 
+The purpose here is to compare the thermodynamic stabilization of the encounter complex
+through non-native interactions with the kinetic enhancement to the encounter complex due to slower
+reconfigurational dynamics. Accordingly, the dynamics considered in this section use the
+same friction coefficient for both internal and center of mass motion ($\gamma_\mathrm{I}/\gamma_0 = 1$).
+
+Following Huang \textit{et al.},\cite{huang:10a} I implemented a non-native
+hydrophobic potential into \textit{Cafemol} simulation package. The functional
+form of the potential is a Gaussian well with constant width and mean located at
+non-native contact distance $d$
+%
+%
+\begin{equation}
+  \label{eq:U_nnat}
+  V_{\mathrm{hp}}(\bm{r}_i,\bm{r}_j) = K_{\mathrm{hp}} \bar{\alpha}_{ij}^{\mathrm{MJ}} \epsilon_{\mathrm{0}}
+  \exp{ \Big(- \frac{( |\bm{r}_i - \bm{r}_j| - d )^2}{2} \Big )}.
+\end{equation}
+%
+%
+Here, $\bm{r}_i$ and  $\bm{r}_j$ are position vectors of interacting particles $i$ and $j$,
+$d$ is uniformly set to 5\AA~. The strength of the non-native hydrophobic contacts are modeled after
+Miyazawa-Jernigan\cite{miyazawa:99s}
+sequence specific energy parameters as shown in Table.~\ref{tab:e_nnat}. 
+The energy parameters in the sequence specific
+Miyazawa-Jernigen matrix $\alpha_{ij}^{\mathrm{MJ}}$ are normalized by the standard deviation
+($\bar{\alpha}_{ij}^{\mathrm{MJ}}=\alpha_{ij}^{\mathrm{MJ}}/\mathrm{std}(\alpha^{\mathrm{MJ}})$) and
+factored by the native contact interaction strength, $\epsilon_0 = 0.3$ kcal/mol. The
+coefficient $K_{hp}$ is used to control the strength of non-specific hydrophobic interactions.
+This coefficient is varied to assess the influence of non-native interaction on
+binding thermodynamics and kinetics.
+Non-native interactions are restricted to intermolecular hydrophobic residue pairs,
+i.e., the pairs of amino acids listed in Table.~\ref{tab:e_nnat}.
+
+
+\begin{table}[t!]
+  \begin{center}
+    \begin{tabular}{@{}l|lllllllll@{}}
+      & ALA  %\footnote{Rates expressed in $10^{-6} [\Delta t^{-1}]$.}
+      & ILE
+      & LEU
+      & MET
+      & PHE
+      & TRP
+      & TYR
+      & VAL \\
+      \hline
+      ALA & -0.12 & -0.37 & -0.38 & -0.27 & -0.36 & -0.27 & -0.20 & -0.32 \\
+      ILE & -0.37 & -0.74 & -0.81 & -0.66 & -0.73 & -0.60 & -0.49 & -0.67 \\
+      LEU & -0.38 & -0.81 & -0.84 & -0.70 & -0.80 & -0.62 & -0.55 & -0.74 \\
+      MET & -0.27 & -0.66 & -0.70 & -0.70 & -0.83 & -0.73 & -0.56 & -0.51 \\
+      PHE & -0.36 & -0.73 & -0.80 & -0.83 & -0.88 & -0.68 & -0.58 & -0.67 \\
+      TRP & -0.27 & -0.60 & -0.62 & -0.73 & -0.68 & -0.64 & -0.49 & -0.51 \\
+      TYR & -0.20 & -0.49 & -0.55 & -0.56 & -0.58 & -0.49 & -0.45 & -0.38 \\
+      PRO & -0.32 & -0.67 & -0.74 & -0.51 & -0.67 & -0.51 & -0.38 & -0.65 
+    \end{tabular}
+    \caption{Miyazawa-Jernigan contact energy parameters for non-native hydrophobic interactions
+      are shown. %scale factor to have units in kkal/mol at T=300 is scale-factor=0.5961660
+    }
+    \label{tab:e_nnat}
+  \end{center}
+\end{table}
+%
+%
+
+%Equilibrium simulations performed for pKID-KIX association using various
+%strengths of the hydrophobic interactions.
+The free energy profiles
+as a function of the fraction of intermolecular native contacts are
+shown in Fig.~\ref{fig:nnat_free}.
+Without non-native interactions ($K_\mathrm{hp} = 0$), there is an approximately
+3.25 $k_\mathrm{B}T$ barrier separating the unbound $Q_\mathrm{inter} = 0$ from
+a broad bound basin at higher $Q_\mathrm{inter}$.
+Stronger non-native hydrophobic interactions (increasing $K_\mathrm{hp}$)
+stabilize the transition state region ($0.17 \le Q_{\mathrm{inter}} \le 0.3$)
+and reduces the barrier to binding. As $K_\mathrm{hp}$ increases,
+a local minimum begins to form, progressively lowering its free energy,
+and the transition state ensemble moves to higher values of $Q_\mathrm{int}$.
+In fact, when $K_{\mathrm{hp}} = 2.0\epsilon_0$, the local intermediate formed in this transition
+region is more stable
+than bound complex. In contrast, the influence $K_{\mathrm{hp}}$ on unbound and bound
+states are not as prominent. This is because in the bound state, the interactions are primarily
+governed by native interactions, while the unbound state is governed by native
+intramolecular interactions.  Our findings are consistent with results obtained
+by Huang \textit{et. al}\cite{huang:10a}, though that study does not include desolvation barriers
+so that the barriers heights in the transition region are lower than shown in Fig.~\ref{fig:nnat_free}.
+
+%
+%        
+\begin{figure}[h!]
+  \begin{centering}
+    \includegraphics[width=14cm]{nnat_free.pdf}
+    \caption{The effect of non-native contact strength on free energy landscape
+      for pKID-KIX IDP complex formation is depicted. For each non-native hydrophobic
+      energy parameter value 24 independent simulations with $10^7$ md steps are
+      performed at various different temperatures(150K - 600K) and combined using WHAM.}                
+    \label{fig:nnat_free}                                                                                  
+  \end{centering}                                                                                          
+\end{figure}
+%
+%
+
+Fig.~\ref{fig:int_kid} shows the free energy surface parameterized by binding order parameter, $Q_\mathrm{inter}$, and the folding order parameter,  $Q_\mathrm{intra}$, for weak and strong hydrophobic interactions. 
+The model with strong non-native interactions ($K_{\mathrm{hp}} =1.5 \epsilon_0$) exhibit a
+smaller barrier with a more localized transition region than a model with 
+weak non-native contacts ($K_{\mathrm{hp}} = 0.25 \epsilon_0$).
+
+%
+%
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=6in]{figures/chap4_figs/2d_free_int_kid.pdf}
+  \caption{Free energy profile of coupled folding and binding for pKID-KIX binding
+    for non-native contact strength $K_{\mathrm{hp}} = 0.25\epsilon_{0}$
+    (a)and $K_{\mathrm{hp}} = 1.5 \epsilon_0$ (b) are depicted.}
+  \label{fig:int_kid}
+\end{figure}
+%
+%
+
+In order to study how binding kinetics respond to changes in the strength of non-native attraction
+between the molecules,
+we perform 100 binding simulations at $T$=300K for a series of models with
+increasing the non-native contact strength. We used the kinetic scheme from the
+previous section (Eq.\ref{eq:kinetic_equation}) to analyze the kinetics.
+
+As shown in Fig.~\ref{fig:nnat_kin}, an interesting and distinct behavior is observed
+for intermediate species as well as the overall binding rate.
+The binding rate, $k_{\mathrm{on}}$, initially increases with the strength of
+the non-native interactions, and then decreases after it crosses the optimal
+value at $K_{\mathrm{hp}} =0.5\epsilon_0$. We can understand this non-monotonic behavior
+by considering the thermodynamic and kinetic influence of the non-specific attraction
+between the molecules. Weak non-specific interactions
+keep the molecules together longer (stabilizing the encounter complex) as can be seen
+in the reduction of the rates out of the encounter complex, $k_\mathrm{E}^-$ and $k_\mathrm{A}$.
+This promotes more efficient search
+of bound conformation within the encounter complex, offsetting the reduced activation rate $k_\mathrm{A}$. On the other hand, if the non-native intermolecular attraction is too strong,
+the binding rate reduces because the protein kinetics slows due to trapping
+the ligand at non-specific sites of target protein. That is, the binding rate
+reduces when $k_\mathrm{E}^-$ and $k_\mathrm{A}$ are sufficiently small due
+to a slowing of conformational dynamics.
+Thus, weak non-native interactions enhance the
+association rate (by increasing the lifetime of the encounter complex),
+while strong non-native contacts reduce it (by slowing the dynamics).
+%                                                                                                        
+\begin{figure}[h!]                                                                                       
+\begin{centering}                                                                                        
+    \includegraphics[width=5in]{figures/chap4_figs/nnat_kin.pdf}
+    \caption{The effect of non-native contact strength on binding kinetics of
+      pKID-KIX IDP complex formation at $T$=300K. 100 binding simulations
+      are performed in a 110~\AA~cubic box to calculate average rates.}                    
+\label{fig:nnat_kin}                                                                                   
+\end{centering}                                                                                          
+\end{figure}                                                                                                
+%                                                                                                           
+%
+
+%Among intermediate species, only the rate into the encounter complex, $k_{\mathrm{E}^{+}}$,
+%increases by a modest amount.
+%showing similar property
+%to $k_{\mathrm{on}}$.
+%This su%gests that encounter rate has greater contribution to overall
+%rate compared to other intermediate rates.
+%Non-specific interaction encorage the
+%encounter rate the same way
+The individual rates are influenced by non-native interactions in a variety of ways.
+Diffusive encounter rate $k_{\mathrm{D}^{+}}$ and escape rate from loose encounter $k_{\mathrm{D}^{-}}$
+are  relatively unaffected by changes in the non-native contact strength. This is not surprising
+because both U and LE states have the least amount of intermolecular interactions.
+Entering the encounter complex from the loose encounter ($k_{\mathrm{E}^{+}}$)
+has a modestly increased rate when the encounter complex is stabilized by non-native contacts. The 
+activation and the escape rates from encounter state, $k_{\mathrm{A}}$ and $k_{\mathrm{E}^{-}}$,
+show continuous reduction as non-native interactions get stronger. As mentioned earlier, this
+can be rationalized by reduced kinetics due to a ``sticky interface''
+which creates difficulty to either escape or evolve from the encounter complex state.
+This behavior in $k_{\mathrm{A}}$ and
+$k_{\mathrm{E}^{-}}$ is similar to what we observed with slow reconfiguration dynamics
+in the absence of non-native hydrophobic interactions.
+
+
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=5in]{figures/chap4_figs/pop_Estate_nnat.pdf}
+  \caption{Time evolution of encounter 'E' state population is depicted for series of
+    non-native hydrophobic contact strength values. Time units are in $10^{6}$ md steps.}
+  \label{fig:pop_Estate_nnat}
+\end{figure}
+%
+%
+
+While it seems reasonable to rationalize the behavior of the overall binding rate, it is not
+easy to directly quantify precisely how the stabilization of the encounter complex
+influences the kinetics. The analysis I developed to investigate the time dependence
+of the encounter complex can be helpful.
+
+As shown in Fig.~\ref{fig:pop_Estate_nnat}, the
+encounter state population as a function of time, $P_\mathrm{E}(t)$,
+is strongly affected by non-native contact interactions (consistent with our previous discussion).
+The peak value grows with native contact strength, reaching a value nearly 8 times larger
+for  $K_{\mathrm{hp}} =\epsilon_0$ compared to 
+$K_{\mathrm{hp}} =0.0\epsilon_0$. Furthermore, the relaxation times
+significantly increase over this range of strength as well. 
+%This suggests that the thermodynamic stabilization due to non-native interactions
+%can be very strong, which also has kinetic consequences.
+Population growth and decay of the encounter complex with non-native interaction strength
+show the same trends we saw earlier for when the kinetic stabilization of the encounter complex was due to increasing $\tau_\mathrm{reconfig}$ as shown in Fig.~\ref{fig:all_E_popuT300},
+although the enhancement of the population is much greater for the models with non-native interactions
+for the parameters considered in my studies. 
+
+\begin{figure}[htp!]
+  \centering
+  \includegraphics[width=5in]{figures/chap4_figs/pop_LEstate_nnat.pdf}
+  \caption{ Time characteristics for loose encounter 'LE' state population.
+    Time units are in $10^{6}$ md steps.}
+  \label{fig:pop_LEstate_nnat}
+\end{figure}
+%
+%
+
+In contrast, the peak population of loose encounter state, $P_\mathrm{LE}(t)$,
+reduces in magnitude and decays faster with increased
+non-native contact strength Fig.~\ref{fig:pop_LEstate_nnat}.
+With strong non-native contacts, once ligand enters the encounter state it is
+highly unlikely to return back to LE state (the rate $k_\mathrm{E}^-$ is small).
+This is due to strong interaction network composed of both native
+and non-native contacts forming intermolecular interface within the encounter complex.
+This dependence of $P_\mathrm{LE}(t)$ on hydrophobic strength is 
+not the same behavior we found for reduced reconfiguration speed.
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Conclusion}}\label{sect:four_seven}
+%*************************************************************************************************
+%
+
+In this work,  I develop a new method to control internal
+dynamics of a molecule independently from its center of mass motion
+within a structure based C-$\alpha$ model. The implementation
+is motivated by application of internal friction in polymer dynamics studies
+\cite{portman:01a,Gennes:1979,echeverria:14,cheng:13}, where additional drag term is
+introduced into relative motions of adjacent beads.
+% Our preliminary investigation
+This work
+shows that
+coarse grained C-$\alpha$ model simulations do not capture the relative diffusive polymeric
+dynamics timescale without modification.
+Because we found that 
+tuning local energy parameters does not provide sufficient
+change in reconfiguration dynamics of ligand,
+%. For instance, by adjusting the bond angle and
+%dihederal energy parameters we have seen a factor of few times difference between the slow and fast,
+%where experiments report up to 4 orders of magnitude difference \cite{echeverria:14,Zheng:2018b}.
+%Thus,
+I chose to tune the internal dynamics independent of the center of mass motion. This
+allows a wider range of well controlled reconfiguration speeds.
+%by damping motions relative to center of mass that show more that
+%order of magnitude change in reconfiguration speed of ligand.
+
+%In addition to having better control over internal dynamics, this method offers a way to
+%correct the polymeric reconfiguration timescale overestimated by C-$\alpha$ model simulations.
+When the reconfiguration time
+% , with $\tau_\mathrm{reconfig} = 6$ ns,
+is calibrated to be close to
+experimentally reported range for IDPs, \cite{chen:10g,schuler:02p}
+the encounter complex is kinetically stabilized by altering the dynamic 
+interactions within the encounter complex.  % that has been proposed \cite{} without compelling evidence.
+These results are compared to a model for which the lifetime of the encounter complex is increased
+through attractive non-native interactions\cite{huang:10a}.
+I find that the kinetic signatures of enhanced population of the encounter complex
+are similar between the two models, while the loose encounter state shows different trends.
+One essential distinction between these models is that the stabilization of the encounter complex
+due to slower $\tau_\mathrm{reconf}$ times appears only kinetically, while non-native interactions
+give thermodynamic stabilization. Still the comparison between the individual rates give insight
+into the nature of the intermolecular interactions and binding kinetics that are helpful to understand
+the behavior of both models. 
+%This difference is interesting in that can be attributed to nature of stabilization, that is kinetic in our model, while non-native
+%interactions result in thermodynamic stabilization.
+Although the kinetic enhancement of the encounter complex was not very large
+over the range of reconfiguration times studied, 
+it likely would continue to increase with slower dynamics than considered here.
+This study shows that properly tuned reconfiguration dynamics with respect to
+the diffusion constant does influence coupled folding and binding kinetics in a non-trivial
+and physically interesting way. Based on this promising preliminary study,
+I expect that properly tuned reconfiguration dynamics provides a promising avenue to
+help bridge the gap between C-$\alpha$ model and experiment in the future.
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

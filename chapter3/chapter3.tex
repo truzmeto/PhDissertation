@@ -1,0 +1,893 @@
+%\documentclass[../Dissertation.tex]{subfiles}
+\documentclass[../talant.diss.submit.tex]{subfiles}
+\begin{document}
+\label{chap:chapter3}
+%
+% --------------------------------------------------------------------------------------------------
+\section{\textbf{Introduction}}\label{sect:three_one}
+%\section{Introduction}
+%########################### History of IDPs ########################################################
+Nearly $20\%$ of proteins in eukaryotic cell are found unfolded or at least have unstructured domains
+under physiological conditions. Such "intrinsically disordered" proteins (IDPs) are void of well defined
+secondary or tertiary structure in a native state, possessing instead ensemble of rapidly changing conformations
+\cite{wright:99,dunker:01}. Although natively unfolded in a solution, IDPs usually
+(though not always\cite{sigalov:07bin,chakrabortee:10cat})
+fold upon association to target receptors through so called coupled folding and binding mechanism
+\cite{wright:99,sugase:07,huang:09,turjanski:08}, where IDP undergoes structural formation assisted by
+intermolecular interactions with binding partner.
+%Two extreme scenario's for coupled folding and binding
+%are confirmations selection (folding prior to binding) and induced fit (folding upon/after binding) baseline
+%mechanisms have been postulated.\cite{baker:14,espinoza-fonseca:09a}
+%
+%Experimental
+%evidence for induced fit mechanism was demonstrated by Sugase et al for pKID and KIX binding through
+%relaxation and dispersion NMR spectroscopy, where they observed seconary structure formation of pKID
+%helicies as it binds to KIX\cite{sugase:07}.
+%
+%######################## Advantages over ordered protein's
+%Physical properties inherent in IDPs give rise to functional advantages over the folded proteins such
+%as (i) kinetic advantege \cite{shoeportman:00}, (ii) low affinity with high specificity
+%binding\cite{uversky:05}, (iii) enlarged interaction surface\cite{gunasekaran:03}, (iv) ability
+%to interact with multiple targets due to conformational flexibility\cite{kriwacki:96}.
+
+%############################### Fly-casting ########################################################
+Abundance of IDPs in a cell makes coupled folding and binding a common and vital bimolecular activity.
+Majority of functions they carry mostly involve regulation or signal transduction. \cite{gsponer:09r}
+One particular property that received wide attention lately is their kinetic advantage over
+folded proteins facilitated by flexible and dynamic nature inherent in IDPs. This rapid molecular recognition
+associated with coupled folding and binding was originally proposed by Shoemaker $\textit{et~al.}$
+via so called fly-casting mechanism\cite{shoeportman:00}. Proposed framework can be explained in two consecutive
+steps: First, due to lack of structure in the unbound state,IDPs are large in size, which enables weak and
+non-specific interactions with the target molecule at farther distances, therefore enhancing the capture rate.
+Second, intermolecular interactions encourage folding near binding site, thus resulting in fast
+activation (barrier crossing) rate.
+Although IDPs tend to have faster binding rates than folded proteins, they do not always reach
+the upper-limit of bi-molecular binding rates.\cite{rogers:13} In this chapter, via coarse grained native-centric
+simulations, we explore how the picture described by the fly-casting mechanism carries over to the activated binding
+regime. Rather than taking the viewpoint that deviations from diffusion-limited binding is evidence against a
+fly-casting description\cite{huang:09}, we illustrate that the conceptual framework of fly-casting
+persists even when the binding rates are activated.
+
+Coarse grained structure based model simulations\cite{levy:05,okazaki:06} confirm fly-casting either via kinetic or
+thermodynamic binding analysis at different ligand flexibilities.
+\cite{turjanski:08,huang:09,levy:04}
+Long range electrostatic interactions have been shown to increase the ``fly-casting`` effect of IDPs.\cite{levy:07}
+Non-native hydrophobic interactions seem to accelerate binding rate initially, but dramatical reduction in
+rate is observed as residues get trapped in a non-specific states at relatively strong non-native contact
+energies\cite{huang:10a}.
+%By conducting critical assessment on fly-casting,
+%Huang $\it{et.al}$
+%\cite{huang:09} suggested that larger geometric size in the unbound might be kinetic disadvantage, rather than
+%advantage, based on slightly reduced capture rate. This is most likely due to comparing capture rates of flexible
+%and rigid IDPs at large separation of melting temperatures. If proper calibration of intermolecular interactions
+%is performed to bring melting temperatures close, while preserving the balance between bound and unbound states,
+%then it can be shown that capture rate of IDP is faster than the capture rate of its ordered counterpart.
+%Observed ~2.5 fold faster overall association rate for IDP over it's ordered counterpart lead to a conclusion that
+%binding enhancement is governed by number of attempts made before pKID evolves into bound complex, which qualitatively
+%agrees with our findings.
+In another interesting investigation by Ref.~\cite{huang:09}, Huang and Lui expressed skepticism over
+fly-casting to explain the faster kinetics of coupled folding and binding based in part on the observation
+that the rates of encounters were not sensitive to protein flexibility (in fact, they found rigid proteins had
+a slightly higher encounter rate). Enhanced binding rate due to coupled folding and binding is often explained
+by appealing to a diffusion-limited picture of binding. Summarizing the physical basis for fast binding rates of
+IDPs as an ``increased capture radius'' due to the expanded and dynamic conformations of an
+unfolded protein\cite{shoeportman:00} may encourage thinking about coupled folding and binding
+only in the diffusion-limited regime. For example, such comparisons evoke the effective size
+of monomers due to the influence of electrostatic interactions on diffusion limited binding
+rates. Here, we explore how basic conceptual framework of fly-casting carries over
+to the case where overcoming a barrier dominates binding kinetics.
+%
+%Using topology based model, Levy $\it{et~al.}$
+%\cite{levy:04} illustrated fly-casting on dimerization
+%process of partially unfolded monomers that suggested the applicability of proposed framework to wide range of
+%cellular species.
+%
+
+Reaction limited binding in an implicit solvent simulations can be introduced by raising the activation barrier through
+potential that accounts for solvent expulsion upon reaction. So called desolvation barrier potential % Fig.~\ref{fig:potential}
+has been shown to increase free energy barrier at expanse of displacing water molecules upon tight packing of solvent
+exposed sites.\cite{levy:06,cheung:02,liu:05}
+%Implicite solvent simulations usually employ such an effect
+%by introducing the potential that mimics desolvation. For instance, tight packing between solvent exposed binding
+%sites of proteins is achieved at expanse of solvent expulsion, thus increasing the free energy barrier. 
+In addition, this potential has been shown to enhance folding cooperativity \cite{chan:11,liu:05a} as well as produce
+folding rates that span a range consistent with experimental observation.\cite{ferguson:09}
+
+
+%############################--Binding Affinity--#########################################
+Another peculiar advantage of intrinsic disorder is having low affinity with high specificity
+binding.\cite{uversky:05} Upon binding and folding IDPs loose conformational entropy. 
+It's been suggested that this loss is not entropically favorable for binding, thereby uncoupling
+binding affinity from specificity, thus allowing highly specific binding with low affinity.
+\cite{dyson:05,zhou:12}. Binding affinity and rates are simply related through the following
+expression: $K_{\mathrm{a}} = k_{\mathrm{on}}/k_{\mathrm{off}}$. Zhou argued that
+having both high affinity $K_{\mathrm{a}}$ and dissociation rate constant $k_{\mathrm{off}}$ could
+be problematic since association rate constant has an upper limit dictated by diffusion.\cite{zhou:12}
+As an explanation, he suggested that IDP's overcome this problem by adjusting dissociation rate
+$k_{\mathrm{off}}$.
+
+%################### last secion
+Our analysis of the simulated coupled folding and binding of pKID-KIX reveals
+gradual accumulation of binding contacts and resolution of orientational constraints
+starting at a distance on the order of the size of the unfolded protein as a key difference
+in the binding of pKID and a version of pKID which is constrained to be folded throughout
+the simulation. Furthermore, these simulations emphasize that an unfolded protein's ability
+to navigate desolvation barriers incrementally is a primary mechanism promoting fast binding
+as well as high dissociation rate constant with low affinity. 
+
+
+%
+%Extensive experimental studies have been done to clarify if IDPs have kinetic advantage over
+%ordered proteins, and it is found that not all IDPs have this advantage, thus making it poorly understood.
+%
+%
+%Structure based models have been extensiely used as an efficient and alternative model over
+%heavy all atom simulations thus gaining popularity in recent couple decades. In this model each
+%aminoacid is treated as a mass point and impilicite incorporation of the solvent increases
+%computation efficiency by two to three orders of magnitude. Although, this models are computationally
+%very inexpansive and have been providing decent results, its applicability have raised some concernes.
+%For instance, implicit incorporation of solvent effect doesn't capture effects such as desolvation of
+%hydrophobic core. Consequently, desolvation barrier potential was introduced to implement solvent
+%effect\cite{cheung:02}. \\
+%
+%
+%\ About pKID-KIX Complex
+%Phosphorylated kinase-inducible domain(pKID) is the transcription factor cAMP response-element binding
+%protein (CREB) and KIX is the KID-binding domain of the CREB-binding protein. One of the well experimentally
+%caracterized IDP complexes Fig.~\ref{fig:vmd}.
+%The IDP pKID folds into
+%two helices upon binding to KIX; $\alpha_{\mathrm{A}}$ (residues 119-129) and $\alpha_{\mathrm{B}}$
+%(residues 132-146) joined through flexible linker\cite{zor:02}. Recent NMR experiments show that
+%$\alpha_{\mathrm{A}}$ is partialy ordered with  $~50\% $ helical population and $\alpha_{\mathrm{B}}$ is
+%mostly  disordered having about $10-15\%$ residual structure formed\cite{radhakrishnan:98}.
+%Large hydrophobic residues (Tyr 134, Ile 137 and Leu 138) which belong to helix $\alpha_{\mathrm{B}}$ found
+%to be essential for high-affinity binding \cite{radhakrishnan:97,parker:98}.
+%
+%
+%
+%
+%######################################     Summary       ############################################  
+%In this paper, we explain origins of kinetic advantage for IDP pKID over its ingeneered folded clone 
+%as well as its ability to have high specificity with low affinity using native centric C-$\alpha$ model.
+
+%By comparing binding affinities at the same temperature
+%but distinct stabilities we demonstrate that difference in the off rate is the main reason
+%for flexible binding partners to have such a high dissosiation constant over its ordered counterpart.
+%Furthermore, thermodynmics analysis show that such a high off rate of IDP's is a result of its ability
+%to overcome barriers incrementally upon dissociation.
+%In a recent experimental investigation, by destabilizing helical structure of
+%PUMA with proline mutation into surface residues, affinity for Mcl-1 was reduced.
+%In addition, it was demostrated that increase in the off rate was mainly
+%responsible for above decrease in binding affinity\cite{rogers:14}.\\
+
+
+%*************************************************************************************************
+%\section{\textbf{pKID-KIX IDP Complex}}\label{sect:three_two}
+%*************************************************************************************************
+%
+%Phosphorylated kinase-inducible domain(pKID) is the transcription factor cAMP response-element binding
+%protein (CREB) and KIX is the KID-binding domain of the CREB-binding protein. One of the well experimentally
+%caracterized IDP complexes Fig.~\ref{fig:figure1}. The IDP pKID folds into
+%two helices upon binding to KIX; $\alpha_{\mathrm{A}}$ (residues 119-129) and $\alpha_{\mathrm{B}}$
+%(residues 132-146) joined through flexible linker\cite{zor:02}. Recent NMR experiments show that
+%$\alpha_{\mathrm{A}}$ is partialy ordered with  $~50\% $ helical population and $\alpha_{\mathrm{B}}$ is
+%mostly  disordered having about $10-15\%$ residual structure formed\cite{radhakrishnan:98}.
+%Large hydrophobic residues (Tyr 134, Ile 137 and Leu 138) which belong to helix $\alpha_{\mathrm{B}}$ found
+%to be essential for high-affinity binding \cite{radhakrishnan:97,parker:98}.
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=8.0cm]{figures/chap3_figs/figure1.pdf}
+    \caption{NMR structure of pKID-KIX native state(PDB id: 1KDX) is
+      shown, where silver substrate is KIX, and cyan represents IDP
+      pKID. Native state structure for above complex is portrayed using
+      visual molecular dynamics. ~\cite{Humphrey:96}}
+    \label{fig:figure1}
+  \end{centering}
+\end{figure}
+%
+%
+%*************************************************************************************************
+\section{\textbf{Binding Thermodynamics}}\label{sect:three_twoo}
+%*************************************************************************************************
+%
+%
+We first characterize the thermodynamics of coupled folding and binding through
+the free energy parameterized by two global order parameters that monitor the
+folding of pKID ($Q_\mathrm{intra}$) and binding between pKID and KIX
+($Q_\mathrm{inter}$). Here, $Q_\mathrm{intra}$ is the fraction of native
+contacts formed between residues within pKID, and $Q_{\mathrm{inter}}$ is the
+fraction of native contacts formed between pKID and KIX. As shown in
+Fig.~\ref{fig:figure2} (a), unbound and disordered pKID remains
+largely unstructured before overcoming a free energy barrier of approximately
+$2.6\mathrm{kcal/mol}$ at $Q_\mathrm{inter} \approx 0.2$, after which folding
+and binding progressively develop until binding is complete.  This interplay
+between inter and intramolecular contact formation is in harmony with induced
+fit coupled folding and binding mechanism.  In comparison,
+Fig.~\ref{fig:figure2}(b) shows that when pKID is constrained to be folded
+before binding, the free energy barrier separating bound and unbound ensembles
+is approximately 6.5 kcal/mol at $Q_\mathrm{inter}\approx 0.4$. This barrier is
+significantly high with more structured intermolecular interface compared to
+transition barrier of induced fit binding.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=6.0in]{figure2.pdf}
+  \caption{Free energy contour plots of folding and binding of pKID to KIX is
+    shown for flexible (a; $\alpha=0.05$) and rigid (b; $\alpha=1.0$).  Free
+    energy units are in $\mathrm{kcal/mol}$ and sampled at binding/unbinding
+    transition temperatures(Tm) with WHAM.}
+  \label{fig:figure2}
+\end{figure}
+
+A more detailed description of the thermodynamic binding mechanism is obtained
+through local structural order parameters.  The degree of intermolecular
+structure for each residue along pKID sequence as a function of the overall
+native order of the interface between pKID and KIX is illustrated in
+Fig.~\ref{fig:figure3}.  Moving from the bottom to the top of the plot with a
+cross section of fixed $Q_{\mathrm{inter}}$ shows local interfacial order that
+develops in the binding transition from unbound to a fully bound complex. The
+colors in the plot reflect local binding order parameters, $q_{i}$,
+defined as the fraction of intermolecular native contacts involving individual
+residue $i$.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=5.50in]{figure3.pdf}
+  \caption{Fraction of native intermolecular contacts for each individual
+    pKID residue shown as a function of global binding reaction coordinate $Q_{\mathrm{\mathrm{inter}}}$.
+    Normalized density for each residue is represented by color.}
+  \label{fig:figure3}
+\end{figure}
+
+As shown in Fig.~\ref{fig:figure3}, the binding interface initiates with
+$\alpha_{\mathrm{B}}$ followed by the binding of $\alpha_{\mathrm{A}}$.  More
+specifically, the binding transition progresses in steps characterized by bound
+state of three distinct regions along pKID sequence denoted as
+$\alpha_{\mathrm{B-CT}}$ (residues 140-144),$\alpha_{\mathrm{B-NT}}$(residues
+133-139) and $\alpha_{\mathrm{A-CT}}$(residues 124-128) consistent with regions
+highlighted in experimental measurement\cite{sugase:07} and previously reported
+simulations.\cite{ganguly:11} Coupled folding and binding initiates with the
+C-terminal region of $\alpha_{\mathrm{B}}$ ($\alpha_{\mathrm{B-CT}}$), even
+though pKID remains largely unstructured. After $\alpha_{\mathrm{B-CT}}$ binds
+completely, residues in the N-terminal region on $\alpha_{\mathrm{B-NT}}$
+engages in binding at $Q_{\mathrm{inter}}$=0.50, with still no significant
+change in the overall folding of pKID (see Fig.~\ref{fig:figure2}a ).
+Completion of $\alpha_{\mathrm{B-NT}}$ binding at $Q_{\mathrm{inter}}$=0.75
+results in about 10\% additional intramolecular contacts above the order found
+in the unbound ensemble.  Finally, with pKID anchored to KIX by
+$\alpha_{\mathrm{B}}$, the C-terminus region of $\alpha_{\mathrm{A}}$ starts to
+bind, near global free energy minimum shown in Fig.~\ref{fig:figure2}
+($Q_{\mathrm{inter}}$=0.75) followed by the binding of the n-terminus of
+$\alpha_{\mathrm{A}}$.
+
+%
+%*************************************************************************************************
+\section{\textbf{Binding Kinetics}}\label{sect:three_three}
+%*************************************************************************************************
+%
+Simulated binding rates are calculated from the mean first passage times,
+$\tau_\mathrm{on}$, from 200 independent binding reactions. As shown in
+Table~\ref{tab:kinetics}, coupled folding and binding enhances binding rate,
+$k_\mathrm{on} = 1/\tau_{\mathrm{on}}$, by a factor of 7 times the binding rate
+when pKID is structured before binding.  In comparison, course grained
+simulations pKID-KIX with models that do not include desolvation barriers report
+a smaller speed up in the rate (about 2-3 times) when pKID is
+unfolded\cite{turjanski:08,huang:09}.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{@{}llllllll@{}}
+    &$k_\mathrm{on/off}$
+    \footnote{Rates expressed in $10^{-6} [\Delta t^{-1}]$, and time units are in $10^{6} [\Delta t]$}
+    & $\langle n_{\mathrm{enc}}\rangle$
+    & $\tau_{\mathrm{ec}}$ 
+    & $k_{\mathrm{D}^{+}}$
+    & $k_{\mathrm{D}^{-}}$
+    & $k_{\mathrm{A}}$\\
+    \hline
+    flexible & 0.38  & 30  &  0.021 & 16.0  &  49.5  &  1.61   \\
+    rigid    & 0.05  & 225 &  0.018 & 14.3  &  56.8  &  0.25   \\
+  \end{tabular}
+  \caption{Binding kinetics simulations performed at $T_0=321^\circ$ K for a flexible, and $T_0=517^\circ$ K for
+    the rigid pKID. Rates expressed in $10^{-6} [\Delta t^{-1}]$, and time units are in $10^{6} [\Delta t]$.}
+  \label{tab:kinetics}
+\end{table}
+
+
+To understand this difference in more detail, we consider binding kinetics
+that proceeds through a loosely bound encounter complex with
+a subsequent activated step that leads to the final bound complex:\cite{sugase:07,huang:09}
+\begin{equation}
+  \label{eq:kinetic_equation}
+  \ce{
+    \mbox{pKID + KIX} <=>[$k_\mathrm{D}^{+}$][$k_\mathrm{D}^{-}$] \mbox{pKID:KIX}
+    ->[$k_\mathrm{A}$] \mbox{pKID-KIX}
+  }.
+\end{equation}
+Here, $k_{\mathrm{D}^+}$ is the pseudo first order encounter rate for unbound
+molecules to come into proximity through diffusion to form the loosely
+associated encounter complex (pKID:KIX). Interacting protein molecules within
+the encounter complex either escape with a rate constant $k_{D^{-}}$ or proceed
+to form the final bound complex (pKID-KIX) with rate $k_\mathrm{A}$.
+
+For simplicity, the overall binding kinetics described by
+Eq.~\ref{eq:kinetic_equation} does not resolve the transitions metastable states
+within the encounter complex shown in Fig.~\ref{fig:figure3}.  Following
+Ref.~\cite{huang:09},%\onlinecite{huang:09},
+the spatial separation between pKID and KIX and
+their intermolecular native contacts distinguish the encounter complex from the
+unbound and bound states. Kinetic trajectories are started from an unbound
+conformation at a separation distance $d_\mathrm{cm} > 40$\AA.  The protein
+diffuses until it enters the encounter complex by making at least one native
+intermolecular contact. An exit from the encounter complex occurs when all
+intermolecular contacts are lost and the center of mass separation distance
+between the molecules exceeds 40\AA (becoming unbound), or when the fraction of
+native intermolecular contacts exceeds $Q_\mathrm{int} > 0.8$ (becoming bound).
+Qualitative kinetic scenarios are not very sensitive to the precise definition
+of the encounter complex.
+
+The rate constants in Eq.\ref{eq:kinetic_equation} are calculated from
+simulations of independent binding events. A typical simulation consists of
+numerous diffusive encounters with the mean time between successive encounters
+given by mean first passage time to form the encounter complex,
+$\tau_{\mathrm{D}^+}$, plus the mean lifetime of an encounter,
+$\tau_\mathrm{ec}$.  Thus, the overall mean binding time, $\tau_{\mathrm{on}}$,
+can be expressed as
+\begin{equation}
+  \tau_\mathrm{on}= \langle n_\mathrm{enc}\rangle \left(\tau_{\mathrm{D}}^{+}+ \tau_\mathrm{ec}\right),
+  \label{eq:tau_on1}
+\end{equation}
+where$\langle n_\mathrm{enc}\rangle$ is the average number of encounters per
+binding event. Eq.~\ref{eq:tau_on1} can be written as
+\begin{equation}
+  \tau_\mathrm{on} = \langle n_\mathrm{enc}\rangle \tau_{\mathrm{D}^+}  + \tau_\mathrm{A},
+  \label{eq:tau_on2}
+\end{equation}
+where $\tau_\mathrm{A} = \langle n_\mathrm{enc}\rangle \tau_{\mathrm{ec}}$ is
+the mean time spent in the encounter complex per binding event. The simulated
+binding rate, $k_\mathrm{on} = 1/\tau_{\mathrm{on}}$, can therefore be written
+as
+\begin{equation}
+  \label{eq:kon_1}
+  \frac{1}{k_{\mathrm{on}}} = \frac{\langle n_{\mathrm{enc}} \rangle}{k_{\mathrm{D}^+}} + \frac{1}{k_{\mathrm{A}}},
+\end{equation}
+where $k_{\mathrm{D}^+} = 1/\tau_{\mathrm{D}^+}$ and $k_\mathrm{A} = 1/\tau_{\mathrm{A}}$.
+
+Eq.~\ref{eq:kon_1} is a convenient form to analyze simulated binding rates. Nevertheless,
+it can be put into somewhat more familiar form by relating the number of encounters
+that occur for a typical binding event to the relative rates of exiting the encounter complex
+though dissociation, $k_{\mathrm{D}^-}$, or binding, $k_{\mathrm{A}}$.
+The dissociation rate can be calculated from the 
+mean time spent in the encounter complex before dissociating, $\tau_{\mathrm{D}^-}$. 
+If the complex dissociates on average $\langle n_{\mathrm{dis}}\rangle$ times per binding event,
+$\tau_{\mathrm{D}^-}$ is given by
+\begin{equation}
+  \label{eq:tau_dminus}
+  \tau_{\mathrm{D}^-} = \tau_{\mathrm{ec}}\frac{\langle n_\mathrm{enc}\rangle}{\langle n_\mathrm{dis}\rangle}
+  = \tau_{\mathrm{A}}/\langle n_\mathrm{dis}\rangle.
+\end{equation}
+Since $\langle n_{\mathrm{enc}}\rangle = \langle n_{\mathrm{dis}}\rangle + 1$,
+the dissociation rate, $k_{\mathrm{D}^-} = 1/\tau_{\mathrm{D}^-}$, is related to
+$k_\mathrm{A}$ by
+\begin{equation}
+  \label{eq:n_enc}
+  k_{\mathrm{D}^-} = \left( \langle n_{\mathrm{enc}} \rangle - 1 \right) k_{\mathrm{A}}.
+\end{equation}
+
+Eq.~\ref{eq:n_enc} reflects how the simulated number of encounters of a typical binding event
+is reflected in the relative magnitude of $k_\mathrm{D}^{-}$ and $k_\mathrm{A}$: if
+the binding is diffusion limited  ($k_{\mathrm{A}} \gg k_{\mathrm{D}^-}$), every
+encounter resulting in a bound complex, $\langle n_{\mathrm{enc}}\rangle \sim 1$; alternatively,
+if binding is reaction limited ($k_{\mathrm{A}} \ll k_{\mathrm{D}^-}$), the
+encounter complex dissociates many times before binding,
+$\langle n_{\mathrm{enc}}\rangle \gg 1$.
+
+Eliminating $\langle n_\mathrm{enc}\rangle$ from Eq.~\ref{eq:kon_1} gives the
+simulated mean first passage estimate for the overall rate,
+\begin{equation}
+  \label{eq:kon_2}
+  k_\mathrm{on} =
+  \frac{k_\mathrm{D}^{+} k_\mathrm{A}}{k_\mathrm{D}^{+}+ k_\mathrm{D}^{-} + k_\mathrm{A}},
+\end{equation}
+where the rates on the right hand side are determined from $\tau_{D}^{+}$,
+$\tau_{\mathrm{ec}}$, and $\langle n_{\mathrm{enc}}\rangle$ calculated from the
+simulations.  As shown in Table~\ref{tab:kinetics}, $k_\mathrm{A}$ for these
+simulations are at least an order of magnitude smaller than $k_{\mathrm{D}^+}$
+and $k_\mathrm{D}^{-}$ (consistent with many encounters per binding event)
+giving the approximate overall binding rate
+\begin{equation}
+  \label{eq:kon_2}
+  k_\mathrm{on} \approx
+  \frac{k_\mathrm{D}^{+} k_\mathrm{A}}{k_\mathrm{D}^{+}+ k_\mathrm{D}^{-}}.
+\end{equation}
+
+
+As shown in Table~\ref{tab:kinetics}, coupled folding and binding leads to a
+faster rate of entering and a slower rate of escaping the encounter complex than
+when pKID is already folded. This agrees qualitatively with the picture
+envisioned by fly-casting in which the expanded conformations of an unfolded
+protein encourage faster encounter rates, and weak transient attractive
+interactions stabilize the encounter complex that result in decreased escape
+rate. Nevertheless, the difference in $k_\mathrm{D}^{+}$ and $k_\mathrm{D}^{-}$
+are marginal compared to the more than 6-fold decrease in $k_\mathrm{A}$
+consistent with a higher free energy barrier of the rigid protein
+(Fig.~\ref{fig:figure2}). Binding of both proteins is reaction limited, as seen
+from the large number of encounters before succeeding in binding. Since
+$k_\mathrm{D}^{-}$ for the rigid pKID is only about 10\% larger than for the
+flexible pKID, the increase in $\langle n_\mathrm{enc}\rangle$ for a rigid
+protein is primarily due to the decrease of $k_\mathrm{A}$.  These results are
+in qualitative agreement with Ref.~\cite{huang:09} which reports that the
+primary difference between binding kinetics of flexible and rigid pKID is in the
+activated binding step. Without desolvation barriers, the binding is more
+diffusion-limited (with order of magnitude smaller
+$\langle n_{\mathrm{enc}}\rangle$).
+
+Interestingly, the calculated mean lifetime of an encounter,
+$\tau_{\mathrm{ec}}$, is approximately independent of whether pKID is
+unstructured or folded prior to binding. This somewhat surprising result is
+likely due to the model's neglect of non-native and electrostatic interactions
+which likely prolongs the lifetime of the encounter complex of a unfolded
+protein more than a typical encounter complex of two folded
+proteins.\cite{huang:10a,kim:18d}.
+
+%
+%*************************************************************************************************
+\section{\textbf{Fly-casting and reaction limited bindings}}\label{sect:three_four}
+%*************************************************************************************************
+%
+Rationalizations for enhanced rates of IDPs usually implicitly assume diffusion
+limited bimolecular association. Here, we aim to investigate how the picture of
+fly-casting carries over to the case of reaction controlled
+kinetics. Desolvation barriers in the contact potential of this model makes it
+more likely that successful binding event requires multiple attempts before a
+tightly bound complex is formed.
+
+The evolution of local intermolecular order parameters as a function of
+separation distance complements description of the binding mechanism shown in
+Fig.~\ref{fig:figure3}. Since binding initiates with $\alpha_\mathrm{B}$, we use
+the distance between the center of mass of KIX and the center of mass of
+$\alpha_\mathrm{B}$, $D_{\mathrm{CM-B}}$, to characterize the proximity of pKID
+and KIX.  The separation distance of $\alpha_\mathrm{B}$ in the bound complex
+(denoted by $D_\mathrm{nat}$) is approximately 12 \AA.  As shown in
+Fig.~\ref{fig:figure4}, weak and diverse interactions between pKID and KIX
+initiate when $D_\mathrm{CM-B} \approx 21$ \AA, which defines the outer range of
+typical encounter distance, $D_\mathrm{enc}$. 20\% native intermolecular
+contacts occur within the C-terminal region of $\alpha_{\mathrm{B}}$, starting
+at a closer distance, $D_{\mathrm{CM-B}}$=18 \AA.  Contacts with the N-terminal
+end of $\alpha_\mathrm{B}$ begin to develop when pKID and KIX are close within
+$D_{\mathrm{CM-B}}$=16\AA, with full binding of $\alpha_\mathrm{B}$ occurring
+within 2 \AA~of $D_\mathrm{nat}$,
+$14 \mbox{\AA} > D_{\mathrm{CM-B}}> 12\mbox{\AA}$.  Binding of
+$\alpha_\mathrm{A}$, which occurs after binding of $\alpha_\mathrm{B}$, is not
+well represented by this plot because $D_\mathrm{CM-B}$ does not couple closely
+to the binding of $\alpha_{\mathrm{A}}$.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=5.5in]{figure4.pdf}
+  \caption{Native local contact order $q_{i}$ between pKID and KIX residues shown
+    as a function of $\alpha_{\mathrm{B}}$ center of mass separation from
+    KIX(b). Normalized $q_{i}$ for pKID residues are represented via color
+    density. White dash lines show upper limit of $D_{\mathrm{CM-B}}$ for the
+    encounter state denoted as $D_{\mathrm{enc}}$ and its value at native bound
+    state $D_{\mathrm{nat}}$.}
+  \label{fig:figure4}
+\end{figure}
+
+The gradual formation of intermolecular contacts of $\alpha_{\mathrm{B}}$ is
+also reflected in the development of the global native contacts within
+$\alpha_\mathrm{B}$, $Q_\mathrm{B}$, as a function of separation distance,
+$D_\mathrm{CM-B}$.  As shown Fig.~\ref{fig:figure5} (a), nearly 15\% of native
+intermolecular contacts of $\alpha_{\mathrm{B}}$ develop at a separation
+distance of approximately equal to 21 \AA, a distance that exceeds the native
+separation distance, $D_\mathrm{nat}$, by the radius of gyration of
+$\alpha_{\mathrm{B}}$ ($R_\mathrm{G}(B)= 7.2$\AA). Incremental progression of
+contacts after initial weak interactions occurring at a relatively far distance
+on the order of the radius of gyration is in harmony with fly-casting mechanism.
+\cite{shoeportman:00}. When $\alpha_\mathrm{B}$ is already structured throughout
+the binding, in contrast, intermolecular contacts form simultaneously over a
+very narrow range in distance starting at 14 \AA, only 2 \AA~ beyond the
+separation in the native state $D_\mathrm{nat}$.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=6.0in]{figure5.pdf}
+  \caption{ (a) fraction of intermolecular native contacts of
+    $\alpha_{\mathrm{B}}$, $Q_B$, and (b) alignment of the end-to-end vector for
+    the residues of $\alpha_{\mathrm{B}}$ with the orientation in the bound
+    complex, $\cos(\theta_\mathrm{B})$ plotted as a function of center of mass
+    separation between $\alpha_{\mathrm{B}}$ and KIX, where red and blue colors
+    represent unfolded and folded pKID, respectively.}
+  \label{fig:figure5}
+\end{figure}
+
+Coupled folding and binding also influences how pKID overcomes orientational
+constraints associated with the bound complex. To quantify this, we characterize
+the alignment of $\alpha_{\mathrm{B}}$ through the measure,
+$\langle\cos\theta_\mathrm{B} \rangle = \langle
+\hat{\mathbf{r}}\cdot\hat{\mathbf{r}}_0 \rangle$, where $\hat{\mathbf{r}}$ is
+the direction of the relative vector defined by the positions of the terminal
+residues of $\alpha_\mathrm{B}$, and $\hat{\mathbf{r}}_0$ is its orientation in
+the bound structure.  At far distances, $\alpha_{\mathrm{B}}$ has random
+orientations with $\langle\cos\theta_\mathrm{B}\rangle \approx 0$, and in the
+bound complex $\alpha_{\mathrm{B}}$ is aligned
+$\langle\cos\theta_\mathrm{B}\rangle \approx 1$.  As shown in
+Fig.~\ref{fig:figure5} (b), one sees that alignment of $\alpha_{\mathrm{B}}$
+tracks development of intermolecular contacts. Here, $\alpha_{\mathrm{B}}$
+aligns to the bound orientation incrementally when folding and binding are
+concomitant, whereas the entropic loss due to orientation occurs suddenly when
+the helix is rigid.  The alignment of the $\alpha_{\mathrm{B}}$ is reminiscent
+of the way electrostatic steering enhances binding rates of folded proteins by
+increasing the likelihood that a diffusive encounter has the correct orientation
+for binding.\cite{huangsteering:15,antosiewicz:96,tan:93} In coupled folding and
+binding, the ``long-range'' interactions that orient the helix develop along
+with the formation of intermolecular contacts begin over a distance on the order
+of the radius of gyration from the separation in the native complex,
+$D_\mathrm{CM-B} \approx D_\mathrm{nat} + R_\mathrm{G}(B)$.
+
+Because the alignment develops within the encounter complex, a diffusive
+encounter is more likely to successfully bind when folding and binding are
+concomitant.  The distribution of $\cos\theta_\mathrm{B}$ for initial encounters
+of successful binding attempts illustrates this kinetic difference.  As shown in
+Fig.~\ref{fig:figure6}, binding is independent of the alignment of an initial
+encounter when folding and binding are coupled. In contrast, successful binding
+of a previously folded pKID molecule is much more likely to occur when it
+encounters KIX in an orientation similar to that of the bound complex.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=6.0in]{figure6.pdf}
+  \caption{Alignment of both $\alpha_{\mathrm{A}}$(red) and $\alpha_{\mathrm{B}}$(blue) are calculated 
+    upon successful encounter with target protein KIX illustrated via histogram
+    for unfolded(a) and folded(b) ligand pKID. As depicted, both helices show an
+    encounter that eventually leads to bound complex(successful binding). Similarly,
+    it can be defined as last attempt prior to binding.}
+  %\label{fig:align_dist}
+  \label{fig:figure6}
+\end{figure}
+
+
+%*************************************************************************************************
+\section{\textbf{Mediation of desolvation barriers}}\label{sect:three_five}
+%*************************************************************************************************
+%
+Coupled folding and binding of pKID leads to faster binding kinetics with a
+lower free energy barrier separating the unbound and bound conformational
+states.  One rationalization for a reduced barrier is through an entropic
+stabilization of the encounter complex associated with greater conformational
+flexibility, including less restrictive orientational constraints and dynamic
+intermolecular interactions.  The way an unstructured protein can use its
+conformational flexibility to overcome desolvation barriers is another factor
+contributing to faster binding kinetics.  Correlations of individual
+intermolecular contacts provide a direct measure of how pKID navigates
+desolvation barriers. We consider the correlation of local intermolecular
+contacts involving residues $i$ and $j$ of pKID,
+\begin{equation}
+  c_{ij} = \frac{\left\langle \delta q_i\delta q_j\right\rangle_1}
+  %{\sqrt{\left\langle \delta q_i^2\right\rangle_1} \sqrt{\left\langle \delta q_j^2\right\rangle_1}},
+  {\sqrt{\langle \delta q_{i}^{2}\rangle_1} \sqrt{\langle \delta{q}_j^2\rangle_1}},
+  \label{eq:correlation}
+\end{equation}
+where  $\delta q_i = q_i - \langle q_i\rangle_1$,  and the averages are over
+conformations that have at least one intermolecular contact.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=4.0in]{figure7.pdf}
+  \caption{Correlations of intermolecular contacts are depicted 
+    for flexible pKID (lower triangle) and folded pKID (upper triangle).
+    The color indicates the value of $c_{ij}$. pKID residues that don't make any native
+    intermolecular contact are omitted.}
+  \label{fig:figure7}
+  %\label{fig:corr_plot}
+\end{figure}
+
+Intermolecular contact correlations for each residue are shown in
+Fig.~\ref{fig:figure7}.  By definition, $c_{ij}$ is normalized to 1 for
+correlations along the diagonal ($i=j$). Moving away from a point on the
+diagonal corresponding to $c_{ii}$ in the horizontal and vertical direction
+indicates how intermolecular contacts of other residues correlate with
+intermolecular contact of the $i^{\mathrm{th}}$ residue.  As shown in
+Fig.~\ref{fig:figure7}, when folding and binding are coupled, the correlations
+of intermolecular contacts with residues of $\alpha_\mathrm{B}$ decrease as the
+sequence separation increases. In contrast, intermolecular contacts with
+residues of $\alpha_\mathrm{A}$, which is more structured and binds later than
+$\alpha_\mathrm{B}$, are highly correlated throughout the helix.  That is,
+contacts between KIX and residues in $\alpha_\mathrm{B}$ are made and broken
+relatively independently, while those of $\alpha_{\mathrm{A}}$ occur
+collectively.
+
+In quantifying the characteristic sequence length describing these correlations,
+we focus on the contacts of $\alpha_\mathrm{B}$ because binding initiates with
+this helix.  For residues in $\alpha_\mathrm{B}$, the average correlation falls
+off exponentially with sequence separation,
+$\overline{c_{|i-j|}} = \exp(-|i-j|/l_0)$ with $\l_0 = 2$, as shown in
+Fig.~\ref{fig:figure8}. That is, contacts in $\alpha_\mathrm{B}$ tend to occur
+with regions containing roughly 5 residues. In contrast, when pKID is structured
+throughout binding, the contact correlations behave as
+$\overline{c_{|i-j|}} \approx 1 - |i-j|/l_0$ with $l_0 = 50$, about five times
+longer than the length of the helix. Accordingly, when $\alpha_{\mathrm{B}}$ is
+already folded, the residues form intermolecular contacts collectively over the
+entire helix.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=4.0in]{figure8.pdf}
+  \caption{Average correlations as a function of sequence separation of
+    $\alpha_{\mathrm{B}}$ for flexible pKID(red) and folded pKID(red) is
+    shown. A fit(gray line) to these correlations give decay lengths of
+    $l_0 \approx 2$ for flexible and $l_0 \approx 50$ for rigid pKID
+    respectively.}
+  %\label{fig:corr_fit}
+  \label{fig:figure8}
+\end{figure}
+
+
+The ability of a flexible, unfolded protein to navigate desolvation barriers
+with relatively small local steps results in lower kinetic barrier within the
+encounter complex. Structural constraints associated with folded proteins, in
+contrast, make simultaneous desolvation over a broader area more likely, which
+leads to a high free energy barriers and slower kinetics. This picture is in
+harmony with the coupled folding and binding gradual accumulation of
+intermolecular contacts as the proteins approach each other shown in
+Fig.~\ref{fig:figure5}.
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Binding affinity, binding rates, and unbinding rates}}\label{sect:three_six}
+%*************************************************************************************************
+%
+Folding upon binding allow IDP to form highly specific, yet low affinity bound
+complexes\cite{dyson:05,hsu:13ex,tompa:08f}.  Thermodynamically, the lower
+affinity can be understood by entropic stabilization of the unbound disordered
+protein due to its higher conformational freedom. From a kinetic point of view,
+the binding affinity, $K_\mathrm{a}$ is determined by the bimolecular binding
+rate, $k_\mathrm{bi}$, and the unimolecular unbinding rate, $k_\mathrm{off}$,
+through
+\begin{equation}
+  \label{eq:Ka}
+  K_\mathrm{a} = \frac{k_\mathrm{bi}}{k_\mathrm{off}}.
+\end{equation}
+So far we have considered the influence of coupled folding and binding on
+$k_\mathrm{bi}$ (or more specifically, $k_\mathrm{on} = k_\mathrm{bi}[L]$ where
+$[L]$ is the concentration of pKID for the simulation). In this section, we
+investigate how changes in the off rate in addition to the binding rate lead to
+lower affinity complexes though coupled folding and binding.
+
+Although the $k_\mathrm{bi}$ is enhanced through coupled folding and binding
+(which tends to increase the affinity), $k_\mathrm{off}$ must have a greater
+increase consistent with the IDP's low binding affinity. As emphasized by Zhou,
+while there has been more attention to the influence of coupled folding and
+binding on $k_\mathrm{bi}$, its influence on $K_\mathrm{a}$ is restricted by an
+upper diffusion limited rate. The dissociation rate, which does not have such a
+limitation, can be adjusted by coupled folding binding to be fast enough for
+regulatory functions.\cite{zhou:12}
+
+The bound complex pKID-KIX is much less stable when folding and binding are
+coupled as indicated by its low binding midpoint temperature ($T_0=321^\circ$ K)
+compared to that the midpoint temperature when pKID is folded before binding
+($T_0=517^\circ$ K).  Since it is difficult to reliably estimate the bound
+population from simulations at temperatures far from $T_0$, we reduce binding
+affinity of rigid to bring it closer to affinity of the flexible pKID by
+weakening the intermolecular energy parameter for the folded pKID from
+$\epsilon_{\mathrm{int}}=2.1\epsilon_{ij}$ to
+$\epsilon_{\mathrm{int}}=1.3\epsilon_{ij}$ to get a qualitative understanding of
+how coupled folding and binding influences the binding kinetics and affinity.
+The resulting equilibrium constants and unbound populations as a function of
+temperature are shown in Fig.~\ref{fig:figure9}.  Without this reduction in
+binding affinity through $\epsilon_{\mathrm{int}}$, the difference in binding
+affinities is estimated to be as high as four to six orders of magnitude at
+$T_0=321^\circ$K.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=6.0in]{figure9.pdf}
+  \caption{Dissociation constant(a) and unbound population (b) as a function of
+    temperature for binding when pKID is unstructured (red) and folded (blue).
+    Vertical dash lines are located at corresponding melting temperatures of
+    flexible and rigid.}
+  \label{fig:figure10}
+\end{figure}
+
+As shown in Table~\ref{tab:affinity_kinetics}, with the adjustment in
+parameterization, coupled folding and binding reduces $K_\mathrm{a}$ by a factor
+of 270. This reduction results from an increase of $k_\mathrm{bi}$ by a factor
+of 5, and a much greater increase of $k_\mathrm{off}$ by nearly a factor of
+2000.  These results are consistent with the proposal that the change in the
+affinity due to coupled folding and binding is primarily reflected in greatly
+enhanced off rate.\cite{zhou:12}
+
+
+\begin{table}[t!]
+  \centering
+  \begin{tabular}{@{}llllllll@{}}
+    & $k_{\mathrm{on}}^{o}$ \footnote{On/off rates are expressed in $10^{-10} [\Delta t^{-1}]$.}
+    & $k_{\mathrm{bi}}$  \footnote{Bimolecular rate is expressed in $10^{-10} [\Delta t^{-1}\mathrm{\mu M^{-1}}]$.}
+    & $k_{\mathrm{off}}$
+    & $K_{\mathrm{d}}$
+    & $\mathrm{P_{B}}$ \\
+    %  & $\epsilon_{\mathrm{int}}$\\
+    \hline
+    flexible  &  3800  & 3.0  & 2200  & 736   &  0.57  \\%&  2.1$\epsilon_{0}$ \\
+    rigid     &  540   & 0.4  & 1.1   & 2.7   &  0.96  \\%&  1.3$\epsilon_{0}$ \\
+  \end{tabular}
+  \caption{ These results are calculated from simulations at $T=321 ^\circ$K, where
+    concentration units are in $\mu \mathrm{M}$. }
+  \label{tab:affinity_kinetics}
+\end{table}
+
+
+%The molecular dissociation mechanism of incremental breaking and reforming
+%contacts allowed when the protein unfolds when it dissociates is similar to the
+%binding mechanism, though it is easier to see directly in the simulations in
+%individual unbinding events.
+The molecular dissociation mechanism of incremental breaking contacts allowed when
+the protein unfolds. The mechanism of dissociation is similar to binding
+mechanism, though it is easier to see directly in the simulations in individual
+unbinding events.
+As shown in Fig.~\ref{fig:figure10} the free
+energy barrier controlling the dissociation rate is lower when pKID unfolds upon
+dissociation. Segments of typical unbinding trajectories are also shown in
+Fig.~\ref{fig:figure10}. Here, we see that changes in the intermolecular
+contacts occur with small incremental changes, often reforming and breaking
+before overcoming the dissociation barrier. In contrast, when pKID is folded
+after dissociation, structural constraints require that contacts are lost
+collectively requiring it to overcome a larger collective desolvation barrier.
+
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=6.0in]{figure10.pdf}
+  \caption{Visual illustration of intermolecular contact formation for
+    $\alpha_{\mathrm{B}}$ as it approaches its binding pocket is presented via
+    2D free energy plots for flexible(a) and rigid(b) pKID.  Center of mass
+    distance between $\alpha_{\mathrm{B}}$ and KIX is used to characterize their
+    separation. In this, the most representative unbinding trajectory is shown
+    on top of free energy landscape.}
+  \label{fig:figure9}
+\end{figure}
+
+%
+%*************************************************************************************************
+\section{\textbf{Materials and Methods}}\label{sect:three_seven}
+%*************************************************************************************************
+%
+Coarse-grained, native-centric Go model\cite{okazaki:06} simulations are
+performed with $\textit{Cafemol}$\cite{Kenzaki:11} software. Role of solvent is
+implicitly incorporated via Langevin dynamics with $\Delta \mathrm{t}$=0.2
+Velocity Verlet integration time step and $\gamma$=0.25 friction coefficient in
+$\textit{Cafemol}$ units. AICG1 model\cite{li:11} is employed to account for
+sequence specificity of both local and non-local interactions.
+
+For simplicity, target protein (KIX) is constrained to its native structure,
+while pKID is free to move inside a cubic box with non-periodic boundary
+conditions. For equilibrium simulations the box has dimensions
+90\AA. Simulations for binding rate calculations are carried in a 110\AA~cubic
+box with independent 200 binding and unbinding runs. Binding simulations are
+started at random unbound and distant confirmations and are stopped once bound
+complex is formed, wheres dissociation simulations are initiated at native state
+and finalized once all intermolecular contacts are lost.
+
+Native contacts between pairs of amino acids are defined using all atom
+information of the reference structure, where if the distance between any
+non-hydrogen atoms of different pairs of residues is less than $6.5$\AA~ then
+they are considered to be in physical contact with each other.  Structural
+similarity of a conformation with the native structure is characterized by the
+fraction of native contacts, where folding and binding are represented through
+fraction of native intramolecular($Q_{\mathrm{intra}}$) and
+intermolecular($Q_{\mathrm{inter}}$)contacts respectively.  For analysis, native
+intramolecular contact is considered formed when
+$r^{ij} \leq 1.2r_{\mathrm{nat}}^{ij}$, where $r^{ij}$ is separation distance
+between pairs of residues and $r_{\mathrm{nat}}^{ij}$ separation distance at
+native state.
+
+Intermolecular contacts interact through a pair potential which includes a
+desolvation barrier separating a weakly stabilizing solvent separated minimum
+potential and the full strength contact at closer distances. The form of this
+potential is described in Ref.~\cite{cheung:02} is parameterized with a
+desolvation barrier height $\epsilon_{\mathrm{db}}=0.1\epsilon_{ij}$ at
+$r_\mathrm{db} = r_{\mathrm{nat}} + r_{\mathrm{water}}$ and solvent separation
+minima depth $\epsilon_{\mathrm{ssm}}=\epsilon_{ij}/3$ at
+$r_\mathrm{ssm} = r_{\mathrm{nat}} + 2r_{\mathrm{water}} $, where
+$\epsilon_{ij}$ is sequence specific pairwise energy parameter. For analysis,
+contacts are considered formed when $r^{ij} \leq r_{\mathrm{db}}$
+($r_{\mathrm{water}}$=1.5\AA).
+
+Weighted Histogram Analysis Method\cite{kumarWHAM:92}(WHAM) is used to combine
+long equilibrium runs simulated at different temperatures, which enables us to
+get statistical average of any order parameter at any intermediate
+temperature\cite{noel:10}. The dissociation constant is estimated by
+\begin{equation}
+  \label{eq:kd}
+  \mathrm{K_{d}}= [C]\frac{P_{\mathrm{U}}^2}{P_{B}},
+\end{equation}
+where $[C]$ is protein concentration, $P_{\mathrm{B}}$ is the bound population,
+and $P_\mathrm{U} = 1 - P_\mathrm{B}$ is the unbound population. The bound
+population at a temperature $T$ is calculated by integrating of the potential of
+mean force
+\begin{equation}
+  \label{eq:pu}
+  \mathrm{P_{\mathrm{B}}}=\int_{Q^*}^{1} e^{-\beta F(Q)}dQ/\int_{0}^{1} e^{-\beta F(Q)}dQ,
+\end{equation}
+where $\beta = 1/k_\mathrm{B} T$.  Here, $Q^*=0.5$ defines intermolecular
+contact threshold that distinguishes the bound and unbound populations.
+
+In order to match experimental binding affinity\cite{zor:02} of the IDP complex
+we increased intermolecular energy prefactor until desired affinity
+$\mathrm{K_{a}}=0.33 \mu \mathrm{M^{-1}}$ is achieved at
+$\epsilon_{\mathrm{int}}=2.1\epsilon_{\mathrm{ij}}$ and
+$\mathrm{T}=303\mathrm{K}$.  Above conditions result in highly stabilized bound
+state with $P_{\mathrm{B}}=0.96$ that makes unbinding simulations too slow to
+simulate directly in a reasonable time. We overcome this problem by estimating
+off rate using Eq.~\ref{eq:Ka}.
+
+Similarly, using above intermolecular energy prefactor
+$\epsilon_{\mathrm{int}}=2.1\epsilon_{\mathrm{ij}}$ for folded pKID result in
+very tight bound complex with high melting temperature
+$\mathrm{T_{0}}=517\mathrm{K}$.  We reduce this energy parameter to
+$\epsilon_{\mathrm{int}}=1.3\epsilon_{ij}$ in order to make comparison of
+binding affinities between flexible and rigid pKID practical (Fig.~\ref{fig:figure11}).
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=4.0in]{figure11.pdf}
+  \caption{Heat capacity vs temperature plots for binding/unbinding simulations
+    of complex are prepared thermodynamic sampling for both flexible(red) and
+    rigid(blue) binding partners.}
+  \label{fig:figure11}
+\end{figure}
+
+
+Experiments suggest that two helices of pKID do not show the same level of disorder,
+where helicity of $\alpha_{\mathrm{A}}$ is $50\%-60\%$ , and for
+$\alpha_{\mathrm{B}}$ it is $10\%-15\%$ \cite{radhakrishnan:98}. To model this,
+we tuned local(bond angle and dihedral) and non-local(Go) energy parameters for
+both $\alpha_{\mathrm{A}}$ and $\alpha_{\mathrm{B}}$. $\alpha_{\mathrm{A}}$
+rigidity is relaxed by reducing its energy parameter twice from original value
+that gave $\langle q_{\mathrm{a}}^{\mathrm{free}}\rangle=0.54$ and kept the same
+throughout. For $\alpha_{\mathrm{B}}$, weakening the energy parameter 20 times
+resulted in $\langle q_{\mathrm{b}}^{\mathrm{free}}\rangle = 0.32$.  To explore
+the influence that chain flexibility has on the binding kinetics, we also
+consider a hypothetical rigid pKID protein in which the energy parameters of
+$\alpha_{\mathrm{B}}$ are kept at their original values.
+
+%*************************************************************************************************
+\section{\textbf{Concluding Remarks}}\label{sect:three_nine}
+%*************************************************************************************************
+In this paper, we present simulations of a structure based model with
+desolvation barriers separating unbound and bound intermolecular interactions
+for the coupled folding and binding of pKID-KIX.  Like previous work, the
+binding mechanism of pKID-KIX complex is in qualitative agreement with the
+experiment\cite{sugase:07}. Desolvation increases the barrier between bound and
+unbound states allowing us to assess how flexibility and coupled folding and
+binding influence the binding mechanism outside of the diffusion limited
+regime.  Perhaps surprisingly, we find that coupled folding and binding enhances
+binding rates to a greater extent than when binding is more diffusion limited.
+\cite{huang:09,huang:10a,shoeportman:00,turjanski:08,levy:04} 
+The enhanced rates encouraged by coupled folding and binding in the reaction limited regime
+is rationalized by fly-casting along with an unstructured protein's ability
+to navigate intramolecular desolvation barriers incrementally because of its increased flexibility.
+
+Our study also emphasizes how flexibility tunes binding, unbinding, and binding
+affinity.  By comparing kinetics of flexible and rigid pKID at the same
+temperature, we find that while the binding rate is enhanced, the unbinding rate
+is accelerated to a much greater extend, resulting in a much less stable bound
+complex. Rapid unbinding and low affinity complexes have been argued to be more
+essential to IDP function than rapid binding.\cite{zhou:12} The simulations
+described in this paper suggest IDPs dissociate rapidly because they can break
+contacts in small independent steps, while a rigid protein must break them
+simultaneously.  Unbinding rates of IDPs have been emphasized in another recent
+study using coarse-grained models.  Umezawa \textit{et al.}, for example, showed
+that disorder induced rate enhancement of pKID-KIX is greater for dissociation
+rate than the association rate, although they compared models with much closer
+affinities than in the current paper\cite{umezawa:16}. In addition the
+dissociation rate as well as affinity has also been used to tune interaction
+parameters of structure based models of IDPs.\cite{cao:16}
+Our results further emphasize the importance of IDPs as regulatory and signaling proteins that
+achieve rapid molecular recognition with high specificity and low affinity facilitated by
+their intrinsic conformational flexibility.
+
+\end{document}

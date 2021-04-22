@@ -1,0 +1,1179 @@
+%\documentclass[../Dissertation.tex]{subfiles}
+\documentclass[../talant.diss.submit.tex]{subfiles}
+%\usepackage{systeme,mathtools}
+\begin{document}
+\label{chap:chapter2}
+%
+%-------------------------------------------------------------------------------------------------
+%
+%*************************************************************************************************
+\section{\textbf{Introduction to Structure Based Model}}\label{sect:two_one}
+%*************************************************************************************************
+%
+Conformational transition of a protein molecule from a disordered globule
+to its unique 3-dimensional structure is a minimally frustrated process\cite{,bryngelson:95,onuchic:97}.
+This means that ruggedness in the landscape due to intramolecular interactions inconsistent with the
+native state conformation do not dominate the folding kinetics under typical
+conditions. Rather, natural protein sequences have evolved to fold rapidly and
+reliably to the native conformation due to a free energy
+driving force towards the native state conformation in its energy landscape.
+In a protein's landscape, native like conformations tend to be more stabilizing than non-native
+conformations. Bryngelson and Wolynes called this
+%driving force towards the native conformation
+correlation of native state similarity and energetic stability the "principle of the minimum
+frustration".\cite{bryngelson:87,bryngelson:89}
+As a result, protein fold on an energy landscape in the shape of a rugged
+funnel\cite{bryngelson:95,onuchic:97,plotkin:97,dill:97,oliveberg:05,onuchic:04}.
+
+Structure Based Models (SBM) are widely used to study protein conformation dynamics and protein
+folding. These models are based on the limit that the energetic frustration due to non-native
+interactions is a weak perturbation to the driving force towards the native state. This
+so-called perfect funnel is realized by an intramolecular potential explicitly biased towards
+the native state conformation. Non-bonded interactions between residues in proximity
+in the native structure are assumed to be attractive, while other (non-native) interactions
+are destabilized.
+Such models are often called Go-models after Japanese
+scientist N. Go who in 1983 proposed an analytical model to characterize the
+statistical mechanics of partially folded conformational states with a potential energy
+defined only by the contacts found in the native conformation\cite{go:83}.
+Because there were no experimental measurement to
+compare with at the time, the approach was not pursued until many years later
+when experiments began to quantitatively characterize the mechanism controlling the kinetics of
+two state folding proteins.
+Analytic\cite{portman:98,alm:99, munoz:99,,galzitskaya:99,portman:01,portman:01a,alm:02,qi:08,garbuzynskiy:04,henry:04} models as well as many simulation
+studies (see Refs.~\cite{hills-jr.:09,noel:12,takada:12,takada:15} and references therein)
+have shown that the seemingly simplistic and strong 
+assumption of native state bias gives predictions in good agreement with measurements
+that characterize the structure of the transition
+state ensemble through mutagenesis experiments (so-called $\phi$-value
+analysis).\cite{fersht:97, fersht:95, oliveberg:05}
+
+Since structure-based models are by design biased to the native conformation,
+the three dimensional folded structure must be known prior to any calculation.
+Consequently, the simulations rely on accuracy of the experimental structural
+data available for the particular protein. Such structures, determined by x-ray
+crystallography or nuclear magnetic resonance (NMR) spectroscopy, are compiled
+in the Protein Data Bank (PDB).\cite{le-gall:07} Relying on these available PDB
+structures and using SBM, various problems pertaining to protein folding and
+binding can be addressed and elucidated rather than predicting the native state
+conformation from a known amino acid sequence.
+
+
+Even though a structure-based potential significantly reduces the complexity of
+the landscape, how the native state topology determines the ensemble of folding
+pathways and their influence on the folding mechanism is non-trivial.  The
+ability of structure based models to reproduce experimental folding mechanisms
+has had an enormous influence on the folding community and understanding of the
+protein folding thermodynamics and kinetics.
+%\cite{baker:00,chavez:04,onuchic:97}.\todo{need more complete citation or leave
+%  off.}
+
+
+%According to widely accepted hypothesis, conformational transition of a polypeptide
+%chain from random topology to unique 3-dimentional structure known as protein folding
+%seems to be a minimally frustrated process\cite{onuchic:97}. Energy landscape of protein
+%folding takes funnel-like shape \cite{onuchic:97,plotkin:97,onuchic:04} that leads to
+%native state driven by site specific interactions. Thus, in order to study the 
+%characteristics of the folding process, simple and sufficient representation can be provided 
+%by potential whose attractive part is based on the inter-residue contacts present in the protein
+%native state. These structure-based (or Go-type) potentials define perfect folding funnels and have 
+%been widely used to study folding pathways\cite{go:83,clementi:03int}.
+%Go model is named after Japanese scientist Go N. for his work done in 1983 on theoretical studies of
+%protein folding\cite{go:83}. Later in 1987 Bryngelson and Wolynes proposed "principle of the minimum
+%frustration" that describe how proteins gained foldability through evolution by minimizing the frustration
+%at their native structures. 
+%
+
+%In structure-based models, force field is designed to bias the native state(folded, bound).
+%Thus, topology of native structure has to be known prior to any calculation. Consequently, the 
+%quality of the simulation results obtained with these potentials depends on the accuracy of the 
+%experimental data, 3D x-ray structure available for the particular protein.
+%The Native state structure of a protein or bound complex can be located in the Protein Data Bank (PDB),
+%\cite{le-gall:07} the database where all the experimentally acquired protein structures are stored.
+%Main experimental techniques used for resolving these structures are x-ray crystallography or nuclear
+%magnetic resonance (NMR) spectroscopy. 
+%
+
+%A structure-based potential significantly reduces the complexity of interaction network by stabilizing
+%contacts that are spatially close in the native configuration. While real protein funnels have residual
+%energetic frustration caused by variety of interactions, the structure based models provide perfectly funneled
+%smooth landscape due to all interactions stabilizing the native structure. The ability of structure based
+%models to reproduce experimental folding mechanisms shows that geometrical effects have an enormous influence
+%on protein dynamics \cite{baker:00,chavez:04,onuchic:97}.
+
+Structure based models have been implemented in all atom as well as
+coarse grained resolution with remarkably successful molecular dynamics simulations
+\cite{Clementi:00a,chavez:04,levy:04,whitford:09,zheng:12p,yao:15n,cho:09,marcovitz:09}.
+Selected examples indicate some of the breadth
+of structure based model. 
+For example, using both atomistic and C-$\alpha$ structure based model for the B domain of Protein A,
+the SH3 domain of C-Src Kinase and Chymotrypsin Inhibitor 2, Whitford and Onuchic
+\textit{et al.} demonstrated its robustness to predict folding mechanisms.
+By exploring
+interplay between side chain packing and backbone folding they found that backbone collapse
+is accompanied by partial side chain packing in a cooperative transition and residual side chain
+packing occurs gradually with decreasing temperature\cite{whitford:09}. Takada \textit{et al.}
+employed structure based model on 18 small proteins and predicted mathematical relationship
+between folding rate and chain length scaling\cite{koga:01}. By including desolvation
+of pairwise contacts into C-$\alpha$ model, Kaya and Chan increased cooperativity in folding
+\cite{kaya:03} consistent with experiment.
+Structure based models have been extensively used in describing complex interactions such as
+protein allostery and ligand binding
+\cite{chen:07,knott:14,okazaki:08,nandigrami:16compa,nandigrami:16coarse},
+coupled folding and binding of dimers and IDPs\cite{levy:04,levy:05,turjanski:08,cao:16,huang:10a}
+and protein DNA/RNA interactions\cite{vuzman:10d,khazanov:11s,trizac:10,marcovitz:09}.
+For in detail review of structure based models for folding, I highly recommend following
+article \cite{noel:12}.
+
+In the remaining sections of this chapter, I introduce the basics of
+course-grained C-$\alpha$ model and various refinements that I used in my
+dissertation work on studying coupled folding and binding of IDPs.
+
+
+%*************************************************************************************************
+\section{\textbf{C-$\alpha$ Model}}\label{sect:two_two}
+%*************************************************************************************************
+\noindent
+%All atom simulations are computationally expansive. The smallest system simulated for
+%protein folding contains 100,000 mass points that require weeks long computation time across highly
+%parallelized  
+%supercomputers and generate tremendous amounts of data. Widely used solution to alleviate this issue is
+%simplification of system via coarse graining.
+%In this, role of solvent is implicitly incorporated via stochastic
+%random kick force sampled from normal distribution with zero mean and constant variance.
+C-$\alpha$ models provide a coarse-grained alternative that avoids computational cost of all atom
+simulations. In this model, each amino acid is represented by a Lennard-Jones monomer centered at
+its alpha carbon position.
+%Protein contacts that are separated by less than 3 residues are neglected. 
+A repulsive interaction between non-bonded residues is introduced to avoid undesired overlapings at
+short distances(with an excluded volume monomer interaction radius $\sigma=$ 4 \AA).
+Attractive interactions appear solely between pairs of residues which are in contact
+in the native state and close in space in a given conformation.
+The potential can be written as combination of local, native and non-native interactions,
+\begin{equation}
+  V_{\mathrm{Go}}= V_{\mathrm{loc}} +
+  V_{\mathrm{nat}}+V_{\mathrm{non-nat}}. 
+\end{equation}
+Here, $V_\mathrm{loc}$ include terms that constrain  bond lengths, bond angles, and dihedral angles
+to their values in the native state. Examples illustrating these geometric constraints
+are given in Fig.~\ref{fig:pot_terms}.
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=12.0cm]{figures/chap2_figs/pot_terms.pdf}
+    \caption{Visual representation of different local potential energy terms and their respective
+    variables.}
+    \label{fig:pot_terms}
+  \end{centering}
+\end{figure}
+%
+%
+%
+The local potential has the form;
+%
+%
+\begin{align}
+  \label{eq:local}
+  V_{\mathrm{loc}} & = \sum_{\mathrm{bonds}}K_{b} (b_{i} -
+  b_{i}^0)^{2}  + \sum_{\mathrm{angles}} K_{\theta} (\theta_{i}
+  - \theta_{i}^0)^{2} \nonumber \\ &
+  +\sum_{\mathrm{dihedrals}} \left[ K_{\phi}[ 1 - \cos (\phi_{i}
+      - \phi_{i}^0) ] \right.\nonumber \\ &  \mbox{\hspace{4em}} +
+    \left. K_{\phi}^{(3)}[1 - \cos 3(\phi_{i} - \phi_{i}^0)]\right],
+  \nonumber \\
+\end{align}
+where, $b_i$, $\theta_i$, and $\phi_i$ denote bond lengths, bond angles, and  dihedral angles
+respectively. Values of above parameters in the native structure are denoted with a superscript:
+$b_i^0$, $\theta_i^0$, and $\phi_i^0$. Non-local interactions between pairs that make contact
+in a native state are typically modeled via a 10-12 Lenard-Jones type potential,
+\begin{equation}
+  \label{eq:native}
+  V_{\mathrm{nat}} =
+  \sum_{\substack{i<j-3\\\mathrm{native}\\\mathrm{contacts}}}
+  \!\!\!\!\!  \epsilon_{\mathrm{go}} \left[ 5
+    \left(\frac{r_{ij}^{0}}{r_{ij}}\right)^{12}  - 6
+    \left(\frac{r_{ij}^{0}}{r_{ij}}\right)^{10} \right],
+\end{equation}
+where, $r_{ij}$ is the distance between C-$\alpha$ mass points $i$ and $j$.
+This potential has its minimum at the distance between C-$\alpha$ positions of
+interacting residues in the native state, $r_{ij}^0$.  This 10-12 LJ potential
+has a narrower well than the more familiar 6-12 form.  This helps to maintain a
+rigidity in the folded coarse-grained structure.  The sum is over residue pairs
+in contact in the native structure. There are various ways to analyze protein
+structure to determine these residue pairs, the so-called native contact map.
+In my studies, I define native
+contacts formed between pairs of amino acids using all atom information of the
+reference structure. In this if the distance between any non-hydrogen atoms of
+different pairs of residues is less than $6.5$\AA~ the residues are considered in
+contact.
+%
+%
+All non-native contacts interact through short ranged excluded volume repulsive interactions. These interactions are modeled by short range repulsion,
+\begin{equation}
+  \label{eq:nonnative}
+  V_{\mathrm{non-nat}} = \sum_{\substack{i<j-3\\ \mathrm{non-native}}}
+  \!\!\!\!  \epsilon_{\mathrm{rep}}
+  \left(\frac{d}{r_{ij}}\right)^{12},
+\end{equation}
+where, $d$ defines repulsion threshold for non-native interaction.
+
+There is a freedom to choose energy parameters for potentials in this model
+depending on the system.
+For instance, while folded protein require stronger energy parameters
+to bias native folded state, IDPs are modelled with weaker intramolecular interactions
+\cite{ganguly:11a}, and flexible local potentials\cite{li:11}.  
+Typical values of coefficients defining the energy function we used are:
+$K_{b} = 100.0$, $K_{\theta} = 20.0$, $K_{\phi}^{(1)} = 1.0$ and $K_{\phi}^{(3)} = 0.5$,
+$\epsilon_{\mathrm{go}}=0.3$, $\epsilon_\mathrm{rep} = 0.2$ in  units of $\mathrm{kcal/mol}$,
+and $d = 4$\AA. The values of $\epsilon_{go}$ and $\epsilon_{rep}$ usually give reasonable
+values for the folding temperature of typical proteins. 
+
+In the following examples, I show some simulations I conducted during my
+research which did not end up as my main topic, but are good illustrations of
+SBM.  First, I consider folding of the $\lambda$-repressor protein(PDB:1COP)
+shown in Fig.~\ref{fig:folding_Free_l-cro}. The simulation uses Langevin
+dynamics with forces derived from potentials given in Eq.~\ref{eq:native}. To
+analyze the thermodynamics, we define structural order parameter, $Q$, as the
+fraction of native contacts calculated for each snapshot of the simulation. $Q$
+measures structural similarity to native state. For analysis, a contact is
+considered formed when $r^{ij} \leq 1.2r_{\mathrm{nat}}^{ij}$, given
+$|i - j| \ge 4$, where $r^{ij}$ is separation distance between pairs of residues
+and $r_{\mathrm{nat}}^{ij}$ separation distance at native state.  This reaction
+coordinate is the most common choice in C-$\alpha$ model simulations, although
+other metrics have been used as well.\cite{clementi:03int,noel:10,wu:08}.  The
+simulated free energy profile as a function of $Q$ is shown in
+Fig.~\ref{fig:folding_Free_l-cro}.  This energy profile of $\lambda$-cro
+repressor show two state behavior. The folded and unfolded states (located
+around $Q$=0.76 and $Q$=0.43, respectively) are separated by free energy barrier
+with height $\Delta{F}=0.4k_{\mathrm{B}}T$. This simulation is performed at
+folding temperature, where folded and unfolded states have equal
+population. Although I will not pursue the analysis here, the structural
+properties of configurations that form the barrier in the free energy give
+insight into the folding mechanism.
+%
+%
+%\begin{figure}[htp!]
+%  \begin{centering}
+%    \includegraphics[width=10.0cm]{figures/chap2_figs/1COP_folding_free.pdf}
+%    \caption{1D free energy profile for 1COP chain-A is depicted. Long folding and
+%      unfolding simulations are performed at folding temperature $T_{\mathrm{F}}$=318K.
+%      Folding temperature is detrmined using bisection method.}
+%    \label{fig:1COP_folding_free}
+%  \end{centering}
+%\end{figure}
+%
+%
+
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=16.0cm]{figures/chap2_figs/folding_Free_l-cro.pdf}
+    \caption{1D free energy profile for $\lambda$-cro repressor(1COP chain-A)
+      (a) along with its cartoon representation (b) are shown. Free energy is
+      constructed from long folding and unfolding simulations at folding temperature
+      $T_{\mathrm{F}}$=318K. Folding temperature is determined using bisection method.}
+    \label{fig:folding_Free_l-cro}
+  \end{centering}
+\end{figure}
+
+
+
+C-$\alpha$ models can also be used to study bimolecular association, that is,
+two proteins that come together to form a bound complex.  In this scenario, the
+binding interface is characterized by the fraction of intermolecular contacts
+between the molecules, $Q_{\mathrm{I}}$.  Folding characterized by the fraction
+of native contacts formed for each protein, $Q_{\mathrm{A}}$, and
+$Q_{\mathrm{B}}$.  In Fig.~\ref{fig:1CTA_demo} we show two dimensional free
+energy surface for association of two identical $\lambda$-cro repressor
+proteins that form dimeric complex (PDB ID: 1CTA).
+The free energy shows two free energy local
+minima: both proteins unfolded and unbound at $Q_{\mathrm{A}} = Q_{\mathrm{B}}=0.5$, and
+both proteins folded and bound at around $Q_{\mathrm{A}} = Q_{\mathrm{B}}=0.9$.
+Interestingly, this protein is unstructured when unbound.  It is called two state because there is no
+minima associated with either protein folding while other protein is unfolded.
+For these proteins, folding and binding are coupled: they
+only fold upon binding to it partner, otherwise the proteins are unfolded as isolated monomers.
+This mechanism is an example of induced fit binding.
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=13.0cm]{figures/chap2_figs/1CTA_demo.pdf}
+    \caption{Illustration of 2-state dimer
+      % (also IDP complex)
+      formation is shown.
+      %, which is also an example for how robust coarse grained C-$\alpha$ models are in
+      %capturing physical properties of biomolecular interactions.
+      In this, figure (a) shows free energy profile for intramolecular contact formation
+      for both chains, while figure (b) demonstrates how folding of chain-A is assisted
+      by its binding to chain-B. Energy parameters for native
+      inter and intramolecular interactions are adjusted to have similar folding
+      and binding transition temperatures.
+      This coupled folding and binding scenario is similar to that seen in models of IDPs binding. 
+      Cartoon representation of dimer complex is
+      visualized via VMD in figure (c).}
+    \label{fig:1CTA_demo}
+  \end{centering}
+\end{figure}
+
+
+Another interesting example for a C-$\alpha$ model simulation is 3-state dimer.
+In this example, two identical $\lambda$-cro repressor proteins
+Fig.~\ref{fig:1COP_demo}(c) (PDB ID: 1COP) bind to form dimeric complex.  A
+particularly interesting property of this dimer is the presence of three
+distinct states as highlighted on free energy surface shown in
+Fig.~\ref{fig:1COP_demo}(a).  In state (I) both proteins are unfolded; in (II)
+one protein is folded and other unfolded; in state (III), both proteins folded
+together either in the bound complex or as unbound monomers.  Reaction
+coordinates are similar to those defined in the previous example.  The free energy
+profile for folding and binding of 3-state dimer show an interesting binding
+mechanism. As shown in Fig.~\ref{fig:1COP_demo}, there are two routes 
+that lead to final bound state. One starts at state (II)
+($1.2 \le Q_{\mathrm{A}}+Q_{\mathrm{B}} \le 1.5$) and  gradually accumulates nearly
+70\% intermolecular contacts without any significant changes in intramolecular
+contacts until binding completes when the other monomer folds.  This
+route mechanism is reminiscent of coupled folding and binding that occurs through
+induced fit mechanism.  In another route, both monomers acquire folded
+conformation before binding.  This folding before binding is an example of
+conformational selection mechanism.
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=15.0cm]{figures/chap2_figs/1COP_demo.pdf}
+    \caption{Free energy surface for folding(a) and binding(b) of 3-state dimer.
+      Here, fraction of intramolecular contacts is denoted with
+      $Q_{\mathrm{A}}$ and $Q_{\mathrm{B}}$ for chains A and B respectively, while
+      binding reaction coordinate is denote with $Q_{\mathrm{I}}$.
+      Energy parameterization is performed to have similar folding
+      and binding transition temperatures($T_{\mathrm{f}} = T_{\mathrm{m}}=318$K).
+      Cartoon representation of dimer complex is visualized via VMD in figure(c).}
+    \label{fig:1COP_demo}
+  \end{centering}
+\end{figure}
+
+
+These examples illustrate that C-$\alpha$ models are robust in capturing folding
+properties of a globular proteins, and their association involving coupled folding
+and binding.
+While the simple C-$\alpha$ model described so far gives reasonable results,
+there are various additional energy functions that have been introduced to improve
+the quality of the model by capturing different interesting effects. These potential energies include
+long range  electrostatic interactions, non-native hydrophobic attraction, desolvation barrier
+potential and flexible local potentials. Next, we introduce some of these energy functions and
+describe effects they have on protein folding and binding.
+
+\clearpage
+%
+%*************************************************************************************************
+\section{\textbf{Electrostatic Interactions}}\label{sect:two_three}
+%*************************************************************************************************
+
+Potential energy functions for all atom models
+typically assign partial charges to each atom of the protein and surrounding water
+molecules based on quantum mechanically derived electrostatic potentials, for example.
+In implicit solvent simulations, the effect of polarization of water on electrostatic
+interactions between protein atoms is reflected in the dielectric constant. 
+Furthermore, in atomistic simulations, net charges on the protein are often neutralized by
+adding counter ions. 
+Coarse grained implicit solvent models require a different
+approach that mimics the  electrostatic properties of charged atoms in the presence of ions.
+These interactions are implicitly incorporated into electrostatic potential
+via Debye-Huckel theory, an effective potential proposed by Peter Debye and Erich Huckel
+as a theoretical explanation for the behavior of solutions of electrolytes
+and plasmas\cite{debye:23th}.
+The Debye-Huckel equation is derived by solving Poisson equation assuming charge
+density follows Boltzmann distribution. The result is a Coulomb potential screened by
+the presence of charge ions in solution
+\begin{equation}
+  \label{eq:deb_huc}
+  V_{\mathrm{ele}} = \sum_{\substack{i<j}}^{N} \!
+  \frac{q_i q_j }{4\pi \epsilon_0 \epsilon_k r_{ij}}
+  e^{-r_{ij}/k_{\mathrm{D}}},
+\end{equation}
+where, $k_{\mathrm{D}}$ is a charge screening length scale. called the Debye length.
+\begin{equation}
+  \label{eq:kD}
+  k_{\mathrm{D}} = \sqrt{\frac{\epsilon_0 \epsilon_k k_{\mathrm{B}} T}{2 N_A e^2 I}}.
+\end{equation}
+Here, $q_i$ is the charge, $\epsilon_0$ is electric constant, $\epsilon_k$ is (dimensionless) dielectric
+constant, $N_A$ is Avogadro's number, and $I$ is the ionic strength.
+The ionic strength is defined as $I = 0.5 \sum_{\substack{i}} z_{i}^{2} c_i$, where $z_i = q_i /e$ and the
+$c_i$ is the molar density per $m^3$. Electrostatic interactions are non-zero only between charged pairs
+of amino acids, whereas residues Lys, Arg, and His are positively charged, while residues Asp and Glu have
+negative charge.
+
+
+In comparison to general Coulomb's potential, Debye-Huckel potential has an
+exponential factor, that makes the interactions shorter range. Physically, charge
+screening is due to counter ion's tendency to concentrate near charges of the
+opposite sign. The Debye length $k_D$ is inversely proportional to ionic
+strength, so that electrostatic interaction become shorter ranged with increased
+ionic concentration.
+%Electrostatic interactions have been shown to influence
+%the folding mechanism of two state proteins in some cases through complementary
+%pair interactions.\needref{can we find examples}Also,
+Electrostatic interactions are known to accelerate association of folded proteins by orders of
+magnitude \cite{schreiber:96r,dogan:15b}, through electrostatic steering of
+binding partners making diffusive encounters more likely to have the correct
+orientation for binding\cite{antosiewicz:96,tan:93,wade:98e}.
+%insignificant effect on dissociation rate. In coupled folding and binding of IDPs, binding rate $k_{on}$ has
+%been found to be beyond the expected diffusion limit range but reduced at infinite ionic
+%strength\cite{rogers:13,shammas:13}.
+
+While experimental studies of IDP binding kinetics demonstrate electrostatic
+interactions play a prominent role\cite{rogers:13,shammas:13},
+coarse grained C-$\alpha$ models that include the role of electrostatic interactions
+through Debye-Huckel type potential haven't shown significant effect on IDP kinetics.
+\cite{ganguly:12e,chu:17r}.
+This may be due to limitations imposed due to coarse-graining. Thus, better models
+of fine-grained nature might show more pronounced electrostatics effect in IDP binding
+kinetics.
+%Interestingly, non-native electrostatic interactions have been shown to
+%influence the coupled folding and binding mechanism of the IDP PUMA with Mcl-1 in the
+%early stage of binding.\cite{chu:17}
+
+%
+%*************************************************************************************************
+\section{\textbf{Non-native Hydrophobic Interactions}}\label{sect:two_five}
+%*************************************************************************************************
+
+Although structure based models often destabilize non-native interactions
+as an approximation, more realistic models must include attractive as well as repulsive interactions
+for non-native interactions. 
+Based on experimental observations, nonnative interactions are found to
+perturb the unfolded conformational ensemble and thus affect the equilibrium stability
+\cite{cho:04t,cho:05m}. Non-native interactions also introduce trapped states in the
+landscape and stabilize metastable intermediate states\cite{capaldi:02i,otzen:05a}.
+In addition, non-native interactions alter kinetics of protein folding by 
+perturbing the transition state ensemble\cite{viguera:02u,di:04d,morton:07e}.
+
+The influence of non-native forces on protein folding have also been widely studied by
+both simulations and analytical approaches\cite{paci:02v,li:00k,plotkin:01s,clementi:04e}. 
+For example,
+Clementi \textit{et al.}  found that 
+weak non-native attraction added to a structure based model increases the 
+folding rate for src-SH3 domain.\cite{clementi:04e}
+Direct comparison between simulation and experiment for the SH3 protein validated
+the importance of non-native contacts on protein folding kinetics.\cite{zarrine:08t}
+Moving beyond structure based models, non-native interactions estimated to be responsible for
+20-25\% of the energy in the transition region as suggested by all-atom simulation\cite{paci:02v}.
+
+%In a generic structure based C-$\alpha$ model, the role of non-native interactions
+%is implemented simply through excluded volume effect.
+Treating all non-native contacts with short range soft repulsion may not be the
+best way to model hydrophobic residues which have been shown
+to play a significant role in protein folding \cite{dill:90d,hummer:00n,sharp:91r}.
+For example, effective attractive forces between hydrophobic residues are essential for
+proteins to form a tightly packed core\cite{papoian:03}.
+Consequently, hydrophobic forces are a primary driving force in folding of
+globular proteins.
+One simple approach to account for this effect is to include attractive
+force between non-native hydrophobic residues in addition to the excluded volume interaction.
+I use this model for pKID-KIX binding to compute the kinetic stabilization of the encounter
+complex due to slower intermolecular dynamics in chapter four of this dissertation.
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Desolvation Barrier Potential}}\label{sect:two_six}
+%*************************************************************************************************
+
+Protein-water interactions are essential to biomolecular structures, dynamics, and functions
+\cite{papoian:03}.
+Protein folding or binding involve intramolecular or intermolecular contact formation, where
+different residues come together to form its final three
+dimensional unique structure. The kinetics of forming contacts can influenced
+a desolvation barrier associated with the partially excluded region between the first and
+second solvation shell.
+A sketch of a potential that includes a desolvation barrier between two interacting
+residues as a function of separation distance is shown in Fig.~\ref{fig:des_pot}.
+This barrier potential is inspired by the potential of mean force between two small non-polar
+solutes in water. 
+
+\begin{figure}[h!]
+  \begin{centering}
+    \includegraphics[width=12cm]{des_pot.pdf}
+    \caption{ Above plots show desolvation barrier potential in blue dash and
+      Lennard-Jonnes10-12 potential in solid red. $U_{\mathrm{db}}$ is characterized by it's 
+      db height, $\epsilon_{\mathrm{db}}$,%=5\epsilon_{\mathrm{0}}/9$)
+      and depth of the solvent separate minima, $\epsilon_{\mathrm{ssm}}$. %=\epsilon_{\mathrm{0}}/3$).
+      In addition, we schematically represent how amino acids (grey circles)squeeze water
+      molecules(light blue circles) out upon making a contact.}                
+    \label{fig:des_pot}                                                                                  
+  \end{centering}                                                                                          
+\end{figure}
+%
+%
+
+For interacting solutes to form a close contact requires the expulsion of  water molecules between them.
+Consequently, favorable water-solute interactions
+decrease as solutes approach each other, while the energy loss is compensated by solute-solute
+interactions that dominate at very close distance\cite{liu:05}.
+This gives rise to free energy barrier to contact formation called desolvation barrier,
+as reflected in solute pair's potential in the presence of water.\cite{rank:97d}.%pratt:77t
+
+Desolvation is naturally present in all atom explicit solvent simulations, and
+particularly evident in pressure sensitive studies of conformational kinetics.
+In implicit solvent simulations, the role of water expulsion can be implemented
+by including the pairwise interaction potential with a barrier that accounts for
+solvation and desolvation. The first use of a potential with an explicit
+desolvation barrier is found in a lattice model for proteins described in Ref.~\cite{Hillson:1999}. 
+Later, Cheung \textit{et al.} applied desolvation barrier into a C-$\alpha$ structure based model
+by  merging three different functions spanning over distinct regions.\cite{cheung:02}
+
+The functional form of this
+desolvation barrier potential, and what we also used in our studies, has following form:
+%
+%
+\begin{align}  
+  \label{eq:db_main}
+  V_{\mathrm{db}}= \alpha\times %\nonumber 
+  \begin{cases} 
+    \epsilon Z(r)[Z(r)-2], & r<r_{nat}
+    \\ CY(r)^{n}[\frac{Y(r)^{n}}{2}-\frac{(r_{db}-r_{nat})^{2n}}{2n}]
+    +\epsilon_{db} ,  &  r_{nat} \le r < r_{db}
+    \\ B[Y(r)-h_{1}]/[Y(r)^{m}+h_{2}], & r > r_{db}, 
+  \end{cases}
+\end{align}
+%
+\begin{align}
+  \label{eq:db_parts}
+  Z(r)&= (r_{nat}/r)^{k}   \nonumber \\
+  Y(r)&=(r/r_{db})^{2}  \nonumber  \\
+  C   &=4n(\epsilon+\epsilon_{db})/(r_{db}-r_{nat})^{4n}  \\
+  B   &=m\epsilon_{ssm}(r_{ssm}-r_{db})^{2(m-1)} \nonumber \\
+  h_{1}&=(1-1/m)(r_{ssm}-r_{db})^{2}(\epsilon_{ssm}/\epsilon_{db}+1)\nonumber \\
+  h_{2}&=(m-1)(r_{ssm}-r_{db})^{2m}/(1+\epsilon_{db}/\epsilon_{ssm}).  \nonumber
+\end{align}
+%
+This potential, shown in Fig.~\ref{fig:des_pot}, is applied to only native contact pairs
+that are separated by $r_{nat}$ at native state with strength defined by $\epsilon_o$.
+Desolvation barrier separates interacting solutes by size of water molecule $r_w = 1.5$\AA, and has a peak at $r_{db}=r_{nat} + r_{w}$. There is a small well corresponding to one water molecule compactly
+residing in between two solutes referred to as solvent separated minima $r_{ssm}=r_{nat}+2r_{w}$.
+
+
+
+
+Protein folding studies using desolvation barrier potential with coarse grained Langevin dynamics
+simulations show enhanced thermodynamic cooperativity\cite{liu:05}. Higher cooperativity
+is associated with a sharp interface between folded and unfolded regions of a protein within
+the transition state ensemble. The destabilization of partially ordered residues in favor of either
+folded or unfolded with a sharp interface encourages higher folding barriers. Takada showed that
+while the simulated folding rates from coarse grained Go-models  of two state proteins are well
+correlated with the experimental folding rates, the range of simulated rates is greatly suppressed.\cite{koga:01}
+This compression of the rates is a signal that the cooperativity of the structure based model is
+too low.\cite{qi:08}
+When desolvation barriers are included, the range of rates increases to match the experimental
+rates.\cite{kaya:03,kaya:05,kaya:13,liu:05}
+An analytic model of folding with enhanced cooperativity has similar behavior in predicting
+reasonable rates with more polarized transition state ensembles for some proteins.\cite{qi:08}
+The essential property of the cooperativity that improves folding rate predictions
+of structure based models seems to be that the long-range contacts
+(such as in forming $\beta$-sheets) have higher local cooperativity than short-range
+(such as forming an $\alpha$-helix.).\cite{portman:10} This is true for pair interaction with
+desolvation barriers because long range interactions tend
+to encourage neighboring residues on each segment to interact, while short range contacts are more local.\cite{portman:10}
+
+        
+\begin{figure}[h!]
+  \begin{centering}
+    \includegraphics[width=13cm]{cv_all.pdf}
+    \caption{Heat capacity curves obtained from replica exchange simulations
+      conducted for flexible(a) and rigid(b) pKID with and without desolvation
+      barrier potential. Temperature is divided by room temperature $T_{0} = 300K$
+      to make it unitless.}                
+    \label{fig:cv_all}                                                                                  
+  \end{centering}                                                                                          
+\end{figure}
+
+
+Folding cooperativity can be
+measured 
+with the Klimov-Thirumalai cooperativity parameter which characterizes the sharpness of the
+peak in heat capacity as a function of temperature. \cite{klimov:98c,li:04f,liu:05} 
+%
+%
+\begin{equation}
+  \label{eq:cooper}
+  \Omega_{\mathrm{c}} = \frac{T_{\mathrm{max}}^2 C_{\mathrm{P,max}}^{(S)}}{\Delta T \Delta H_{\mathrm{cal}}^{(S)}}
+\end{equation}
+%
+%
+Here, $ C_{\mathrm{P,max}}^{(S)}$ and $\Delta H_{\mathrm{cal}}^{(S)}$ are the peak heat capacity value and
+calorimetric enthalpy (area under the curve), respectively, both measured after baseline subtraction.
+$T_{max}$ is the temperature at heat capacity peak and $\Delta T$ is half width of the peak.
+We extended this calculation to measure cooperativity in coupled folding and binding
+of pKID-KIX association Fig.~\ref{fig:cv_all}a. Our results show that binding cooperativity
+is stronger in the presence of potential that accounts for solvent expulsion based on cooperativity
+values $\Omega_{\mathrm{c}}^{\mathrm{db}} \approx 66.0$ with desolvation and $\Omega_{\mathrm{c}} \approx 7.5$ without.
+
+
+%        
+\begin{figure}[h]
+  \begin{centering}
+    \includegraphics[width=10cm]{1D_free.pdf}
+    \caption{Free energy vs fraction of native intermolecular contacts $q_{inter}$ is illustrated
+      for coupled folding and binding of pKID-KIX IDP complex at melting temperature $T_m$. In this,
+      blue dashed lines represent model with desolvation barrier potential, while red lines correspond
+      to a result of no desolvation model.}                
+    \label{fig:1D_free}                                                                                  
+  \end{centering}                                                                                          
+\end{figure}
+
+
+% 
+%
+
+It is also interesting to investigate how desolvation barrier potential affects the free energy
+landscape. Compared to baseline native-centric C-$\alpha$ model with Lennard-Jones potential,
+the model with desolvation barrier results in higher activation free energy barrier in a more rugged 
+energy landscape as shown in Fig.~\ref{fig:1D_free}. Inclusion of desolvation barrier shifts the location
+of binding transition peak from $q_{inter}=0.15$ to $q_{inter}=0.4$, and the activation barrier is
+almost two times larger.
+
+
+While energy functions dictate molecular interactions in the simulation, dynamics of the system
+is usually governed by equations of motion that allows time propagation. Next, we talk about
+molecular dynamics approaches and how they are used in coarse grained systems. 
+
+
+%
+%*************************************************************************************************
+\section{\textbf{Stochastic Molecular Dynamics Simulations}}\label{sect:two_seven}
+%*************************************************************************************************
+%
+Molecular dynamics(MD) simulations are widely used to study the dynamic properties of various systems
+such as liquids, macromolecules, and large biomolecules.
+MD simulations of biomolecules treat the molecule as a collection of classical particles interacting through
+a potential energy function.
+In molecular dynamics, time evolution of mass points is usually governed by Newtonian 
+mechanics involving explicit solvent molecule, evolving through time in discrete steps.
+
+In constant temperature MD simulations, the kinetic energy should be consistent with the equipartition theorem:
+the average energy of each degree of freedom is 0.5$k_{\mathrm{B}}T$, where $k_{\mathrm{B}}$ is the Boltzmann constant, and $T$ is the temperature. 
+Several thermostats are available to adapt MD simulations to the canonical ensemble
+by maintaining a fixed temperature \cite{hunenberger:05a}. 
+They include the Nose-Hoover thermostat that generate the true canonical distributions of
+velocities, and velocity rescaling methods such as the Andersen and Berendsen
+\cite{berendsen:84h}
+thermostats. In rescaling approaches average kinetic energy of the system corresponds to the
+expected value at the desired temperature. 
+
+The most commonly used thermostats in structure based C-$\alpha$ models is so called
+Langevin thermostat, which is shown to be less sensitive to the strength of the coupling
+between the protein system and the thermal bath compared to the Berendsen thermostat
+\cite{mor:08s}. 
+In  Langevin dynamics (also called Stochastic Dynamics) the  role of water molecules is implicitly
+incorporated into system 
+by introducing drag term and stochastic force which mimics collisions with the solvent molecule.\cite{pastor:94t}
+Here, dissipation of kinetic energy is proportional to the velocity of each
+mass point with friction constant, $\gamma$, that determines the strength of coupling to the bath.
+On the other hand, the system may gain energy by random implicit kicks from the surroundings.
+The balance between these two effects gives proper equilibrium distribution of velocities and potential
+energy at temperature T.
+
+Inclusion of stochastic force and drag term into Newton's equation yields Langevin equation;
+%
+%
+\begin{equation}
+  \label{eq:Lange}
+  m \frac{ \partial^2}{\partial{t^2}} \bm{r}_i = \bm{F}(\bm{r}_i)
+  - \gamma \frac{ \partial}{\partial{t}} \bm{r}_i  + \bm{\xi}_i(t), 
+\end{equation}
+%
+%
+where $\bm{r}_i$ is a position vector of the $i^{\mathrm{th}}$ particle with mass $m$,
+$\bm{F}_i$ is the net
+conservative force on the particle, and $\bm{\xi}_i$ is a Gaussian stochastic variable.
+To simulate equilibrium dynamics at temperature T, the statistics of the random force
+has zero mean and variance defined by 
+
+\begin{equation}                                                                                         \label{eq:rand_force_var}                                                                                
+    \langle \bm{\xi}_i(t) \bm{\xi}_j(t')\rangle = 2k_B T\gamma \delta_{ij} \delta(t-t').                        
+\end{equation}                                                                                           
+% role of gamma!
+This connection between random force and dissipation (the friction force),  called
+the Fluctuation Dissipation Theorem, ensures the velocities and positions from the
+simulations converge thermodynamically to the Boltzmann distribution at temperature $T$.
+The damping constant $\gamma$ determines the relative strength of the inertial forces with
+respect to the random kick forces. Therefore, as $\gamma$ increases, the dynamics of the system
+go from inertial to an overdamped, or diffusive Brownian regime.
+For a particle of radius $R$, a physical value for $\gamma$ modeled according to Stokes law;
+%
+%
+\begin{equation}
+  \label{eq:stokes}
+  \gamma = \frac{6 \pi \eta R}{m},
+\end{equation}
+%
+%
+where, $m$ is mass of the particle, and $\eta$ is the solvent viscosity.
+For example, value of damping constant estimated for water is $\gamma=54.9 ps^{-1}$,
+which is approximately equal to a typical collision frequency $\gamma=50 ps^{-1}$ for
+protein atoms exposed to solvent at room temperature\cite{pastor:88a}.
+
+Velocity Verlet is the most frequently used integration scheme for Langevin Dynamics simulations.
+The algorithm was first used in 1791 by Delambre and has been rediscovered many times since then,
+most recently by Loup Verlet in the 1960s for use in molecular dynamics.
+In this scheme, the position, $\bm{r}_i$, velocity, $\bm{v}_i$ and  acceleration, $\bm{a}_i$, are
+updated from time $t$ to time $t+h$ through the following steps:
+%
+%
+\begin{align}
+  \label{eq:verl1}
+  \bm{r}_{i}(t+h) &= \bm{r}_{i}(t) + \bm{v}_{i}(t)h + \frac{\bm{a}_{i}(t)h^2}{2},  \\
+  \label{eq:verl2}
+  \bm{a}_{i}(t+h) &= \frac{\bm{f}_{i}^{tot}(t+h)}{m}, \\
+  \label{eq:verl3}
+  \bm{v}_{i}(t+h) &= \bm{v}_{i}(t) +  \frac{h}{2} \big( \bm{a}_{i}(t) + \bm{a}_{i}(t+h) \big).  
+\end{align}
+%
+Here, $\bm{f}_{i}^{tot} = m\ddot{\bm{r}}_i$ is net force acting on $i^{th}$ monomer with mass $m$.
+Typically, positions and velocities are initialized by structural and
+thermodynamic properties of the system, while initial accelerations, $\bm{a}_i$, are set to zero.
+Values for positions at time $t+h$ (Eq.~\ref{eq:verl1}) are used to calculate pairwise interaction
+forces along with accelerations at time $t+h$ (Eq.~\ref{eq:verl2}).
+Velocities are updated from a combination of acceleration at the previous step $\bm{a}_i(t)$
+and the current acceleration $\bm{a}_i(t+h)$. This averaging make the scheme stable.
+
+Langevin dynamics is widely used to simulate biomolecular systems.
+For example, it has been employed to enhance sampling
+\cite{doniach:99p,hao:93u}, represent hydration shell models in large systems
+\cite{beglov:95d,beglov:95n}, in protein folding landscape studies
+\cite{koga:01,karanicolas:03,cheung:02,kouza:06,jefferys:10p,eaton:17t,},
+and to investigate coupled folding and binding of IDP complex formation
+\cite{knott:14,huang:10a,huang:10,ganguly:11,de-sancho:12,cao:16,umezawa:16}.
+
+While Langevin Dynamics is robust in simulating protein folding and binding
+trajectories without explicit representation of solvent, additional sampling
+techniques might be necessary.  For instance, when protein folding transition
+barrier is high or it contains many local minima that can potentially pose traps
+along transition region, sampling the landscape becomes challenging. Thus,
+molecular dynamics simulations are often combined with free energy sampling
+techniques that provide more accurate calculation. Next, we discuss some of
+these free energy sampling techniques including those we adopted in our studies.
+
+%
+%*************************************************************************************************
+\section{\textbf{Free Energy Sampling}}\label{sect:two_seven}
+%*************************************************************************************************
+%
+Free energy sampling methods are introduced as a way for the system to escape from local
+traps or to overcome high free energy barriers that limit sampling.
+Traditional long equilibrium constant temperature simulations 
+are incapable of equilibration to resolve physical properties within transition state regions
+that have high free energy barriers in a reasonable time.
+New algorithms are needed to emphasize on those under-sampled regions and yet preserve physical
+properties of the system.
+
+In a protein folding and unfolding simulation at the folding transition
+temperature, we observe multiple transitions between native and globular states
+if simulation time is longer than the folding transition time.  Systems with
+high transition barriers require a long time to cross the barrier making it very
+difficult to achieve sufficient amount of transitions and statistically
+significant sampling with constant temperature simulations.  Common practice to
+overcome this problem is to use advanced sampling techniques that include (but
+not limited to) Simulated Annealing, Replica Exchange Molecular Dynamics-REMD,
+Umbrella Sampling, and Weighted Histogram Analysis Method. These methods provide
+a way to enhance free energy sampling by performing series of simulations at
+various parameter values. The parameters usually chosen to bias the simulations
+to a different region of conformation space. Data from these simulations are later
+combined statistical histogramming techniques that can potentially produce
+better sampled outcome.
+
+For example, an intuitive approach to enhance sampling would be to run simulations at
+various different temperatures around actual transition temperature with possible different
+initial conditions and combine in a statistically plausible way that approximates the
+equilibrium distribution.
+This allows sampling of large region of conformational space at a desired temperature.
+
+In protein folding, low temperature simulations sample the folded state, whereas
+high temperature simulations are more likely to sample unfolded state while
+overcoming large barriers between states trapped at lower temperatures.
+Simulations with temperatures that are close to actual transition
+temperature(folding temperature) are able to sample both states given long
+enough simulation time.  One method, called 'Replica Exchange Molecular
+Dynamics' is a method to enhance sampling using a coupled simulations at
+different temperatures.
+
+%
+%*************************************************************************************************
+\section{\textbf{Replica Exchange Molecular Dynamics-REMD}}\label{sect:two_eight}
+%*************************************************************************************************
+%
+In REMD, m copies of non-interacting replicas of the system are simulated at different
+temperatures $T_m$(m = 1,2,...M). Hamiltonian of $i_{th}$ replica can be written as a sum
+of the kinetic energy $E(p_i)$ and the potential energy $V(p_i)$:
+%
+\begin{equation}
+  \label{eq:rep_hamil}
+  H_{m(i)}(q_i ,p_i) =  E(p_i) + V(q_i),
+\end{equation}
+%
+%
+where, $q_i$ and $p_i$ represent positions and momenta of $N$ particles.
+%\todoin{Do we really need $m(i)$ or can the replica be labeled with $m$?}
+
+In the canonical ensemble at temperature $T_m$, each state $(q_i,p_i)$ with the Hamiltonian
+$H(q_i,p_i)$ is weighted by the Boltzmann factor $w_B = e^{-\beta_{m(i)} H_{m(i)}}$, where
+$\beta_{m(i)} = 1 /(k_{\mathrm{B}} T_m)$ is the inverse temperature. 
+Since replicas do not interact physically with each other, the joint probability distribution of
+the entire system is represented as the product of each canonical system.
+%
+%
+\begin{equation}
+  \label{eq:rep_distribution}
+  P_{RE} =  \prod \limits_{i}^{N_{rep}} P_i(q_i,p_i) = \\
+  \frac{1}{Z_{all}} \exp{ \Big( -\sum \limits_{i}^{N_{rep}} \beta_{m(i)} H_{m(i)}(q_i,p_i) \Big) }
+\end{equation}
+%
+%
+
+After running simulations simultaneously for certain period of time called the exchange period,
+a Monte-Carlo attempt is made to exchange parameters of the replicas.
+Fig.~\ref{fig:simple_rep_exchange} illustrates two replicas before and after an exchange is temperature
+takes place.
+%
+%        
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=8cm]{simple_rep_exchange.pdf}
+    \caption{Visual illustration for simple replica exchange scenario
+      with only two replicas. In this, once exchange is accepted replicas
+      swap temperatures, while keeping replica identity(labeled with different colors)
+      unchanged.}                
+    \label{fig:simple_rep_exchange} 
+  \end{centering}                                                                                          
+\end{figure}
+
+The transition probability for  the exchange, $W(T_m \rightarrow T_n)$, is
+based on detailed balance
+%
+\begin{equation}
+  \label{eq:det_bal}
+  P_{RE}(q_i,T_{m};q_j,T_n) W(T_m \rightarrow T_n) =
+  P_{RE}(q_i,T_{n};q_j,T_{m}) W(T_n \rightarrow T_m).
+\end{equation}
+%
+%
+This can be satisfied by the
+%
+%
+\begin{equation}
+  \label{eq:det_bal1}
+  \exp(-\Delta) = \frac{W(T_m \rightarrow T_n)}{ W(T_n \rightarrow T_m)},
+\end{equation}
+%
+%
+where,
+%
+%
+\begin{equation}
+  \label{eq:det_bal2}
+  \Delta = (\beta_n - \beta_m) (\mathrm{V}(q_i) - \mathrm{V}(q_j)). 
+\end{equation}
+%
+%
+
+Acceptance or rejection of exchange is, therefore, controlled by Metropolis criterion;
+%
+%
+\begin{equation}
+  W(T_m \rightarrow T_n) =
+  \begin{cases}
+    1, & \mbox{if  }  \Delta \leq 0 \\
+    \exp(-\Delta), & \mbox{if  } \Delta > 0.
+  \end{cases}
+\end{equation}  
+%
+%
+If exchange is accepted, velocities momentum must be rescaled to reflect the Boltzman
+weight of the kinetic energy of each temperature.
+%
+\begin{align}
+  \label{eq:vel_rescale}
+  p_i' = \sqrt{\frac{T_n}{T_m}} p_i\\ 
+  p_j' = \sqrt{\frac{T_m}{T_n}}p_j. 
+\end{align}
+%
+%
+
+%In order to perform the exchange,
+%two candidates are randomly selected from available
+%set of replicas with assigned temperatures $T_i$.
+%\todoin{I think the temperatures are usually adjacent ---- change back if I am wrong.}
+In order to preform the exchange, two candidate replicas with neighboring temperatures
+are chosen at random. 
+Then, if the magnitude of $\Delta$
+is less than zero, the replicas swap temperatures. On the other hand, if $\Delta$ value is
+greater than zero, the replicas swap temperatures if a number sampled from random uniform
+distribution between 0 and 1 is less than $\exp(-\Delta)$. If an exchange is accepted,
+the velocities are rescaled based on Eq.~\ref{eq:vel_rescale}. Exchanges are typically
+tried $M$ times per round. Molecular dynamics then proceeds normally for a period of the
+exchange time when a new round of exchanges is performed. 
+Fig.~\ref{fig:rep_exch_hist} illustrates how temperature swapping take place
+between replicas for results taken from simulations of 24 replicas of the pKID-KIX
+coupled folding and binding process.
+This figure shows high temperature replicas have more frequent exchange compared to
+low temperature ones because acceptance of exchange is more likely when the energy
+difference between previous and current state is low. Nevertheless, each replica,
+identified by the color, typically travels back and forth throughout the entire range of temperatures.
+        
+\begin{figure}[h!]
+  \begin{centering}
+    \includegraphics[width=16cm]{rep_exch_hist.pdf}
+    \caption{Visual illustration of replica exchange history snapshot(initial
+      10000 steps) for pKID-KIX complex binding and unbinding simulations. Twenty replicas
+      are simulated with uniformly distributed temperatures between 150K and 600K. Temperature
+      exchange among replicas is performed every 100 md steps.}
+    \label{fig:rep_exch_hist}
+  \end{centering}                                                                                          
+\end{figure}
+
+
+What is the advantage of making replicas exchange compared to simple independent simulations
+with distinct temperatures? Let's again consider protein folding problem and
+consider a replica that makes transitions from a low temperature, up to a high temperature,
+and back again. This replica likely samples the a compact or folded state initially, unfolds at
+high temperature, and then returns to a different compact state within the folded ensemble at low
+temperatures. The other replicas are making similar trajectories through the configuration and
+temperature space.  In the end, the simulations converge to an equilibrium sampling at each temperature.
+These conformations (sorted by temperature) are combined using WHAM, which I discuss next.
+
+
+%*************************************************************************************************
+\section{\textbf{Weighted Histogram Analysis Method}}\label{sect:two_nine}
+%*************************************************************************************************
+
+WHAM is a statistical technique that combines multiple histograms generated by
+NVT (constant number,volume, and temperature) simulations with different
+parameters or constraints in order to produce single histogram that can be used
+to calculate statistical average of any observable.  It was originally developed
+by Ferrenberg and Swendsen \cite{ferrenberg:88,ferrenberg:89} and have been
+extensively used in various simulated physical systems for free energy
+calculation.
+
+Here I highlight some applications for which WHAM was employed that I found particularly
+helpful in learning this widely used and powerful technique. These include the calculation
+of the potential of mean force for pseudo-rotation phase angle of the sugar ring
+in deoxyadenosine by Kumar and co-workers \cite{kumarWHAM:92}, binding free energy
+ of the protein-ligand association \cite{bouzida:99}, and broad sampling of conformational
+transitions in protein molecules.\cite{whitford:09,wei:2013,huang:10a,zhang:12,ganguly:11a,trizac:10}
+WHAM is often used with techniques such as replica exchange or
+umbrella sampling.  For example, Gallicchio and co-workers \cite{gallicchio:05}
+used WHAM together with replica exchange MD simulation to estimate the potential
+of mean force for a peptide molecule. Chodera and Dill \cite{chodera:07} have
+combined parallel tempering and simulated annealing with WHAM, to calculate the
+free energy for alanine dipeptide in both, implicit and explicit solvent
+simulations.  The sampling of low probability states at the top of the
+protein-ligand binding transition barrier require reweighting multiple
+histograms to improve the sampling probability of those conformations.
+Individual histograms are produced by simulations at different value of
+parameter that enables sampling distinct conformational regions. Combined
+histogram is used to estimate the density of states (DOS). Then any
+thermodynamic property of the system can be calculated for a wide range of
+parameters. From the free energy profile spanning from unbound to bound state,
+we can sample the states of the system corresponding to the intermediate binding
+steps.
+
+The basic framework of WHAM starts from a set of equilibrium ensembles each simulated with
+a different value of a parameter.  Using temperature as
+the variable parameter, an ensemble of conformations for each temperature is generated,
+labeled by index $m$, either from long equilibrium simulations or replica
+exchange simulation with configurations
+sorted by temperature. Then  energy histograms $H_{m}(E)$ are constructed for each
+simulation.  An example of these histograms for coupled folding and binding of
+pKID-KIX is shown in Fig.~\ref{fig:EHist}. Notice that low temperature
+simulations produce relatively sharp distributions sampling lower energies.
+Similarly, the high temperature simulations sample high energies. At intermediate
+temperatures we see the distribution broadens and includes multiple peaks. This
+broadening of the energy histograms indicate that these temperatures are near a
+thermodynamic change of state. Here, it is near binding transition temperature,
+$T_m$.  For temperatures near $T_m$, the distribution shifts the most probable
+state towards bound state for $T < T_m$ or to the unbound conformations for
+$ T > T_m$.  WHAM is a technique to combine these histograms. It requires that
+there is a significant overlap of neighboring histograms in energy so that the
+entire energy range covered by a relatively flat distribution
+%as shown in Fig.~\ref{fig:EHist}b.
+
+% 
+%
+%\begin{figure}[htp!]
+%  \begin{centering}
+%    %\includegraphics[width=13.0cm]{figures/chap2_figs/EHist.pdf}
+%    \includegraphics[width=14.0cm]{figures/chap2_figs/E_hist.pdf}
+%    \caption{(Energy histograms produced from independent multiple temperature simulations
+%      of pKID-KIX complex formation are shown. Energy units are reported in kcal/mol.}
+%    \label{fig:EHist}
+%  \end{centering}
+%\end{figure}
+%
+%
+%
+%
+\begin{figure}[htp!]
+  \begin{centering}
+    %\includegraphics[width=13.0cm]{figures/chap2_figs/EHist.pdf}
+    \includegraphics[width=14.0cm]{figures/chap2_figs/E_hist.pdf}
+    \caption{Energy histograms produced from parallel tempering simulations without exchange
+      for pKID-KIX complex formation are depicted for range of temperatures.}
+    \label{fig:EHist}
+  \end{centering}
+\end{figure}
+%
+%
+%b) When combined,
+%resulting histogram shows improved sampling over all regions including transition state.
+
+From the energy histograms, the probability distribution of energy at inverse temperature
+$\beta = (\mathrm{k_{B}}T)^{-1}$ is given by: 
+\begin{equation}
+    \label{eq:H_E}
+    P(E,\beta) = \frac{\sum\limits_{m=1}^{\mathrm{R}}{g_{m}^{-1} \, H_{m}(E) \,
+        e^{\beta E}}}{\sum\limits_{m=1}^{\mathrm{R}}{\mathrm{N}_m \, g_{m}^{-1} \, e^{\beta_{m} E - f_{m}}}},
+\end{equation}
+where, $\mathrm{N}_m$ is the number of conformations sampled at the $m^{th}$
+simulation, and R is total number of simulations performed. Here, $g_m$
+represents the so-called statistical inefficiency, and is calculated by
+integrating energy autocorrelation function $t_m = \int_{t} C(\tau)d\tau$ , for
+the $m_{th}$ simulation. If all the successive conformations sampled for the
+histogram, are independent, $g_m = 1$, otherwise $g_m = 1 + 2\tau_m$. The parameter
+$f_m$ is the unknown free energy at inverse temperature $\beta_m$ for the $m^{th}$ simulation.
+
+If $P(E,\beta)$ is known, the free energy can be calculated through:
+\begin{equation}
+  \label{eq:exp_fm}
+  e^{f_m} = \sum_{E} P(E,\beta_{m}).
+\end{equation}
+%
+%
+Since the expression for $P(E\beta_m)$ involves the free energies $f_m$, 
+Eq.~\ref{eq:exp_fm} needs to be solved self-consistently for the free energy
+values, $f_m$ for each value of $T_m$.
+Using these free energies, the density of states can be calculated according to
+\begin{equation}
+  \label{eq:DOS}
+  \Omega (E) =  \frac{ \sum\limits_{m=1}^{\mathrm{R}}{g_{m}^{-1} \, H_m(E)}} {\sum\limits_{m=1}^{\mathrm{R}}{\mathrm{N}
+      \, g_{m}^{-1} \, e^{\beta_{m} E - f_{m}}}},
+\end{equation}
+Average quantities of an observable $A$ can then be estimated via
+\begin{equation}
+  \label{eq:A_ave}
+  \langle A \rangle_{\beta}  = \frac{\int\limits_{E}{ A(E) \, \Omega(E) e^{-\beta E} dE}}{\int\limits_{E}{\Omega(E)
+      e^{-\beta E} dE}}.
+\end{equation}
+From the DOS, we can obtain the partition function Z as:
+\begin{equation}
+  \label{eq:parti}
+  Z = \sum\limits_{E}{\Omega(E) e^{-\beta E}}.
+\end{equation}
+Finally, partition function can be used to calculate the Helmholtz free energy.
+%
+\begin{equation}
+  \label{eq:free_E}
+  F = -\mathrm{k_B} T ln(Z).
+\end{equation}
+%
+
+Notice that every simulated configuration contributes to the calculated average property. 
+Also, this formalism allows one to calculate thermodynamic properties at any temperature within the
+simulated range (not just those particular values in the set of simulations).
+This is very helpful because often we are not sure of the temperature of interest
+from the outset. For example,
+the binding temperature $T_m$ can be precisely identified by the peak in the
+specific heat as a function of temperature. WHAM can be used to calculate the specific heat as continuous function of temperature in order to identify $T_m$. Then using WHAM again,  we can calculate the equilibrium properties
+of the system at $T_m$ even though none of the simulations are performed precisely at $T_m$.
+
+%
+%*************************************************************************************************
+\section{\textbf{Why are Structure Based Coarse-Grained Simulations Fast?}}\label{sect:two_ten}
+%*************************************************************************************************
+
+One of the key advantages of using coarse grained structure based (C-$\alpha$)
+models is their computational efficiency over all atom
+simulations\cite{takada:12}. There are many factors that contribute to this low
+computational cost. First and most apparent reason is reduction in system size
+(see Fig.~\ref{fig:1AIK}a). There are on average, $~20$ atoms per amino acid, so
+that the overall number of particles in the coarse grained representation is
+reduced by the factor of 20. Additionally, by removing water molecules we reduce the
+system size by another order of magnitude. In total, by coarse-graining and with
+an implicit solvent model the system size is reduced by nearly two orders of magnitude.
+
+Second, the time step of integration in molecular dynamics simulations is limited 
+by the highest frequency vibrations in the model to avoid inadvertently adding energy to
+the system. For instance, in atomistic simulations, this frequency corresponds
+to a covalent  bond with the highest frequency.
+Coarse-graining allows for a bigger timestep
+because in C-$\alpha$ representation the highest frequency is dictated by a weak effective bond between
+residues (see Fig.~\ref{fig:1AIK}b).
+For example, the effective mass for the bond length oscillations for Gly-Gly in a Coarse Grained MD is about 100
+times as large as that for C-H in an All Atom MD, which gives a factor of 10 increase in the time step
+\cite{takada:12}.
+
+\begin{figure}[htp!]
+  \begin{centering}
+    \includegraphics[width=15cm]{1AIK.pdf}
+    \caption{Comparison made between an all atom and a coarse grained
+      structure based models illustrated for Hen Egg-White Lysozyme(PDB id 1AKI).
+      In this, (a) and (a') show three dimensional folded X-ray structures for an atomistic and a coarse-grained
+      representations respectively. Qualitative comparison between inter atomic bond (C-H) and inter
+      amino acid bond(Gly-Gly) is shown in (b) and (b'). Due to significant difference in above bond length
+      and effective masses, there is a big difference in vibration frequencies as well, as shown in (c)
+      and (c'). Finally, (d) and (d') highlight distinctions in one dimensional free energies, where $Q$ is
+      a folding reaction coordinate and $F$ is a measure for free energy. While all atom simulation generates
+      rugged energy landscape, coarse-grained model produces a smooth free energy profile that makes computation
+      less costly.}                
+    \label{fig:1AIK}                                                                                  
+  \end{centering}                                                                                          
+\end{figure}
+
+Another, though difficult to quantify, factor for simulation speedup is a
+consequence of smoothing the underlying free energy landscape as a result of
+coarse-graining (see Fig.~\ref{fig:1AIK}c). While free energy landscape of all
+atom models are rugged due to nature of various complex interactions that cause
+local traps along transition path,  landscape in coarse grained models is
+smoothed due to the reduced complexity of the interactions. Considering all
+above effects cumulatively, the overall speedup is expected to be something
+between $10^4 - 10^7$ times.\cite{takada:12}  Still precisely
+mapping the time step of a coarse-grained model to realistic time scale is not
+straight forward. Typically, the best one can do is to map the timestep by the
+process studied by Takada \textit{et al.} For example, the experimental folding
+time of a simulated protein can give an indication of a reasonable effective
+conversion between the time step and physical one.
+Nevertheless, if you are modeling diffusion of a protein, it requires a
+different identification of the time step to get real value for the diffusion
+coefficient.  This is problematic when the process of interest involves multiple
+timescales, such as coupled folding and binding which depends on a diffusive
+time scale and the polymeric dynamics time scale that reflects conformational
+changes of the protein. This issue is explored in chapter four of this
+dissertation.
+
+
+%
+%
+\section{\textbf{Conclusion}}\label{sect:two_eleven}
+%
+%
+Although structure based C-$\alpha$ model offers great computational advantage, there are also numerous
+drawbacks that must be pointed out. Disadvantages include the loss of accuracy due to coarse-graining,
+the neglect of non-native interactions, lack of explicit solvent, weak folding
+and binding cooperativity, inaccuracies in folding and binding rate predictions, and lack of
+hydrodynamic interactions. As mentioned here, refinements have been introduced to assess the importance
+and capture the physics of these issues. 
+
+Despite drawbacks, structure based C-$\alpha$ models have been successful in
+simulating various biological activities especially for large systems such as folding of
+multi-domain proteins\cite{borgia:11s,sulkowska:09d}, association of IDPs
+\cite{huang:10,ganguly:11, de-sancho:12, cao:16, umezawa:16}, to study
+confinement effects on protein dimerization
+\cite{levy:05,wang:09c}, to study ribosomes, RNA polymerase,
+transcription factor binding to DNA \cite{chen:10p,khazanov:11s,vuzman:10d}. 
+In summary, coarse-grained structure
+provide a computationally inexpensive way to explore a wide variety of 
+complex and interesting biomolecular systems.
+%Popularity of these models is expected to grow
+%untill perhaps emergence of quantum computing that is expected to revolutionize whole notion of computing. 
+
+\end{document}
+
+
